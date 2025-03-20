@@ -4,6 +4,8 @@ import CrmSidebar from "../components/CrmSidebar";
 import LandingPage from "../pages/LandingPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import LoginPage from "../pages/LoginPage";
+import TicketsPage from "../pages/TicketsPage";
+import ProtectedRoute from "./ProtectedRoute";
 
 const RouteProvider = () => {
   const routes: RouteType[] = [
@@ -25,6 +27,14 @@ const RouteProvider = () => {
       path: "/",
       element: <LandingPage />,
     },
+    {
+      name: "Tickets Page",
+      hidden: false,
+      path: "/tickets",
+      element: (
+        <ProtectedRoute allowedRoles={[{ name: "admin" }, { name: "user" }]} />
+      ),
+    },
   ];
 
   return (
@@ -34,6 +44,16 @@ const RouteProvider = () => {
           {routes.map((route, index) => (
             <Route key={index} element={route.element} path={route.path} />
           ))}
+          {/* Protected Nested Route */}
+          <Route
+            element={
+              <ProtectedRoute
+                allowedRoles={[{ name: "admin" }, { name: "user" }]}
+              />
+            }
+          >
+            <Route path="/tickets" element={<TicketsPage />} />
+          </Route>
         </Routes>
       </CrmSidebar>
     </Router>

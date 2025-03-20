@@ -1,7 +1,7 @@
-import CrmMarketingSidebarSection from "./CrmUserSidebarSection";
+import CrmUserSidebarSection from "./CrmUserSidebarSection";
 
 const CrmSidebarSection = () => {
-  return <CrmMarketingSidebarSection />;
+  return <CrmUserSidebarSection />;
 };
 
 export default CrmSidebarSection;

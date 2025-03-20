@@ -7,6 +7,13 @@ type Route = {
   hidden: boolean;
 };
 
+type ButtonType = {
+  id: string;
+  name: string;
+  icon: string;
+  path: string;
+};
+
 type UserData = {
   sub: number;
   firstName: string;
@@ -15,6 +22,7 @@ type UserData = {
   deptId: number;
   deptName: string;
   deptCode: string;
+  roles: { name: string }[];
 };
 
 type Query = {
@@ -84,4 +92,5 @@ export type {
   Department,
   Secrets,
   ForgotPassword,
+  ButtonType,
 };

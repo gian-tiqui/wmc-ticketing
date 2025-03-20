@@ -37,14 +37,13 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      console.log("logged in");
+      navigate("/tickets");
       return;
     }
   }, [navigate, user]);
 
   const handleLogin = async ({ username, password }: FormFields) => {
     try {
-      console.log(username, password);
       const response = await axios.post(`${URI.API_URI}/api/v1/auth/login`, {
         username,
         password,
@@ -85,7 +84,7 @@ const LoginPage = () => {
             summary: "Login Successful",
           });
 
-          console.log("logged in successfully");
+          navigate("/tickets");
         }
       }
     } catch (error) {
