@@ -4,16 +4,15 @@ import useUserDataStore from "../@utils/store/userDataStore";
 import { UserData } from "../types/types";
 
 interface Props {
-  allowedRoles: { name: string }[];
+  allowedRoles: string[];
+  children?: React.ReactNode;
 }
 
-const ProtectedRoute: React.FC<Props> = ({ allowedRoles }) => {
+const ProtectedRoute: React.FC<Props> = ({ allowedRoles, children }) => {
   const { user } = useUserDataStore();
 
   const authorized = (user: UserData) => {
-    return user.roles.some((role) =>
-      allowedRoles.some((allowedRole) => allowedRole.name === role.name)
-    );
+    return user.roles.some((role) => allowedRoles.includes(role.name));
   };
 
   if (!user) {
@@ -24,7 +23,7 @@ const ProtectedRoute: React.FC<Props> = ({ allowedRoles }) => {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  return <Outlet />;
+  return children ? <>{children}</> : <Outlet />;
 };
 
 export default ProtectedRoute;

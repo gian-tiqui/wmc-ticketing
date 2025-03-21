@@ -32,7 +32,9 @@ const RouteProvider = () => {
       hidden: false,
       path: "/tickets",
       element: (
-        <ProtectedRoute allowedRoles={[{ name: "admin" }, { name: "user" }]} />
+        <ProtectedRoute allowedRoles={["user", "admin"]}>
+          <TicketsPage />
+        </ProtectedRoute>
       ),
     },
   ];
@@ -42,22 +44,11 @@ const RouteProvider = () => {
       <CrmSidebar>
         <Routes>
           {routes.map((route, index) => (
-            <Route key={index} element={route.element} path={route.path} />
+            <Route key={index} path={route.path} element={route.element} />
           ))}
-          {/* Protected Nested Route */}
-          <Route
-            element={
-              <ProtectedRoute
-                allowedRoles={[{ name: "admin" }, { name: "user" }]}
-              />
-            }
-          >
-            <Route path="/tickets" element={<TicketsPage />} />
-          </Route>
         </Routes>
       </CrmSidebar>
     </Router>
   );
 };
-
 export default RouteProvider;

@@ -2,6 +2,7 @@ import { TabPanel, TabView } from "primereact/tabview";
 import PageTemplate from "../templates/PageTemplate";
 import useCrmSidebarStore from "../@utils/store/crmSidebar";
 import { PrimeIcons } from "primereact/api";
+import { Avatar } from "primereact/avatar";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
@@ -24,32 +25,86 @@ const TicketsPage = () => {
           <TabPanel
             pt={{ headerAction: { className: "bg-inherit" } }}
             leftIcon={`${PrimeIcons.PLUS} me-2`}
-            header="New"
+            header={
+              <div className="flex items-center">
+                <p>New</p>
+                <Avatar
+                  label="0"
+                  shape="circle"
+                  className="w-6 h-6 text-white bg-blue-400 ms-2"
+                />
+              </div>
+            }
           ></TabPanel>
           <TabPanel
             pt={{ headerAction: { className: "bg-inherit" } }}
             leftIcon={`${PrimeIcons.EYE} me-2`}
-            header="Viewed"
+            header={
+              <div className="flex items-center">
+                <p>Viewed</p>
+                <Avatar
+                  label="0"
+                  shape="circle"
+                  className="w-6 h-6 text-white bg-blue-400 ms-2"
+                />
+              </div>
+            }
           ></TabPanel>
           <TabPanel
             pt={{ headerAction: { className: "bg-inherit" } }}
             leftIcon={`${PrimeIcons.USER_PLUS} me-2`}
-            header="Assigned"
+            header={
+              <div className="flex items-center">
+                <p>Assigned</p>
+                <Avatar
+                  label="0"
+                  shape="circle"
+                  className="w-6 h-6 text-white bg-blue-400 ms-2"
+                />
+              </div>
+            }
           ></TabPanel>
           <TabPanel
             pt={{ headerAction: { className: "bg-inherit" } }}
             leftIcon={`${PrimeIcons.ALIGN_CENTER} me-2`}
-            header="Acknowledged"
+            header={
+              <div className="flex items-center">
+                <p>Acknowledged</p>
+                <Avatar
+                  label="0"
+                  shape="circle"
+                  className="w-6 h-6 text-white bg-blue-400 ms-2"
+                />
+              </div>
+            }
           ></TabPanel>
           <TabPanel
             pt={{ headerAction: { className: "bg-inherit" } }}
             leftIcon={`${PrimeIcons.CHECK_CIRCLE} me-2`}
-            header="Resolved"
+            header={
+              <div className="flex items-center">
+                <p>Resolved</p>
+                <Avatar
+                  label="0"
+                  shape="circle"
+                  className="w-6 h-6 text-white bg-blue-400 ms-2"
+                />
+              </div>
+            }
           ></TabPanel>
           <TabPanel
             pt={{ headerAction: { className: "bg-inherit" } }}
             leftIcon={`${PrimeIcons.LIST} me-2`}
-            header="Closed-Resolved"
+            header={
+              <div className="flex items-center">
+                <p>Closed</p>
+                <Avatar
+                  label="0"
+                  shape="circle"
+                  className="w-6 h-6 text-white bg-blue-400 ms-2"
+                />
+              </div>
+            }
           ></TabPanel>
         </TabView>
       </div>

@@ -5,7 +5,7 @@ import useCrmSidebarStore from "../@utils/store/crmSidebar";
 
 const NotFoundPage = () => {
   const navigate = useNavigate();
-  const [counter, setCounter] = useState<number>(7);
+  const [counter, setCounter] = useState<number>(3);
   const { isExpanded, setIsExpanded } = useCrmSidebarStore();
 
   useEffect(() => {
