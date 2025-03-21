@@ -3,6 +3,7 @@ import PageTemplate from "../templates/PageTemplate";
 import useCrmSidebarStore from "../@utils/store/crmSidebar";
 import { PrimeIcons } from "primereact/api";
 import { Avatar } from "primereact/avatar";
+import NewTicketButton from "./NewTicketButton";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
@@ -10,9 +11,13 @@ const TicketsPage = () => {
   return (
     <PageTemplate>
       <div className="w-full h-full p-4 bg-inherit">
-        <h4 className={`mb-10 text-2xl font-medium ${!isExpanded && "ms-14"} `}>
-          <i className={`${PrimeIcons.TICKET} text-xl rotate-90`}></i> Tickets
-        </h4>
+        <div className="flex items-center justify-between mb-10">
+          <h4 className={` text-2xl font-medium ${!isExpanded && "ms-14"} `}>
+            <i className={`${PrimeIcons.TICKET} text-xl rotate-90`}></i> Tickets
+          </h4>
+          <NewTicketButton />
+        </div>
+
         <TabView
           pt={{
             panelContainer: {

@@ -43,6 +43,11 @@ type Query = {
   startingPoint?: number;
 };
 
+type Category = {
+  id: number;
+  name: string;
+};
+
 type User = {
   firstName: string;
   middleName?: string;
@@ -81,6 +86,11 @@ type Panel = {
   icon: string;
 };
 
+type PriorityLevel = {
+  id: string;
+  name: string;
+};
+
 export type {
   Panel,
   Route,
@@ -93,4 +103,6 @@ export type {
   Secrets,
   ForgotPassword,
   ButtonType,
+  Category,
+  PriorityLevel,
 };
