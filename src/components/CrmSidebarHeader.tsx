@@ -8,10 +8,6 @@ const CrmSidebarHeader = () => {
   const [avatarLabel, setAvatarLabel] = useState<string>("");
 
   useEffect(() => {
-    console.log(user?.roles);
-  }, [user]);
-
-  useEffect(() => {
     if (!user) {
       console.error("Info could not be extracted");
       return;

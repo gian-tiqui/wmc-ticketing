@@ -38,9 +38,7 @@ type Query = {
   level?: number;
   sortOrder?: string;
   isDeleted?: boolean;
-  roomImageDeleted?: boolean;
-  isIncomplete?: boolean;
-  startingPoint?: number;
+  statusId?: number;
 };
 
 type Category = {
@@ -53,6 +51,8 @@ type User = {
   middleName?: string;
   lastName: string;
   deptId: number;
+
+  department: Department;
 };
 
 type ChangePassword = {
@@ -91,7 +91,98 @@ type PriorityLevel = {
   name: string;
 };
 
+type CreateTicket = {
+  deptId: number;
+  categoryId: number;
+  priorityLevelId: number;
+  title: string;
+  description: string;
+};
+
+type Status = {
+  id: number;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+
+  tickets: Ticket[];
+};
+
+type Ticket = {
+  id: number;
+  title: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  acknowledgedAt: string;
+
+  issuerId: number;
+  issuer: User;
+  assignedUserId: number;
+  assignedUser: User;
+  statusId: number;
+  status: Status;
+  deptId: number;
+  department: Department;
+  categoryId: number;
+  category: Category;
+  priorityLevelId: number;
+  priorityLevel: PriorityLevel;
+
+  serviceReports: ServiceReport[];
+  comments: Comment[];
+  activities: Activity[];
+};
+
+type Activity = {
+  id: number;
+  activity: string;
+  createdAt: string;
+  updatedAt: string;
+
+  ticketId: number;
+  ticket: Ticket;
+};
+
+type ServiceReport = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+
+  ticketId: number;
+  ticket: Ticket;
+
+  imageLocation: ImageLocation[];
+};
+
+type ImageLocation = {
+  id: number;
+  path: string;
+  createdAt: string;
+  updatedAt: string;
+
+  serviceReportId: number;
+  serviceReport: ServiceReport;
+};
+
+type Comment = {
+  id: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+
+  userId: number;
+  user: User;
+  ticketId: number;
+  ticket: Ticket;
+};
+
 export type {
+  Activity,
+  ServiceReport,
+  ImageLocation,
+  Comment,
+  Ticket,
   Panel,
   Route,
   UserData,
@@ -105,4 +196,5 @@ export type {
   ButtonType,
   Category,
   PriorityLevel,
+  CreateTicket,
 };

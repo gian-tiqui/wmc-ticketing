@@ -3,10 +3,20 @@ import PageTemplate from "../templates/PageTemplate";
 import useCrmSidebarStore from "../@utils/store/crmSidebar";
 import { PrimeIcons } from "primereact/api";
 import { Avatar } from "primereact/avatar";
-import NewTicketButton from "./NewTicketButton";
+import NewTicketButton from "../components/NewTicketButton";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { Query } from "../types/types";
+import { getTickets } from "../@utils/services/ticketService";
+import TicketsTable from "../components/TicketsTable";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
+  const [query] = useState<Query>({ search: "" });
+  const { data: newTicketsData } = useQuery({
+    queryKey: [`new-tickets-${JSON.stringify({ ...query, statusId: 1 })}`],
+    queryFn: () => getTickets({ ...query, statusId: 1 }),
+  });
 
   return (
     <PageTemplate>
@@ -34,13 +44,15 @@ const TicketsPage = () => {
               <div className="flex items-center">
                 <p>New</p>
                 <Avatar
-                  label="0"
+                  label={newTicketsData?.data.count}
                   shape="circle"
                   className="w-6 h-6 text-white bg-blue-400 ms-2"
                 />
               </div>
             }
-          ></TabPanel>
+          >
+            <TicketsTable tickets={newTicketsData?.data.tickets} />
+          </TabPanel>
           <TabPanel
             pt={{ headerAction: { className: "bg-inherit" } }}
             leftIcon={`${PrimeIcons.EYE} me-2`}

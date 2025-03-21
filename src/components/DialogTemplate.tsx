@@ -21,7 +21,7 @@ const DialogTemplate: React.FC<Props> = ({
       onHide={() => {
         if (visible) setVisible(false);
       }}
-      className="p-4 w-96"
+      className="p-4 w-96 md:w-[500px]"
       pt={{
         header: {
           className:

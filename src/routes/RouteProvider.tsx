@@ -6,6 +6,7 @@ import NotFoundPage from "../pages/NotFoundPage";
 import LoginPage from "../pages/LoginPage";
 import TicketsPage from "../pages/TicketsPage";
 import ProtectedRoute from "./ProtectedRoute";
+import TicketPage from "../pages/TicketPage";
 
 const RouteProvider = () => {
   const routes: RouteType[] = [
@@ -34,6 +35,16 @@ const RouteProvider = () => {
       element: (
         <ProtectedRoute allowedRoles={["user", "admin"]}>
           <TicketsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      name: "Ticket Page",
+      hidden: false,
+      path: "tickets/:ticketId",
+      element: (
+        <ProtectedRoute allowedRoles={["user", "admin"]}>
+          <TicketPage />
         </ProtectedRoute>
       ),
     },
