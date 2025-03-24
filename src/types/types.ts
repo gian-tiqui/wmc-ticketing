@@ -183,7 +183,14 @@ type TicketTabs = {
   component: ReactNode;
 };
 
+type SummaryCardType = {
+  icon: string;
+  summary: string;
+  details: string;
+};
+
 export type {
+  SummaryCardType,
   TicketTabs,
   Activity,
   ServiceReport,

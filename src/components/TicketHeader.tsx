@@ -1,20 +1,27 @@
-import React from "react";
+import React, { useState } from "react";
 import { Ticket } from "../types/types";
 import { useNavigate } from "react-router-dom";
 import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
+import TicketSettingsDialog from "./TicketSettingsDialog";
 
 interface Props {
   ticket: Ticket;
 }
 
 const TicketHeader: React.FC<Props> = ({ ticket }) => {
+  const [visible, setVisible] = useState<boolean>(false);
   const navigate = useNavigate();
 
   return (
     <header className="mb-4">
-      <div className="flex w-full gap-1 px-8 pt-6 font-mono text-gray-400">
+      <TicketSettingsDialog
+        setVisible={setVisible}
+        visible={visible}
+        ticket={ticket}
+      />
+      <div className="flex w-full gap-1 px-4 pt-6 font-mono text-gray-400">
         <h4
           className="cursor-pointer hover:underline"
           onClick={() => navigate("/ticket")}
@@ -29,7 +36,7 @@ const TicketHeader: React.FC<Props> = ({ ticket }) => {
           {ticket.title}
         </h4>
       </div>
-      <div className="flex items-center w-full gap-3 px-8 pt-3">
+      <div className="flex items-center justify-between w-full gap-3 px-4 pt-3">
         <div className="flex items-center gap-3">
           <Avatar
             label={ticket.id.toString()}
@@ -38,9 +45,12 @@ const TicketHeader: React.FC<Props> = ({ ticket }) => {
           <h4 className="text-xl font-medium ">{ticket.title}</h4>
         </div>
         <Button
-          icon={PrimeIcons.ELLIPSIS_H}
+          icon={PrimeIcons.COG}
           severity="contrast"
           className="w-10 h-10 rounded-full bg-inherit"
+          onClick={() => {
+            if (!visible) setVisible(true);
+          }}
         />
       </div>
     </header>

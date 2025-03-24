@@ -1,13 +1,18 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PageTemplate from "../templates/PageTemplate";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { URI } from "../@utils/enums/enum";
 import TicketHeader from "../components/TicketHeader";
 import TicketTab from "../components/TicketTab";
+import { useEffect } from "react";
+import useUserDataStore from "../@utils/store/userDataStore";
+import roleIncludes from "../@utils/functions/rolesIncludes";
 
 const TicketPage = () => {
   const param = useParams();
+  const navigate = useNavigate();
+  const { user } = useUserDataStore();
 
   const fetchTicket = async (ticketId: number) => {
     try {
@@ -29,7 +34,6 @@ const TicketPage = () => {
     isLoading,
     error,
     isError,
-    refetch,
   } = useQuery({
     queryKey: [`ticket-${param.ticketId}`],
     queryFn: () => {
@@ -41,6 +45,16 @@ const TicketPage = () => {
     enabled: !!param.ticketId,
     retry: false,
   });
+
+  useEffect(() => {
+    if (
+      !roleIncludes(user, "admin") &&
+      ticketData &&
+      ticketData.ticket.issuerId !== user?.sub
+    ) {
+      navigate("/unauthorized");
+    }
+  }, [user, ticketData, navigate]);
 
   if (isLoading) return <p>Loading ticket...</p>;
 

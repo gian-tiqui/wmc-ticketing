@@ -9,13 +9,20 @@ import { useState } from "react";
 import { Query } from "../types/types";
 import { getTickets } from "../@utils/services/ticketService";
 import TicketsTable from "../components/TicketsTable";
+import useUserDataStore from "../@utils/store/userDataStore";
+import roleIncludes from "../@utils/functions/rolesIncludes";
+import { getUserTicketsById } from "../@utils/services/userService";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
+  const { user } = useUserDataStore();
   const [query] = useState<Query>({ search: "" });
   const { data: newTicketsData } = useQuery({
     queryKey: [`new-tickets-${JSON.stringify({ ...query, statusId: 1 })}`],
-    queryFn: () => getTickets({ ...query, statusId: 1 }),
+    queryFn: () =>
+      roleIncludes(user, "admin")
+        ? getTickets({ ...query, statusId: 1 })
+        : getUserTicketsById(user?.sub, query),
   });
 
   return (

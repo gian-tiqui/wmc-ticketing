@@ -1,62 +1,81 @@
 import { PrimeIcons } from "primereact/api";
-import { InputTextarea } from "primereact/inputtextarea";
 import React from "react";
-import RequestorDetails from "./RequestorDetails";
-import { Ticket } from "../types/types";
+import RequestDetails from "./RequestDetails";
+import { SummaryCardType, Ticket } from "../types/types";
+import SummaryItem from "./SummaryItem";
 
 interface Props {
   ticket: Ticket;
 }
 
 const TicketSummary: React.FC<Props> = ({ ticket }) => {
+  const cards: SummaryCardType[] = [
+    {
+      details: `Status: ${ticket.status.type}`,
+      summary: "",
+      icon: PrimeIcons.CHECK_CIRCLE,
+    },
+    {
+      details: `Priority Level: ${ticket.priorityLevel.name}`,
+      summary: "",
+      icon: PrimeIcons.INFO_CIRCLE,
+    },
+    {
+      details: `${ticket.createdAt.split(" at ")[0]}`,
+      summary: "Date Requested",
+      icon: PrimeIcons.CALENDAR,
+    },
+    {
+      details: `${ticket.createdAt.split(" at ")[1]}`,
+      summary: "Time Requested",
+      icon: PrimeIcons.CLOCK,
+    },
+    {
+      details: `${
+        ticket.acknowledgedAt
+          ? ticket.acknowledgedAt.split(" at ")[0]
+          : "Unacknowledged yet"
+      }`,
+      summary: "Date Acknowledged",
+      icon: PrimeIcons.CALENDAR,
+    },
+    {
+      details: `${
+        ticket.acknowledgedAt
+          ? ticket.acknowledgedAt.split(" at ")[1]
+          : "Unacknowledged yet"
+      }`,
+      summary: "Time Acknowledged",
+      icon: PrimeIcons.CLOCK,
+    },
+  ];
+
   return (
     <div className="grid grid-cols-2 gap-4">
       <div className="grid grid-cols-1 gap-4">
         <div className="grid grid-cols-2 gap-4">
-          <div className="flex w-full h-20 rounded-lg shadow h-18 hover:shadow-blue-900 bg-slate-900">
+          <div className="flex w-full h-20 col-span-2 rounded-lg shadow h-18 hover:shadow-blue-900 bg-slate-900">
             <div className="w-5 h-full bg-blue-500 rounded-s-lg"></div>
             <div className="flex flex-col justify-between p-4">
-              <i className={PrimeIcons.CHECK_CIRCLE}></i>
-              <p className="font-medium">Status: {ticket.status.type}</p>
+              <div className="flex items-center gap-2">
+                <i className={PrimeIcons.ALIGN_CENTER}></i>
+                <p className="text-sm">{"Category"}</p>
+              </div>{" "}
+              <p className="text-sm font-medium">{ticket.category.name}</p>
             </div>
           </div>
-          <div className="flex w-full h-20 rounded-lg shadow h-18 hover:shadow-blue-900 bg-slate-900">
-            <div className="w-5 h-full bg-blue-500 rounded-s-lg"></div>
-            <div className="flex flex-col justify-between p-4">
-              <i className={PrimeIcons.CALENDAR}></i>
-              <p className="font-medium">Status: {ticket.status.type}</p>
-            </div>
-          </div>{" "}
-          <div className="flex w-full h-20 rounded-lg shadow h-18 hover:shadow-blue-900 bg-slate-900">
-            <div className="w-5 h-full bg-blue-500 rounded-s-lg"></div>
-            <div className="flex flex-col justify-between p-4">
-              <i className={PrimeIcons.CHECK_CIRCLE}></i>
-              <p className="font-medium">Status: {ticket.status.type}</p>
-            </div>
-          </div>{" "}
-          <div className="flex w-full h-20 rounded-lg shadow h-18 hover:shadow-blue-900 bg-slate-900">
-            <div className="w-5 h-full bg-blue-500 rounded-s-lg"></div>
-            <div className="flex flex-col justify-between p-4">
-              <i className={PrimeIcons.CHECK_CIRCLE}></i>
-              <p className="font-medium">Status: {ticket.status.type}</p>
-            </div>
-          </div>{" "}
-        </div>
-        <div className="h-48 rounded-lg shadow bg-slate-900 hover:shadow-blue-900">
-          <div className="h-[5%] bg-blue-500 rounded-t-lg"></div>
-          <h4 className="flex items-center gap-2 mx-4 mt-2 mb-4 text-xl font-medium">
-            <i className={`${PrimeIcons.INFO_CIRCLE} text-xl`}></i>
-            Ticket Description
-          </h4>
-          <InputTextarea
-            value={ticket.description}
-            className="w-[93%] mx-4 h-28 bg-slate-800 text-slate-100 disabled:opacity-100 disabled:text-slate-100"
-            disabled
-          />
+          {cards.map((card, index) => (
+            <SummaryItem
+              details={card.details}
+              icon={card.icon}
+              summary={card.summary}
+              key={index}
+            />
+          ))}
         </div>
       </div>
 
-      <RequestorDetails ticket={ticket} />
+      <RequestDetails ticket={ticket} />
     </div>
   );
 };
