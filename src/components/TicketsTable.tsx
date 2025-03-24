@@ -87,6 +87,16 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
           }
         ></Column>
         <Column
+          pt={{
+            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
+            sortIcon: { className: "text-slate-100" },
+          }}
+          className="text-slate-100"
+          header="Priority"
+          body={(rowData: Ticket) => <p>{rowData.priorityLevel.name}</p>}
+        ></Column>
+
+        <Column
           header="Action"
           pt={{
             headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
@@ -96,9 +106,9 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
           body={(rowData: Ticket) => (
             <Button
               icon={PrimeIcons.DIRECTIONS}
-              className="h-10 w-10 rounded-full"
+              className="w-10 h-10 rounded-full"
               onClick={() => {
-                navigate(`/tickets/${rowData.id}`);
+                navigate(`/ticket/${rowData.id}`);
               }}
             ></Button>
           )}

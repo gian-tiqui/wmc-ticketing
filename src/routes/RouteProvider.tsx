@@ -7,6 +7,12 @@ import LoginPage from "../pages/LoginPage";
 import TicketsPage from "../pages/TicketsPage";
 import ProtectedRoute from "./ProtectedRoute";
 import TicketPage from "../pages/TicketPage";
+import DashboardPage from "../pages/DashboardPage";
+import UsersPage from "../pages/UsersPage";
+import CategoriesPage from "../pages/CategoriesPage";
+import ReportsPage from "../pages/ReportsPage";
+import UnauthorizedPage from "../pages/UnauthorizedPage";
+import DepartmentsPage from "../pages/DepartmentsPage";
 
 const RouteProvider = () => {
   const routes: RouteType[] = [
@@ -31,7 +37,7 @@ const RouteProvider = () => {
     {
       name: "Tickets Page",
       hidden: false,
-      path: "/tickets",
+      path: "/ticket",
       element: (
         <ProtectedRoute allowedRoles={["user", "admin"]}>
           <TicketsPage />
@@ -41,12 +47,68 @@ const RouteProvider = () => {
     {
       name: "Ticket Page",
       hidden: false,
-      path: "tickets/:ticketId",
+      path: "ticket/:ticketId",
       element: (
         <ProtectedRoute allowedRoles={["user", "admin"]}>
           <TicketPage />
         </ProtectedRoute>
       ),
+    },
+    {
+      name: "Dashboard Page",
+      hidden: true,
+      path: "dashboard",
+      element: (
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <DashboardPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      name: "Users Page",
+      hidden: true,
+      path: "users",
+      element: (
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <UsersPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      name: "Departments Page",
+      hidden: true,
+      path: "departments",
+      element: (
+        <ProtectedRoute allowedRoles={["admin"]}>
+          <DepartmentsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      name: "Categories Page",
+      hidden: true,
+      path: "categories",
+      element: (
+        <ProtectedRoute allowedRoles={["admin", "user"]}>
+          <CategoriesPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      name: "Reports Page",
+      hidden: true,
+      path: "reports",
+      element: (
+        <ProtectedRoute allowedRoles={["admin", "user"]}>
+          <ReportsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      name: "Unauthorized Page",
+      hidden: true,
+      path: "unauthorized",
+      element: <UnauthorizedPage />,
     },
   ];
 

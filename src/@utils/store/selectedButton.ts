@@ -6,7 +6,7 @@ interface State {
 }
 
 const useSelectedButtonStore = create<State>((set) => ({
-  id: "tickets",
+  id: "dashboard",
   setId: (id: string) => set({ id }),
 }));
 

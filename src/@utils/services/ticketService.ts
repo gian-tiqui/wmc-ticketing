@@ -10,7 +10,7 @@ const getTickets = (params: Query) => {
   return apiClient.get(`${URI.API_URI}/api/v1/ticket`, { params });
 };
 
-const getTicketById = (ticketId?: number) => {
+const getTicketById = (ticketId: number) => {
   return apiClient.get(`${URI.API_URI}/api/v1/ticket/${ticketId}`);
 };
 

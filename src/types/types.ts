@@ -12,6 +12,7 @@ type ButtonType = {
   name: string;
   icon: string;
   path: string;
+  allowedRoles: string[];
 };
 
 type UserData = {
@@ -177,7 +178,13 @@ type Comment = {
   ticket: Ticket;
 };
 
+type TicketTabs = {
+  name: string;
+  component: ReactNode;
+};
+
 export type {
+  TicketTabs,
   Activity,
   ServiceReport,
   ImageLocation,

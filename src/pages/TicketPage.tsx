@@ -1,42 +1,62 @@
 import { useParams } from "react-router-dom";
 import PageTemplate from "../templates/PageTemplate";
 import { useQuery } from "@tanstack/react-query";
-import { getTicketById } from "../@utils/services/ticketService";
-import { useEffect } from "react";
+import axios from "axios";
+import { URI } from "../@utils/enums/enum";
+import TicketHeader from "../components/TicketHeader";
+import TicketTab from "../components/TicketTab";
 
 const TicketPage = () => {
   const param = useParams();
+
+  const fetchTicket = async (ticketId: number) => {
+    try {
+      const response = await axios.get(
+        `${URI.API_URI}/api/v1/ticket/${ticketId}`
+      );
+      return response.data;
+    } catch (err: unknown) {
+      const error = err as { response: { status: number } };
+      if (error.response && error.response.status === 404) {
+        throw new Error("NOT_FOUND");
+      }
+      throw new Error("ERROR_LOADING");
+    }
+  };
 
   const {
     data: ticketData,
     isLoading,
     error,
     isError,
+    refetch,
   } = useQuery({
     queryKey: [`ticket-${param.ticketId}`],
     queryFn: () => {
       if (!param.ticketId) {
         throw new Error("Ticket ID is undefined");
       }
-      return getTicketById(parseInt(param.ticketId, 10));
+      return fetchTicket(+param.ticketId);
     },
     enabled: !!param.ticketId,
+    retry: false,
   });
-
-  useEffect(() => {
-    console.log(ticketData?.data.status);
-  }, [ticketData]);
 
   if (isLoading) return <p>Loading ticket...</p>;
 
-  if (ticketData?.status === 404) return <p>Ticket not found</p>;
-
-  if (isError) return <p>Error loading ticket: {error.message}</p>;
+  if (isError) {
+    if (error.message === "NOT_FOUND") {
+      return <p>Ticket not found</p>;
+    }
+    return <p>Error loading ticket. Please try again later.</p>;
+  }
 
   return (
     <PageTemplate>
-      <h1>Ticket ID: {param.ticketId}</h1>
-      {/* Render ticket data here */}
+      <div className="w-full h-full">
+        <TicketHeader ticket={ticketData.ticket} />
+        <TicketTab ticket={ticketData.ticket} />
+      </div>
     </PageTemplate>
   );
 };

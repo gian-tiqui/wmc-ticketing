@@ -3,24 +3,62 @@ import { Button } from "primereact/button";
 import { ButtonType } from "../types/types";
 import { useNavigate } from "react-router-dom";
 import useSelectedButtonStore from "../@utils/store/selectedButton";
+import useUserDataStore from "../@utils/store/userDataStore";
+import isAuthorized from "../@utils/functions/isAuthorized"; // Import authorization function
 
 const CrmUserSidebarSection = () => {
   const navigate = useNavigate();
+  const { user } = useUserDataStore();
   const { id, setId } = useSelectedButtonStore();
-  const buttons: ButtonType[] = [
+
+  const allButtons: (ButtonType & { allowedRoles: string[] })[] = [
+    {
+      id: "dashboard",
+      name: "Dashboard",
+      icon: "pi pi-wave-pulse",
+      path: "/dashboard",
+      allowedRoles: ["admin"],
+    },
     {
       id: "tickets",
       name: "Tickets",
       icon: PrimeIcons.TICKET,
-      path: "/tickets",
+      path: "/ticket",
+      allowedRoles: ["user", "admin"],
     },
     {
-      id: "user",
+      id: "users",
       name: "Users",
       icon: PrimeIcons.USERS,
-      path: "/tickets",
+      path: "/users",
+      allowedRoles: ["admin"],
+    },
+    {
+      id: "departments",
+      name: "Departments",
+      icon: PrimeIcons.BUILDING,
+      path: "/departments",
+      allowedRoles: ["admin"],
+    },
+    {
+      id: "categories",
+      name: "Categories",
+      icon: PrimeIcons.COG,
+      path: "/categories",
+      allowedRoles: ["admin", "user"],
+    },
+    {
+      id: "reports",
+      name: "Reports",
+      icon: PrimeIcons.BOOK,
+      path: "/reports",
+      allowedRoles: ["admin", "user"],
     },
   ];
+
+  const buttons: ButtonType[] = allButtons.filter((button) =>
+    isAuthorized(user, button.allowedRoles)
+  );
 
   return (
     <section className="flex-1 px-5 overflow-hidden">

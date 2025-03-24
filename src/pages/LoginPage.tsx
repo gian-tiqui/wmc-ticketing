@@ -18,6 +18,7 @@ import useUserDataStore from "../@utils/store/userDataStore";
 import extractUserData from "../@utils/functions/extractUserData";
 import axios from "axios";
 import CustomToast from "../components/CustomToast";
+import navigateBasedOnRole from "../@utils/functions/navigateBasedOnRole";
 
 interface FormFields {
   username: string;
@@ -37,7 +38,7 @@ const LoginPage = () => {
 
   useEffect(() => {
     if (isAuthenticated()) {
-      navigate("/tickets");
+      if (user) navigateBasedOnRole(user, navigate);
       return;
     }
   }, [navigate, user]);
@@ -56,13 +57,11 @@ const LoginPage = () => {
           localStorage.setItem(Namespace.BASE, accessToken);
 
           const { exp } = jwtDecode(refreshToken);
-
           const currentTimestamp = Math.floor(Date.now() / 1000);
 
           if (!exp) return;
 
           const expires = Math.floor((exp - currentTimestamp) / (60 * 60 * 24));
-
           Cookies.set(Namespace.BASE, refreshToken, { expires });
 
           const userData = extractUserData();
@@ -70,9 +69,8 @@ const LoginPage = () => {
           if (!userData) {
             toastRef.current?.show({
               severity: "error",
-              summary: "There was a problem in ",
+              summary: "Failed to extract user data",
             });
-
             return;
           }
 
@@ -84,30 +82,10 @@ const LoginPage = () => {
             summary: "Login Successful",
           });
 
-          navigate("/tickets");
+          navigateBasedOnRole(userData, navigate);
         }
       }
     } catch (error) {
-      const {
-        status,
-        response: {
-          data: { message },
-        },
-      } = error as {
-        response: { data: { message: string; error: string } };
-        status: number;
-      };
-
-      if (status === 429) {
-        toastRef.current?.show({
-          severity: "error",
-          summary: "Please wait",
-          detail: message,
-        });
-
-        return;
-      }
-
       handleLoginError(error, toastRef);
     }
   };
