@@ -7,6 +7,14 @@ type Route = {
   hidden: boolean;
 };
 
+type ButtonType = {
+  id: string;
+  name: string;
+  icon: string;
+  path: string;
+  allowedRoles: string[];
+};
+
 type UserData = {
   sub: number;
   firstName: string;
@@ -15,6 +23,7 @@ type UserData = {
   deptId: number;
   deptName: string;
   deptCode: string;
+  roles: { name: string }[];
 };
 
 type Query = {
@@ -30,9 +39,12 @@ type Query = {
   level?: number;
   sortOrder?: string;
   isDeleted?: boolean;
-  roomImageDeleted?: boolean;
-  isIncomplete?: boolean;
-  startingPoint?: number;
+  statusId?: number;
+};
+
+type Category = {
+  id: number;
+  name: string;
 };
 
 type User = {
@@ -40,6 +52,8 @@ type User = {
   middleName?: string;
   lastName: string;
   deptId: number;
+
+  department: Department;
 };
 
 type ChangePassword = {
@@ -73,7 +87,116 @@ type Panel = {
   icon: string;
 };
 
+type PriorityLevel = {
+  id: string;
+  name: string;
+};
+
+type CreateTicket = {
+  deptId: number;
+  categoryId: number;
+  priorityLevelId: number;
+  title: string;
+  description: string;
+};
+
+type Status = {
+  id: number;
+  type: string;
+  createdAt: string;
+  updatedAt: string;
+
+  tickets: Ticket[];
+};
+
+type Ticket = {
+  id: number;
+  title: string;
+  description?: string;
+  createdAt: string;
+  updatedAt: string;
+  acknowledgedAt: string;
+
+  issuerId: number;
+  issuer: User;
+  assignedUserId: number;
+  assignedUser: User;
+  statusId: number;
+  status: Status;
+  deptId: number;
+  department: Department;
+  categoryId: number;
+  category: Category;
+  priorityLevelId: number;
+  priorityLevel: PriorityLevel;
+
+  serviceReports: ServiceReport[];
+  comments: Comment[];
+  activities: Activity[];
+};
+
+type Activity = {
+  id: number;
+  activity: string;
+  createdAt: string;
+  updatedAt: string;
+
+  ticketId: number;
+  ticket: Ticket;
+};
+
+type ServiceReport = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+
+  ticketId: number;
+  ticket: Ticket;
+
+  imageLocation: ImageLocation[];
+};
+
+type ImageLocation = {
+  id: number;
+  path: string;
+  createdAt: string;
+  updatedAt: string;
+
+  serviceReportId: number;
+  serviceReport: ServiceReport;
+};
+
+type Comment = {
+  id: number;
+  comment: string;
+  createdAt: string;
+  updatedAt: string;
+
+  userId: number;
+  user: User;
+  ticketId: number;
+  ticket: Ticket;
+};
+
+type TicketTabs = {
+  name: string;
+  component: ReactNode;
+};
+
+type SummaryCardType = {
+  icon: string;
+  summary: string;
+  details: string;
+};
+
 export type {
+  SummaryCardType,
+  TicketTabs,
+  Activity,
+  ServiceReport,
+  ImageLocation,
+  Comment,
+  Ticket,
   Panel,
   Route,
   UserData,
@@ -84,4 +207,8 @@ export type {
   Department,
   Secrets,
   ForgotPassword,
+  ButtonType,
+  Category,
+  PriorityLevel,
+  CreateTicket,
 };

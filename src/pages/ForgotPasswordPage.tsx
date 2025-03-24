@@ -12,7 +12,7 @@ import { Dropdown, DropdownProps } from "primereact/dropdown";
 import { ForgotPassword, Question } from "../types/types";
 import { useForm } from "react-hook-form";
 import { getSecretQuestions } from "../@utils/services/secetQuestionService";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { forgotPassword } from "../@utils/services/authService";
 import handleErrors from "../@utils/functions/handleErrors";
 import ChangePasswordDialog from "../components/ChangePasswordDialog";
@@ -104,20 +104,7 @@ const ForgotPasswordPage = () => {
         visible={changePasswordDialogVisible}
         onHide={setChangePasswordDialogVisible}
       />
-      <ConfirmDialog
-        pt={{
-          header: {
-            className:
-              "bg-slate-900 text-slate-100 border-x border-t border-slate-700",
-          },
-          content: {
-            className: "bg-slate-900 text-slate-100 border-x border-slate-700",
-          },
-          footer: {
-            className: "bg-slate-900 border-x border-b border-slate-700",
-          },
-        }}
-      />
+
       <CustomToast ref={toastRef} />
       <main className="grid h-full place-content-center">
         <form

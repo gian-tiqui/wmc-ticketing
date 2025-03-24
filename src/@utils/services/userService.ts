@@ -1,4 +1,4 @@
-import { ChangePassword, User } from "../../types/types";
+import { ChangePassword, Query, User } from "../../types/types";
 import { URI } from "../enums/enum";
 import apiClient from "../http-common/apiClient";
 
@@ -48,6 +48,15 @@ const verifyPasswordById = async (userId: number, password: string) => {
   );
 };
 
+const getUserTicketsById = async (
+  userId: number | undefined,
+  params: Query
+) => {
+  return apiClient.get(`${URI.API_URI}/api/v1/user/${userId}/ticket`, {
+    params,
+  });
+};
+
 export {
   getUser,
   updateUserById,
@@ -55,4 +64,5 @@ export {
   getUserSecret,
   updateUserSecretById,
   verifyPasswordById,
+  getUserTicketsById,
 };

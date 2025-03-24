@@ -4,7 +4,7 @@ import { Namespace, URI } from "../@utils/enums/enum";
 import Cookies from "js-cookie";
 import useUserDataStore from "../@utils/store/userDataStore";
 import apiClient from "../@utils/http-common/apiClient";
-import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 import { useNavigate } from "react-router-dom";
 import useLoggedInStore from "../@utils/store/loggedIn";
 import { useEffect, useRef, useState } from "react";
@@ -128,21 +128,6 @@ const CrmSidebarFooter = () => {
         </div>
       </Dialog>
       <footer className="flex flex-col gap-2 mx-5">
-        <ConfirmDialog
-          pt={{
-            header: {
-              className:
-                "bg-slate-900 text-slate-100 border-x border-t border-slate-700",
-            },
-            content: {
-              className:
-                "bg-slate-900 text-slate-100 border-x border-slate-700",
-            },
-            footer: {
-              className: "bg-slate-900 border-x border-b border-slate-700",
-            },
-          }}
-        />
         <SettingsDialog
           visible={settingsDialogVisible}
           setVisible={setSettingsDialogVisible}

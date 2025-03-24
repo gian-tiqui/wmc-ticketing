@@ -13,7 +13,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     if (isLoggedIn) {
-      console.log("user is logged in");
+      navigate("/ticket");
     }
   }, [isLoggedIn, navigate, user]);
 
