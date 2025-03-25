@@ -6,7 +6,7 @@ import { Avatar } from "primereact/avatar";
 import NewTicketButton from "../components/NewTicketButton";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Query } from "../types/types";
+import { Query, TicketsPageTabItems } from "../types/types";
 import { getTickets } from "../@utils/services/ticketService";
 import TicketsTable from "../components/TicketsTable";
 import useUserDataStore from "../@utils/store/userDataStore";
@@ -24,6 +24,93 @@ const TicketsPage = () => {
         ? getTickets({ ...query, statusId: 1 })
         : getUserTicketsById(user?.sub, query),
   });
+
+  const tabs: TicketsPageTabItems[] = [
+    {
+      icon: PrimeIcons.PLUS,
+      header: (
+        <div className="flex items-center">
+          <p>New</p>
+          <Avatar
+            label={newTicketsData?.data.count}
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <TicketsTable tickets={newTicketsData?.data.tickets} />,
+    },
+    {
+      icon: PrimeIcons.CHECK,
+      header: (
+        <div className="flex items-center">
+          <p>Acknowledged</p>
+          <Avatar
+            label="0"
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <div></div>,
+    },
+    {
+      icon: PrimeIcons.USER,
+      header: (
+        <div className="flex items-center">
+          <p>Assigned</p>
+          <Avatar
+            label="0"
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <div></div>,
+    },
+    {
+      icon: PrimeIcons.USER_PLUS,
+      header: (
+        <div className="flex items-center">
+          <p>Escalated</p>
+          <Avatar
+            label="0"
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <div></div>,
+    },
+    {
+      icon: PrimeIcons.USER_EDIT,
+      header: (
+        <div className="flex items-center">
+          <p>Resolved</p>
+          <Avatar
+            label="0"
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <div></div>,
+    },
+    {
+      icon: PrimeIcons.CHECK_SQUARE,
+      header: (
+        <div className="flex items-center">
+          <p>Closed</p>
+          <Avatar
+            label="0"
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <div></div>,
+    },
+  ];
 
   return (
     <PageTemplate>
@@ -44,92 +131,15 @@ const TicketsPage = () => {
             tab: { className: "w-full bg-inherit" },
           }}
         >
-          <TabPanel
-            pt={{ headerAction: { className: "bg-inherit" } }}
-            leftIcon={`${PrimeIcons.PLUS} me-2`}
-            header={
-              <div className="flex items-center">
-                <p>New</p>
-                <Avatar
-                  label={newTicketsData?.data.count}
-                  shape="circle"
-                  className="w-6 h-6 text-white bg-blue-400 ms-2"
-                />
-              </div>
-            }
-          >
-            <TicketsTable tickets={newTicketsData?.data.tickets} />
-          </TabPanel>
-          <TabPanel
-            pt={{ headerAction: { className: "bg-inherit" } }}
-            leftIcon={`${PrimeIcons.EYE} me-2`}
-            header={
-              <div className="flex items-center">
-                <p>Viewed</p>
-                <Avatar
-                  label="0"
-                  shape="circle"
-                  className="w-6 h-6 text-white bg-blue-400 ms-2"
-                />
-              </div>
-            }
-          ></TabPanel>
-          <TabPanel
-            pt={{ headerAction: { className: "bg-inherit" } }}
-            leftIcon={`${PrimeIcons.USER_PLUS} me-2`}
-            header={
-              <div className="flex items-center">
-                <p>Assigned</p>
-                <Avatar
-                  label="0"
-                  shape="circle"
-                  className="w-6 h-6 text-white bg-blue-400 ms-2"
-                />
-              </div>
-            }
-          ></TabPanel>
-          <TabPanel
-            pt={{ headerAction: { className: "bg-inherit" } }}
-            leftIcon={`${PrimeIcons.ALIGN_CENTER} me-2`}
-            header={
-              <div className="flex items-center">
-                <p>Acknowledged</p>
-                <Avatar
-                  label="0"
-                  shape="circle"
-                  className="w-6 h-6 text-white bg-blue-400 ms-2"
-                />
-              </div>
-            }
-          ></TabPanel>
-          <TabPanel
-            pt={{ headerAction: { className: "bg-inherit" } }}
-            leftIcon={`${PrimeIcons.CHECK_CIRCLE} me-2`}
-            header={
-              <div className="flex items-center">
-                <p>Resolved</p>
-                <Avatar
-                  label="0"
-                  shape="circle"
-                  className="w-6 h-6 text-white bg-blue-400 ms-2"
-                />
-              </div>
-            }
-          ></TabPanel>
-          <TabPanel
-            pt={{ headerAction: { className: "bg-inherit" } }}
-            leftIcon={`${PrimeIcons.LIST} me-2`}
-            header={
-              <div className="flex items-center">
-                <p>Closed</p>
-                <Avatar
-                  label="0"
-                  shape="circle"
-                  className="w-6 h-6 text-white bg-blue-400 ms-2"
-                />
-              </div>
-            }
-          ></TabPanel>
+          {tabs.map((tab) => (
+            <TabPanel
+              pt={{ headerAction: { className: "bg-inherit" } }}
+              header={tab.header}
+              leftIcon={`${tab.icon} me-2`}
+            >
+              {tab.body}
+            </TabPanel>
+          ))}
         </TabView>
       </div>
     </PageTemplate>

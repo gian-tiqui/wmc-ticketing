@@ -6,12 +6,16 @@ import { ScrollPanel } from "primereact/scrollpanel";
 import CommentBar from "./CommentBar";
 import { ContextMenu } from "primereact/contextmenu";
 import { MenuItem } from "primereact/menuitem";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 
 interface Props {
   ticket: Ticket;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<Ticket, Error>>;
 }
 
-const TicketComments: React.FC<Props> = ({ ticket }) => {
+const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
   const contextMenu = useRef<ContextMenu>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -55,35 +59,46 @@ const TicketComments: React.FC<Props> = ({ ticket }) => {
           </div>
         </div>
 
-        <div>
+        {/* <div>
           {Array(5)
             .fill(0)
             .map((_, index) => (
               <div
-                className="flex gap-2 p-2 mb-6 rounded-md cursor-pointer hover:bg-gray-700"
+                className="flex gap-2 p-2 mb-6 rounded-md cursor-pointer "
                 key={index}
                 onContextMenu={(e) => onRightClick(e, index)}
               >
                 <Avatar label="Se" className="w-12 h-12 bg-blue-500" />
-                <div>
+                <div className="w-full">
                   <p className="font-medium text-slate-100">
                     Sender{" "}
                     <span className="text-xs font-light ms-1">
                       Today at 3:23 pm
                     </span>
                   </p>
-                  <p>hi po</p>
-                  <p>hi po</p>
-                  <p>hi po</p>
-                  <p>hi po</p>
-                  <p>hi po</p>
+                  {Array(5)
+                    .fill(0)
+                    .map((_, index) => (
+                      <pre
+                        key={index}
+                        className="w-full hover:bg-gray-700"
+                        onContextMenu={(e) => onRightClick(e, index)}
+                      >
+                        hi
+                      </pre>
+                    ))}
                 </div>
               </div>
             ))}
+        </div> */}
+        <div>
+          {ticket.comments.map((comment) => (
+            <p key={comment.id}>{comment.comment}</p>
+          ))}
         </div>
       </ScrollPanel>
 
-      <CommentBar />
+      <CommentBar ticketId={ticket.id} refetch={refetch} />
 
       <ContextMenu
         model={menuItems}
@@ -93,7 +108,6 @@ const TicketComments: React.FC<Props> = ({ ticket }) => {
           menuitem: { className: "hover:bg-slate-800" },
           label: { className: "text-slate-100" },
           icon: { className: "text-slate-100" },
-          content: { className: "hover:bg-slate-800" },
         }}
       />
     </div>

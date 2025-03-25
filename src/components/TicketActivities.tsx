@@ -6,7 +6,7 @@ interface Props {
 }
 
 const TicketActivities: React.FC<Props> = ({ ticket }) => {
-  return <div>Activities</div>;
+  return <div></div>;
 };
 
 export default TicketActivities;
