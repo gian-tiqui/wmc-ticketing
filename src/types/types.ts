@@ -179,6 +179,7 @@ type Comment = {
 };
 
 type TicketTabs = {
+  icon: string;
   name: string;
   component: ReactNode;
 };
@@ -189,7 +190,20 @@ type SummaryCardType = {
   details: string;
 };
 
+type TicketsPageTabItems = {
+  icon: string;
+  header: ReactNode;
+  body: ReactNode;
+};
+
+type CreateComment = {
+  comment: string;
+  ticketId: number;
+};
+
 export type {
+  CreateComment,
+  TicketsPageTabItems,
   SummaryCardType,
   TicketTabs,
   Activity,

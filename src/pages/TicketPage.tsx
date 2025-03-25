@@ -8,6 +8,7 @@ import TicketTab from "../components/TicketTab";
 import { useEffect } from "react";
 import useUserDataStore from "../@utils/store/userDataStore";
 import roleIncludes from "../@utils/functions/rolesIncludes";
+import TicketSkeleton from "../components/TicketSkeleton";
 
 const TicketPage = () => {
   const param = useParams();
@@ -34,6 +35,7 @@ const TicketPage = () => {
     isLoading,
     error,
     isError,
+    refetch,
   } = useQuery({
     queryKey: [`ticket-${param.ticketId}`],
     queryFn: () => {
@@ -56,7 +58,7 @@ const TicketPage = () => {
     }
   }, [user, ticketData, navigate]);
 
-  if (isLoading) return <p>Loading ticket...</p>;
+  if (isLoading) return <TicketSkeleton />;
 
   if (isError) {
     if (error.message === "NOT_FOUND") {
@@ -69,7 +71,7 @@ const TicketPage = () => {
     <PageTemplate>
       <div className="w-full h-full">
         <TicketHeader ticket={ticketData.ticket} />
-        <TicketTab ticket={ticketData.ticket} />
+        <TicketTab ticket={ticketData.ticket} refetch={refetch} />
       </div>
     </PageTemplate>
   );

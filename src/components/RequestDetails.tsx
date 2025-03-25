@@ -18,10 +18,10 @@ const RequestDetails: React.FC<Props> = ({ ticket }) => {
           <i className={`${PrimeIcons.INFO_CIRCLE}`}></i>Request Details
         </h4>
         <div className="flex items-center justify-between">
-          <UserDetails user={ticket.issuer} />
+          <UserDetails user={ticket.issuer} mode="normal" />
 
           <i className={`${PrimeIcons.ARROW_CIRCLE_RIGHT} text-xl`}></i>
-          <UserDetails user={ticket.assignedUser} />
+          <UserDetails user={ticket.assignedUser} mode="normal" />
         </div>
       </div>
 
