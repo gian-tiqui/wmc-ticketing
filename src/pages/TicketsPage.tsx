@@ -17,7 +17,7 @@ const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
   const { user } = useUserDataStore();
   const [query] = useState<Query>({ search: "" });
-  const { data: newTicketsData } = useQuery({
+  const { data: newTicketsData, refetch } = useQuery({
     queryKey: [`new-tickets-${JSON.stringify({ ...query, statusId: 1 })}`],
     queryFn: () =>
       roleIncludes(user, "admin")
@@ -119,7 +119,7 @@ const TicketsPage = () => {
           <h4 className={` text-2xl font-medium ${!isExpanded && "ms-14"} `}>
             <i className={`${PrimeIcons.TICKET} text-xl rotate-90`}></i> Tickets
           </h4>
-          <NewTicketButton />
+          <NewTicketButton refetch={refetch} />
         </div>
 
         <TabView

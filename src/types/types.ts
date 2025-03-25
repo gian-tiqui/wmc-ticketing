@@ -138,6 +138,7 @@ type Ticket = {
 type Activity = {
   id: number;
   activity: string;
+  title: string;
   createdAt: string;
   updatedAt: string;
 
@@ -201,7 +202,12 @@ type CreateComment = {
   ticketId: number;
 };
 
+type UpdateComment = {
+  comment: string;
+};
+
 export type {
+  UpdateComment,
   CreateComment,
   TicketsPageTabItems,
   SummaryCardType,

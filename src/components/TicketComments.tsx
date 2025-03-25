@@ -1,12 +1,15 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Ticket } from "../types/types";
 import { Avatar } from "primereact/avatar";
 import { Divider } from "primereact/divider";
-import { ScrollPanel } from "primereact/scrollpanel";
 import CommentBar from "./CommentBar";
 import { ContextMenu } from "primereact/contextmenu";
 import { MenuItem } from "primereact/menuitem";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import Comment from "./Comment";
+import { deleteCommentById } from "../@utils/services/commentService";
+import { confirmDialog } from "primereact/confirmdialog";
+import UpdateCommentDialog from "./UpdateCommentDialog";
 
 interface Props {
   ticket: Ticket;
@@ -17,7 +20,18 @@ interface Props {
 
 const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
   const contextMenu = useRef<ContextMenu>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
+  const [visible, setVisible] = useState<boolean>(false);
+
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current;
+    if (scrollContainer) {
+      requestAnimationFrame(() => {
+        scrollContainer.scrollTop = scrollContainer.scrollHeight;
+      });
+    }
+  }, [ticket.comments]);
 
   const onRightClick = (event: React.MouseEvent, id: number) => {
     event.preventDefault();
@@ -27,22 +41,44 @@ const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
     }
   };
 
+  const deleteComment = (commentId: number | null) => {
+    confirmDialog({
+      header: "Delete this comment?",
+      defaultFocus: "reject",
+      accept: () => {
+        deleteCommentById(commentId).then((response) => {
+          if (response?.status === 200) {
+            refetch();
+          }
+        });
+      },
+    });
+  };
+
   const menuItems: MenuItem[] = [
     {
       label: "Edit",
       icon: "pi pi-pencil",
-      command: () => alert(`Edit comment ${selectedId}`),
+      command: () => setVisible(true),
     },
     {
       label: "Delete",
       icon: "pi pi-trash",
-      command: () => alert(`Delete comment ${selectedId}`),
+      command: () => deleteComment(selectedId),
     },
   ];
 
   return (
     <div>
-      <ScrollPanel style={{ width: "100%", height: "20rem" }} className="p-4">
+      <UpdateCommentDialog
+        commentId={selectedId}
+        visible={visible}
+        setVisible={setVisible}
+      />
+      <div
+        ref={scrollContainerRef}
+        className="w-full p-4 overflow-y-auto h-80 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
+      >
         <div>
           <Avatar
             label={ticket.id.toString()}
@@ -59,44 +95,16 @@ const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
           </div>
         </div>
 
-        {/* <div>
-          {Array(5)
-            .fill(0)
-            .map((_, index) => (
-              <div
-                className="flex gap-2 p-2 mb-6 rounded-md cursor-pointer "
-                key={index}
-                onContextMenu={(e) => onRightClick(e, index)}
-              >
-                <Avatar label="Se" className="w-12 h-12 bg-blue-500" />
-                <div className="w-full">
-                  <p className="font-medium text-slate-100">
-                    Sender{" "}
-                    <span className="text-xs font-light ms-1">
-                      Today at 3:23 pm
-                    </span>
-                  </p>
-                  {Array(5)
-                    .fill(0)
-                    .map((_, index) => (
-                      <pre
-                        key={index}
-                        className="w-full hover:bg-gray-700"
-                        onContextMenu={(e) => onRightClick(e, index)}
-                      >
-                        hi
-                      </pre>
-                    ))}
-                </div>
-              </div>
-            ))}
-        </div> */}
-        <div>
+        <div className="flex flex-col w-full gap-6">
           {ticket.comments.map((comment) => (
-            <p key={comment.id}>{comment.comment}</p>
+            <Comment
+              key={comment.id}
+              comment={comment}
+              onRightClick={onRightClick}
+            />
           ))}
         </div>
-      </ScrollPanel>
+      </div>
 
       <CommentBar ticketId={ticket.id} refetch={refetch} />
 

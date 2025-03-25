@@ -13,8 +13,13 @@ import {
   Department,
   PriorityLevel,
   Query,
+  Ticket,
 } from "../types/types";
-import { useQuery } from "@tanstack/react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useQuery,
+} from "@tanstack/react-query";
 import {
   getDepartmentCategoriesByDeptId,
   getDepartments,
@@ -37,9 +42,17 @@ interface Props {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   header?: ReactNode;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<Ticket[], Error>>;
 }
 
-const NewTicketDialog: React.FC<Props> = ({ visible, setVisible, header }) => {
+const NewTicketDialog: React.FC<Props> = ({
+  visible,
+  setVisible,
+  header,
+  refetch,
+}) => {
   const toastRef = useRef<Toast>(null);
   const {
     register,
@@ -109,6 +122,7 @@ const NewTicketDialog: React.FC<Props> = ({ visible, setVisible, header }) => {
             summary: "Success",
           });
         }
+        refetch();
         reset();
         setVisible(false);
         setSelectedCategory(undefined);

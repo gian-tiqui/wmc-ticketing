@@ -1,0 +1,59 @@
+import { Avatar } from "primereact/avatar";
+import React from "react";
+import { Comment as CommentType } from "../types/types";
+
+interface Props {
+  comment: CommentType;
+  onRightClick: (event: React.MouseEvent, id: number) => void;
+}
+
+const Comment: React.FC<Props> = ({ comment, onRightClick }) => {
+  const formatDate = (date: Date): string => {
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const dateStr = date.toDateString();
+    const todayStr = today.toDateString();
+    const yesterdayStr = yesterday.toDateString();
+
+    if (dateStr === todayStr) return "Today";
+    if (dateStr === yesterdayStr) return "Yesterday";
+
+    return date.toLocaleString("en-PH", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      timeZone: "Asia/Manila",
+    });
+  };
+
+  return (
+    <div key={comment.id} className="flex w-full gap-2">
+      <Avatar
+        label={comment.user.firstName[0] + comment.user.lastName[0]}
+        className="w-12 h-12 font-extrabold bg-blue-500"
+      />
+      <div className="w-full">
+        <p className="font-medium">
+          {`${comment.user.firstName} ${comment.user.lastName}`}{" "}
+          <span className="text-sm font-light text-gray-400">
+            {formatDate(new Date(comment.createdAt.split(" at ")[0]))} at{" "}
+            {comment.createdAt.split(" at ")[1]}
+          </span>
+        </p>
+        <p
+          className="w-full hover:bg-slate-600"
+          onContextMenu={(e) => onRightClick(e, comment.id)}
+        >
+          {comment.comment}
+        </p>
+      </div>
+    </div>
+  );
+};
+
+export default Comment;

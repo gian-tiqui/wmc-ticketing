@@ -8,4 +8,23 @@ const createComment = async (createCommentDto: CreateComment) => {
   });
 };
 
-export { createComment };
+const findCommentById = async (commentId: number | null) => {
+  if (!commentId) return;
+  return apiClient.get(`${URI.API_URI}/api/v1/comment/${commentId}`);
+};
+
+const updateCommentById = async (
+  commentId: number,
+  updateComment: { comment: string }
+) => {
+  return apiClient.patch(`${URI.API_URI}/api/v1/comment/${commentId}`, {
+    ...updateComment,
+  });
+};
+
+const deleteCommentById = async (commentId: number | null) => {
+  if (!commentId) return;
+  return apiClient.delete(`${URI.API_URI}/api/v1/comment/${commentId}`);
+};
+
+export { createComment, findCommentById, updateCommentById, deleteCommentById };
