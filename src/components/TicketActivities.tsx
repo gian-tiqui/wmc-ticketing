@@ -23,13 +23,22 @@ const TicketActivities: React.FC<Props> = ({ ticket }) => {
     );
   };
 
+  const customizedMarker = (item: Activity) => {
+    return (
+      <div className="grid w-10 h-10 bg-blue-500 rounded-full place-content-center">
+        <i className={`${item.icon}`}></i>
+      </div>
+    );
+  };
+
   return (
-    <div className="card">
+    <div className="w-full p-4 overflow-y-auto h-96 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
       <Timeline
         value={ticket.activities}
         align="alternate"
         className="customized-timeline"
         content={customizedContent}
+        marker={customizedMarker}
       />
     </div>
   );

@@ -1,5 +1,5 @@
 import { PrimeIcons } from "primereact/api";
-import React from "react";
+import React, { useEffect } from "react";
 import RequestDetails from "./RequestDetails";
 import { SummaryCardType, Ticket } from "../types/types";
 import SummaryItem from "./SummaryItem";
@@ -9,6 +9,10 @@ interface Props {
 }
 
 const TicketSummary: React.FC<Props> = ({ ticket }) => {
+  useEffect(() => {
+    console.log(ticket.acknowledgedAt);
+  }, [ticket]);
+
   const cards: SummaryCardType[] = [
     {
       details: `Status: ${ticket.status.type}`,
@@ -41,9 +45,7 @@ const TicketSummary: React.FC<Props> = ({ ticket }) => {
     },
     {
       details: `${
-        ticket.acknowledgedAt
-          ? ticket.acknowledgedAt.split(" at ")[1]
-          : "Unacknowledged yet"
+        ticket.acknowledgedAt ? ticket.acknowledgedAt : "Unacknowledged yet"
       }`,
       summary: "Time Acknowledged",
       icon: PrimeIcons.CLOCK,

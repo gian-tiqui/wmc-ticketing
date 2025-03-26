@@ -70,7 +70,7 @@ const TicketPage = () => {
   return (
     <PageTemplate>
       <div className="w-full h-full">
-        <TicketHeader ticket={ticketData.ticket} />
+        <TicketHeader ticket={ticketData.ticket} refetch={refetch} />
         <TicketTab ticket={ticketData.ticket} refetch={refetch} />
       </div>
     </PageTemplate>

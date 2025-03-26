@@ -5,12 +5,16 @@ import { Avatar } from "primereact/avatar";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import TicketSettingsDialog from "./TicketSettingsDialog";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
 interface Props {
   ticket: Ticket;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<Ticket, Error>>;
 }
 
-const TicketHeader: React.FC<Props> = ({ ticket }) => {
+const TicketHeader: React.FC<Props> = ({ ticket, refetch }) => {
   const [visible, setVisible] = useState<boolean>(false);
   const navigate = useNavigate();
 
@@ -44,14 +48,24 @@ const TicketHeader: React.FC<Props> = ({ ticket }) => {
           />
           <h4 className="text-xl font-medium ">{ticket.title}</h4>
         </div>
-        <Button
-          icon={PrimeIcons.COG}
-          severity="contrast"
-          className="w-10 h-10 rounded-full bg-inherit"
-          onClick={() => {
-            if (!visible) setVisible(true);
-          }}
-        />
+        <div>
+          <Button
+            icon={PrimeIcons.REFRESH}
+            severity="contrast"
+            className="w-10 h-10 rounded-full bg-inherit"
+            onClick={() => {
+              refetch();
+            }}
+          />
+          <Button
+            icon={PrimeIcons.COG}
+            severity="contrast"
+            className="w-10 h-10 rounded-full bg-inherit"
+            onClick={() => {
+              if (!visible) setVisible(true);
+            }}
+          />
+        </div>
       </div>
     </header>
   );

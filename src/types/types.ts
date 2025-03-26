@@ -141,6 +141,7 @@ type Activity = {
   title: string;
   createdAt: string;
   updatedAt: string;
+  icon: string;
 
   ticketId: number;
   ticket: Ticket;
