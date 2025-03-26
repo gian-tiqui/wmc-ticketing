@@ -1,4 +1,4 @@
-import { CreateTicket, Query } from "../../types/types";
+import { CreateTicket, Query, UpdateTicket } from "../../types/types";
 import { URI } from "../enums/enum";
 import apiClient from "../http-common/apiClient";
 
@@ -14,4 +14,10 @@ const getTicketById = (ticketId: number) => {
   return apiClient.get(`${URI.API_URI}/api/v1/ticket/${ticketId}`);
 };
 
-export { createTicket, getTickets, getTicketById };
+const updateTicketById = (ticketId: number, body: UpdateTicket) => {
+  return apiClient.patch(`${URI.API_URI}/api/v1/ticket/${ticketId}`, {
+    ...body,
+  });
+};
+
+export { createTicket, getTickets, getTicketById, updateTicketById };

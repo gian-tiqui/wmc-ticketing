@@ -4,7 +4,7 @@ import { TabPanel, TabView } from "primereact/tabview";
 import TicketSummary from "./TicketSummary";
 import TicketComments from "./TicketComments";
 import TicketActivities from "./TicketActivities";
-import TicketAction from "./TicketAction";
+import TicketSettings from "./TicketSettings";
 import TicketServiceReport from "./TicketServiceReports";
 import { PrimeIcons } from "primereact/api";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
@@ -39,9 +39,9 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
       icon: PrimeIcons.HISTORY,
     },
     {
-      name: "Actions",
-      component: <TicketAction ticket={ticket} />,
-      icon: PrimeIcons.LIST,
+      name: "Settings",
+      component: <TicketSettings ticket={ticket} refetch={refetch} />,
+      icon: PrimeIcons.COG,
     },
   ];
   return (

@@ -1,5 +1,5 @@
 import { PrimeIcons } from "primereact/api";
-import React, { useEffect } from "react";
+import React from "react";
 import RequestDetails from "./RequestDetails";
 import { SummaryCardType, Ticket } from "../types/types";
 import SummaryItem from "./SummaryItem";
@@ -9,10 +9,6 @@ interface Props {
 }
 
 const TicketSummary: React.FC<Props> = ({ ticket }) => {
-  useEffect(() => {
-    console.log(ticket.acknowledgedAt);
-  }, [ticket]);
-
   const cards: SummaryCardType[] = [
     {
       details: `Status: ${ticket.status.type}`,

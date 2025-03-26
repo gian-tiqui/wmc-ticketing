@@ -55,7 +55,7 @@ const TicketsPage = () => {
       body: <div></div>,
     },
     {
-      icon: PrimeIcons.USER,
+      icon: PrimeIcons.USER_PLUS,
       header: (
         <div className="flex items-center">
           <p>Assigned</p>
@@ -69,21 +69,7 @@ const TicketsPage = () => {
       body: <div></div>,
     },
     {
-      icon: PrimeIcons.USER_PLUS,
-      header: (
-        <div className="flex items-center">
-          <p>Escalated</p>
-          <Avatar
-            label="0"
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
-        </div>
-      ),
-      body: <div></div>,
-    },
-    {
-      icon: PrimeIcons.USER_EDIT,
+      icon: PrimeIcons.CHECK_CIRCLE,
       header: (
         <div className="flex items-center">
           <p>Resolved</p>
@@ -97,10 +83,24 @@ const TicketsPage = () => {
       body: <div></div>,
     },
     {
-      icon: PrimeIcons.CHECK_SQUARE,
+      icon: PrimeIcons.LOCK,
       header: (
         <div className="flex items-center">
           <p>Closed</p>
+          <Avatar
+            label="0"
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <div></div>,
+    },
+    {
+      icon: PrimeIcons.CHECK_SQUARE,
+      header: (
+        <div className="flex items-center">
+          <p>CR</p>
           <Avatar
             label="0"
             shape="circle"

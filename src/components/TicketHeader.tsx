@@ -57,14 +57,6 @@ const TicketHeader: React.FC<Props> = ({ ticket, refetch }) => {
               refetch();
             }}
           />
-          <Button
-            icon={PrimeIcons.COG}
-            severity="contrast"
-            className="w-10 h-10 rounded-full bg-inherit"
-            onClick={() => {
-              if (!visible) setVisible(true);
-            }}
-          />
         </div>
       </div>
     </header>

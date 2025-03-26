@@ -207,7 +207,19 @@ type UpdateComment = {
   comment: string;
 };
 
+type UpdateTicket = {
+  deptId?: number;
+  categoryId?: number;
+  priorityLevelId?: number;
+  title?: string;
+  description?: string;
+  assignedUserId?: number;
+  statusId?: number;
+  acknowledgedAt?: Date;
+};
+
 export type {
+  UpdateTicket,
   UpdateComment,
   CreateComment,
   TicketsPageTabItems,
