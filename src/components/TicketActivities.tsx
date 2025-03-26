@@ -16,7 +16,7 @@ const TicketActivities: React.FC<Props> = ({ ticket }) => {
       <Card
         title={item.title}
         subTitle={item.createdAt}
-        className="bg-slate-900 text-slate-100"
+        className="bg-slate-800 text-slate-100"
       >
         <p>{item.activity}</p>
       </Card>
