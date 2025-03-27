@@ -48,6 +48,7 @@ type Category = {
 };
 
 type User = {
+  id: number;
   firstName: string;
   middleName?: string;
   lastName: string;
@@ -98,6 +99,7 @@ type CreateTicket = {
   priorityLevelId: number;
   title: string;
   description: string;
+  reportRequired: number;
 };
 
 type Status = {
@@ -116,6 +118,7 @@ type Ticket = {
   createdAt: string;
   updatedAt: string;
   acknowledgedAt: string;
+  reportRequired: boolean;
 
   issuerId: number;
   issuer: User;

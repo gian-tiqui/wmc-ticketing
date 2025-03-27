@@ -78,7 +78,7 @@ apiClient.interceptors.response.use(
       try {
         const refreshToken = Cookies.get(Namespace.BASE);
         const response = await axios.post(
-          `${apiUri}api/v1/auth/refresh`,
+          `${apiUri}/api/v1/auth/refresh`,
           { refreshToken },
           { withCredentials: true }
         );

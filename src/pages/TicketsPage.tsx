@@ -12,18 +12,98 @@ import TicketsTable from "../components/TicketsTable";
 import useUserDataStore from "../@utils/store/userDataStore";
 import roleIncludes from "../@utils/functions/rolesIncludes";
 import { getUserTicketsById } from "../@utils/services/userService";
+import { TicketStatus } from "../@utils/enums/enum";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
   const { user } = useUserDataStore();
   const [query] = useState<Query>({ search: "" });
-  const { data: newTicketsData, refetch } = useQuery({
-    queryKey: [`new-tickets-${JSON.stringify({ ...query, statusId: 1 })}`],
+  const { data: newTicketsData, refetch: refetchNewTickets } = useQuery({
+    queryKey: [
+      `new-tickets-${JSON.stringify({ ...query, statusId: TicketStatus.NEW })}`,
+    ],
     queryFn: () =>
       roleIncludes(user, "admin")
         ? getTickets({ ...query, statusId: 1 })
         : getUserTicketsById(user?.sub, query),
   });
+
+  const { data: acknowledgeTicketsData, refetch: refetchAcknowledgedTickets } =
+    useQuery({
+      queryKey: [
+        `acknowledged-tickets-${JSON.stringify({
+          ...query,
+          statusId: TicketStatus.ACKNOWLEDGED,
+        })}`,
+      ],
+      queryFn: () =>
+        roleIncludes(user, "admin")
+          ? getTickets({ ...query, statusId: TicketStatus.ACKNOWLEDGED })
+          : getUserTicketsById(user?.sub, query),
+    });
+
+  const { data: assignedTickets, refetch: refetchAssignedTickets } = useQuery({
+    queryKey: [
+      `assigned-tickets-${JSON.stringify({
+        ...query,
+        statusId: TicketStatus.ASSIGNED,
+      })}`,
+    ],
+    queryFn: () =>
+      roleIncludes(user, "admin")
+        ? getTickets({ ...query, statusId: TicketStatus.ASSIGNED })
+        : getUserTicketsById(user?.sub, query),
+  });
+
+  const { data: escalatedTickets, refetch: refetchEscalatedTickets } = useQuery(
+    {
+      queryKey: [
+        `assigned-tickets-${JSON.stringify({
+          ...query,
+          statusId: TicketStatus.ESCALATED,
+        })}`,
+      ],
+      queryFn: () =>
+        roleIncludes(user, "admin")
+          ? getTickets({ ...query, statusId: TicketStatus.ESCALATED })
+          : getUserTicketsById(user?.sub, query),
+    }
+  );
+
+  const { data: resolvedTickets, refetch: refetchResolvedTickets } = useQuery({
+    queryKey: [
+      `assigned-tickets-${JSON.stringify({
+        ...query,
+        statusId: TicketStatus.RESOLVED,
+      })}`,
+    ],
+    queryFn: () =>
+      roleIncludes(user, "admin")
+        ? getTickets({ ...query, statusId: TicketStatus.RESOLVED })
+        : getUserTicketsById(user?.sub, query),
+  });
+
+  const { data: closedTickets, refetch: refetchClosedTickets } = useQuery({
+    queryKey: [
+      `assigned-tickets-${JSON.stringify({
+        ...query,
+        statusId: TicketStatus.CLOSED,
+      })}`,
+    ],
+    queryFn: () =>
+      roleIncludes(user, "admin")
+        ? getTickets({ ...query, statusId: TicketStatus.CLOSED })
+        : getUserTicketsById(user?.sub, query),
+  });
+
+  const refetchAll = () => {
+    refetchNewTickets();
+    refetchAcknowledgedTickets();
+    refetchAssignedTickets();
+    refetchClosedTickets();
+    refetchResolvedTickets();
+    refetchEscalatedTickets();
+  };
 
   const tabs: TicketsPageTabItems[] = [
     {
@@ -46,13 +126,13 @@ const TicketsPage = () => {
         <div className="flex items-center">
           <p>Acknowledged</p>
           <Avatar
-            label="0"
+            label={acknowledgeTicketsData?.data.count}
             shape="circle"
             className="w-6 h-6 text-white bg-blue-400 ms-2"
           />
         </div>
       ),
-      body: <div></div>,
+      body: <TicketsTable tickets={acknowledgeTicketsData?.data.tickets} />,
     },
     {
       icon: PrimeIcons.USER_PLUS,
@@ -60,13 +140,27 @@ const TicketsPage = () => {
         <div className="flex items-center">
           <p>Assigned</p>
           <Avatar
-            label="0"
+            label={assignedTickets?.data.count}
             shape="circle"
             className="w-6 h-6 text-white bg-blue-400 ms-2"
           />
         </div>
       ),
-      body: <div></div>,
+      body: <TicketsTable tickets={assignedTickets?.data.tickets} />,
+    },
+    {
+      icon: PrimeIcons.USER_PLUS,
+      header: (
+        <div className="flex items-center">
+          <p>Escalated</p>
+          <Avatar
+            label={escalatedTickets?.data.count}
+            shape="circle"
+            className="w-6 h-6 text-white bg-blue-400 ms-2"
+          />
+        </div>
+      ),
+      body: <TicketsTable tickets={escalatedTickets?.data.tickets} />,
     },
     {
       icon: PrimeIcons.CHECK_CIRCLE,
@@ -74,41 +168,27 @@ const TicketsPage = () => {
         <div className="flex items-center">
           <p>Resolved</p>
           <Avatar
-            label="0"
+            label={resolvedTickets?.data.count}
             shape="circle"
             className="w-6 h-6 text-white bg-blue-400 ms-2"
           />
         </div>
       ),
-      body: <div></div>,
+      body: <TicketsTable tickets={resolvedTickets?.data.tickets} />,
     },
     {
-      icon: PrimeIcons.LOCK,
+      icon: PrimeIcons.CHECK_CIRCLE,
       header: (
         <div className="flex items-center">
           <p>Closed</p>
           <Avatar
-            label="0"
+            label={closedTickets?.data.count}
             shape="circle"
             className="w-6 h-6 text-white bg-blue-400 ms-2"
           />
         </div>
       ),
-      body: <div></div>,
-    },
-    {
-      icon: PrimeIcons.CHECK_SQUARE,
-      header: (
-        <div className="flex items-center">
-          <p>CR</p>
-          <Avatar
-            label="0"
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
-        </div>
-      ),
-      body: <div></div>,
+      body: <TicketsTable tickets={closedTickets?.data.tickets} />,
     },
   ];
 
@@ -119,7 +199,7 @@ const TicketsPage = () => {
           <h4 className={` text-2xl font-medium ${!isExpanded && "ms-14"} `}>
             <i className={`${PrimeIcons.TICKET} text-xl rotate-90`}></i> Tickets
           </h4>
-          <NewTicketButton refetch={refetch} />
+          <NewTicketButton refetch={refetchNewTickets} />
         </div>
 
         <TabView
@@ -131,8 +211,9 @@ const TicketsPage = () => {
             tab: { className: "w-full bg-inherit" },
           }}
         >
-          {tabs.map((tab) => (
+          {tabs.map((tab, index) => (
             <TabPanel
+              key={index}
               pt={{ headerAction: { className: "bg-inherit" } }}
               header={tab.header}
               leftIcon={`${tab.icon} me-2`}

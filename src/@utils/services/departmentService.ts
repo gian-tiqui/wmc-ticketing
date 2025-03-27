@@ -32,4 +32,17 @@ const getDepartmentCategoriesByDeptId = async (
   );
 };
 
-export { getDepartments, getDepartmentCategoriesByDeptId };
+const getDepartmentUsersByDeptId = async (
+  deptId: number | undefined,
+  params?: Query
+) => {
+  return apiClient.get(`${URI.API_URI}/api/v1/department/${deptId}/user`, {
+    params,
+  });
+};
+
+export {
+  getDepartments,
+  getDepartmentCategoriesByDeptId,
+  getDepartmentUsersByDeptId,
+};

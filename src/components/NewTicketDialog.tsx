@@ -37,6 +37,7 @@ import { createTicket } from "../@utils/services/ticketService";
 import handleErrors from "../@utils/functions/handleErrors";
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
+import { Checkbox } from "primereact/checkbox";
 
 interface Props {
   visible: boolean;
@@ -67,6 +68,7 @@ const NewTicketDialog: React.FC<Props> = ({
       priorityLevelId: undefined,
       title: "",
       description: "",
+      reportRequired: 0,
     },
   });
 
@@ -80,6 +82,7 @@ const NewTicketDialog: React.FC<Props> = ({
   }, [visible, reset]);
 
   const [query] = useState<Query>({ search: "", offset: 0, limit: 50 });
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [selectedDepartment, setSelectedDepartment] = useState<
     Department | undefined
   >(undefined);
@@ -128,11 +131,16 @@ const NewTicketDialog: React.FC<Props> = ({
         setSelectedCategory(undefined);
         setSelectedDepartment(undefined);
         setSelectedPriorityLevel(undefined);
+        setIsChecked(false);
       })
       .catch((error) => {
         handleErrors(error, toastRef);
       });
   };
+
+  useEffect(() => {
+    setValue("reportRequired", isChecked ? 1 : 0);
+  }, [isChecked, setValue]);
 
   useEffect(() => {
     if (!visible) return;
@@ -314,7 +322,17 @@ const NewTicketDialog: React.FC<Props> = ({
             placeholder="Enter your description"
           />
 
-          {/* Submit Button */}
+          <div
+            onClick={() => setIsChecked(!isChecked)}
+            className="flex items-center gap-2 mb-4 hover:cursor-pointer"
+          >
+            <Checkbox
+              checked={isChecked}
+              pt={{ box: { className: `${!isChecked && "bg-inherit"}` } }}
+            />
+            <p className="text-sm hover:underline">Require service report</p>
+          </div>
+
           <Button
             className="justify-center w-full gap-2"
             icon={`${PrimeIcons.PLUS_CIRCLE}`}
