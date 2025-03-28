@@ -119,6 +119,7 @@ type Ticket = {
   updatedAt: string;
   acknowledgedAt: string;
   reportRequired: boolean;
+  closingReason?: string;
 
   issuerId: number;
   issuer: User;
@@ -219,6 +220,7 @@ type UpdateTicket = {
   assignedUserId?: number;
   statusId?: number;
   acknowledgedAt?: Date;
+  closingReason?: string;
 };
 
 export type {

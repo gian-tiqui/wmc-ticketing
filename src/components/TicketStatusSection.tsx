@@ -11,6 +11,7 @@ import { TicketStatus } from "../@utils/enums/enum";
 import AssignUserDialog from "./AssignUserDialog";
 import EscalateTicketDialog from "./EscalateTicketDialog";
 import ServiceReportDialog from "./ServiceReportDialog";
+import CloseTicketDialog from "./CloseTicketDialog";
 
 interface Props {
   ticket: Ticket;
@@ -26,6 +27,9 @@ interface FormFields {
 const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   const toastRef = useRef<Toast>(null);
   const [statusId, setStatusId] = useState<number>(ticket.status.id);
+  const [closingReason, setClosingReason] = useState<string | undefined>(
+    ticket.closingReason
+  );
   const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
   const [escalateUserVisible, setEscalateUserVisible] =
     useState<boolean>(false);
@@ -42,6 +46,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   const { setValue } = useForm<FormFields>({
     defaultValues: { statusId: ticket.statusId },
   });
+  const [closeDialogVisible, setCloseDialogVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (statusId > 0 && statusId <= 7 && statusId !== ticket.status.id) {
@@ -51,6 +56,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         assignedUserId: selectedUser?.id,
         categoryId: selectedCategory?.id,
         deptId: selectedDepartment?.id,
+        closingReason,
       })
         .then((response) => {
           if (response.status === 200) {
@@ -58,6 +64,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
             if (assignUserVisible) setAssignUserVisible(!assignUserVisible);
             if (escalateUserVisible)
               setEscalateUserVisible(!escalateUserVisible);
+            if (closeDialogVisible) setCloseDialogVisible(false);
           }
         })
         .catch((error) => {
@@ -85,6 +92,8 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     selectedDepartment,
     assignUserVisible,
     escalateUserVisible,
+    closingReason,
+    closeDialogVisible,
   ]);
 
   const handleStatusChange = (newStatusId: number) => {
@@ -92,123 +101,143 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   };
 
   return (
-    <form className="mb-6">
-      <AssignUserDialog
-        selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
-        ticket={ticket}
-        setStatusId={setStatusId}
-        visible={assignUserVisible}
-        setVisible={setAssignUserVisible}
-      />
-      <EscalateTicketDialog
-        selectedDepartment={selectedDepartment}
-        setSelectedDepartment={setSelectedDepartment}
-        selectedCategory={selectedCategory}
-        setSelectedCategory={setSelectedCategory}
-        ticket={ticket}
-        selectedUser={selectedUser}
-        setSelectedUser={setSelectedUser}
-        setStatusId={setStatusId}
-        visible={escalateUserVisible}
-        setVisible={setEscalateUserVisible}
-      />
-      <ServiceReportDialog
-        visible={serviceReportDialogVisible}
-        setVisible={setServiceReportDialogVisible}
-      />
-      <CustomToast ref={toastRef} />
-      <h4 className="text-lg font-medium">Status</h4>
-      <Divider />
-      <div className="flex items-center">
-        <div className="w-32">
-          <span className="text-md">Current:</span>{" "}
-          <span className="font-medium">{ticket.status.type}</span>
-        </div>
-        <div className="flex items-center justify-center w-full gap-2">
-          <Button
-            disabled={statusId !== TicketStatus.NEW || isUpdating}
-            onClick={() => handleStatusChange(TicketStatus.ACKNOWLEDGED)}
-            type="button"
-            loading={isUpdating && statusId === TicketStatus.ASSIGNED}
-          >
-            Acknowledge
-          </Button>
-          {ticket.statusId === TicketStatus.ASSIGNED ||
-          ticket.statusId === TicketStatus.ESCALATED ? (
+    <>
+      <form className="mb-6">
+        <CloseTicketDialog
+          setStatusId={setStatusId}
+          setClosingReason={setClosingReason}
+          refetch={refetch}
+          setVisible={setCloseDialogVisible}
+          visible={closeDialogVisible}
+          ticket={ticket}
+        />
+        <AssignUserDialog
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          ticket={ticket}
+          setStatusId={setStatusId}
+          visible={assignUserVisible}
+          setVisible={setAssignUserVisible}
+        />
+        <EscalateTicketDialog
+          selectedDepartment={selectedDepartment}
+          setSelectedDepartment={setSelectedDepartment}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          ticket={ticket}
+          selectedUser={selectedUser}
+          setSelectedUser={setSelectedUser}
+          setStatusId={setStatusId}
+          visible={escalateUserVisible}
+          setVisible={setEscalateUserVisible}
+        />
+        <ServiceReportDialog
+          visible={serviceReportDialogVisible}
+          setVisible={setServiceReportDialogVisible}
+        />
+
+        <CustomToast ref={toastRef} />
+        <h4 className="text-lg font-medium">Status</h4>
+        <Divider />
+        <div className="flex items-center">
+          <div className="w-32">
+            <span className="text-md">Current:</span>{" "}
+            <span className="font-medium">{ticket.status.type}</span>
+          </div>
+          <div className="flex items-center justify-center w-full gap-2">
+            <Button
+              disabled={statusId !== TicketStatus.NEW || isUpdating}
+              onClick={() => handleStatusChange(TicketStatus.ACKNOWLEDGED)}
+              type="button"
+              loading={isUpdating && statusId === TicketStatus.ASSIGNED}
+            >
+              Acknowledge
+            </Button>
+            {ticket.statusId === TicketStatus.ASSIGNED ||
+            ticket.statusId === TicketStatus.ESCALATED ? (
+              <Button
+                disabled={
+                  (statusId !== TicketStatus.ACKNOWLEDGED &&
+                    statusId !== TicketStatus.ASSIGNED &&
+                    statusId !== TicketStatus.ESCALATED) ||
+                  isUpdating
+                }
+                onClick={() => setEscalateUserVisible(true)}
+                type="button"
+                loading={isUpdating && statusId === TicketStatus.ASSIGNED}
+              >
+                Escalate
+              </Button>
+            ) : (
+              <Button
+                disabled={
+                  (statusId !== TicketStatus.ACKNOWLEDGED &&
+                    statusId !== TicketStatus.ACKNOWLEDGED) ||
+                  isUpdating
+                }
+                onClick={() => setAssignUserVisible(true)}
+                type="button"
+                loading={isUpdating && statusId === TicketStatus.ASSIGNED}
+              >
+                Assign
+              </Button>
+            )}
+
             <Button
               disabled={
-                (statusId !== TicketStatus.ACKNOWLEDGED &&
-                  statusId !== TicketStatus.ASSIGNED &&
+                (statusId !== TicketStatus.ASSIGNED &&
                   statusId !== TicketStatus.ESCALATED) ||
                 isUpdating
               }
-              onClick={() => setEscalateUserVisible(true)}
+              onClick={() => {
+                if (ticket.reportRequired) {
+                  setServiceReportDialogVisible(true);
+                } else {
+                  setStatusId(TicketStatus.RESOLVED);
+                }
+              }}
               type="button"
-              loading={isUpdating && statusId === TicketStatus.ASSIGNED}
+              loading={isUpdating && statusId === TicketStatus.ESCALATED}
             >
-              Escalate
+              Resolve
             </Button>
-          ) : (
+            <Button
+              disabled={isUpdating || statusId === TicketStatus.CLOSED}
+              type="button"
+              loading={isUpdating && statusId === TicketStatus.RESOLVED}
+              onClick={() => {
+                setCloseDialogVisible(true);
+              }}
+            >
+              Close
+            </Button>
             <Button
               disabled={
-                (statusId !== TicketStatus.ACKNOWLEDGED &&
-                  statusId !== TicketStatus.ACKNOWLEDGED) ||
+                (statusId !== TicketStatus.CLOSED &&
+                  statusId !== TicketStatus.RESOLVED) ||
                 isUpdating
               }
-              onClick={() => setAssignUserVisible(true)}
+              onClick={() => handleStatusChange(TicketStatus.NEW)}
               type="button"
-              loading={isUpdating && statusId === TicketStatus.ASSIGNED}
+              loading={isUpdating && statusId === TicketStatus.NEW}
             >
-              Assign
+              Re-open
             </Button>
-          )}
-
-          <Button
-            disabled={
-              (statusId !== TicketStatus.ASSIGNED &&
-                statusId !== TicketStatus.ESCALATED) ||
-              isUpdating
-            }
-            onClick={() => handleStatusChange(TicketStatus.RESOLVED)}
-            type="button"
-            loading={isUpdating && statusId === TicketStatus.ESCALATED}
-          >
-            Resolve
-          </Button>
-          <Button
-            disabled={statusId !== 5 || isUpdating}
-            onClick={() => {
-              if (ticket.reportRequired) {
-                setServiceReportDialogVisible(true);
-              } else {
-                setStatusId(TicketStatus.CLOSED);
+            <Button
+              disabled={
+                (statusId !== 6 && statusId !== TicketStatus.RESOLVED) ||
+                isUpdating
               }
-            }}
-            type="button"
-            loading={isUpdating && statusId === TicketStatus.RESOLVED}
-          >
-            Close
-          </Button>
-          <Button
-            disabled={statusId !== TicketStatus.CLOSED || isUpdating}
-            onClick={() => handleStatusChange(TicketStatus.NEW)}
-            type="button"
-            loading={isUpdating && statusId === TicketStatus.NEW}
-          >
-            Re-open
-          </Button>
-          <Button
-            disabled={statusId !== 6 || isUpdating}
-            onClick={() => handleStatusChange(TicketStatus.NEW)}
-            type="button"
-            loading={isUpdating && statusId === TicketStatus.NEW}
-          >
-            Close-Resolve
-          </Button>
+              onClick={() => handleStatusChange(TicketStatus.NEW)}
+              type="button"
+              loading={isUpdating && statusId === TicketStatus.NEW}
+            >
+              Close-Resolve
+            </Button>
+          </div>
         </div>
-      </div>
-    </form>
+      </form>
+    </>
   );
 };
 

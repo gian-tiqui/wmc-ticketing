@@ -27,11 +27,10 @@ const AssignUserDialog: React.FC<Props> = ({
 }) => {
   const [query] = useState<Query>({ search: "", limit: 10 });
 
-  // Use staleTime and refetchOnWindowFocus to minimize unnecessary requests
   const { data: departmentUsers } = useQuery({
     queryKey: [`department-${ticket.deptId}-user`],
     queryFn: () => getDepartmentUsersByDeptId(ticket.deptId, query),
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
