@@ -149,17 +149,16 @@ const EscalateTicketDialog: React.FC<Props> = ({
               },
               input: { className: "text-slate-100" },
             }}
+            className={`w-full bg-inherit border-slate-400`}
             options={memoizedCategories}
             value={selectedCategory}
             optionLabel="name"
             onChange={(e) => {
               setSelectedCategory(e.value);
-              // Reset user selection
               setSelectedUser(undefined);
             }}
             filter
             disabled={!selectedDepartment || memoizedCategories.length === 0}
-            className={`w-full bg-inherit border-slate-400`}
             placeholder="Select a category"
           />
         </div>
@@ -191,7 +190,7 @@ const EscalateTicketDialog: React.FC<Props> = ({
         </div>
 
         <Button
-          className="justify-center w-full items-center gap-2"
+          className="items-center justify-center w-full gap-2"
           icon={`${PrimeIcons.FORWARD}`}
           onClick={handleEscalate}
           disabled={!selectedDepartment || !selectedCategory || !selectedUser}

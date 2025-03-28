@@ -89,7 +89,7 @@ type Panel = {
 };
 
 type PriorityLevel = {
-  id: string;
+  id: number;
   name: string;
 };
 
@@ -223,7 +223,17 @@ type UpdateTicket = {
   closingReason?: string;
 };
 
+type StatusMarker = {
+  name: string;
+  disabled: boolean;
+  onClick: React.MouseEventHandler<HTMLButtonElement> | undefined;
+  type: string;
+  loading: boolean;
+  icon?: string;
+};
+
 export type {
+  StatusMarker,
   UpdateTicket,
   UpdateComment,
   CreateComment,

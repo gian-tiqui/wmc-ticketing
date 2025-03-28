@@ -1,6 +1,12 @@
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
-import { Category, Department, Ticket, User } from "../types/types";
+import {
+  Category,
+  Department,
+  StatusMarker,
+  Ticket,
+  User,
+} from "../types/types";
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
 import { Divider } from "primereact/divider";
@@ -12,6 +18,7 @@ import AssignUserDialog from "./AssignUserDialog";
 import EscalateTicketDialog from "./EscalateTicketDialog";
 import ServiceReportDialog from "./ServiceReportDialog";
 import CloseTicketDialog from "./CloseTicketDialog";
+import { Timeline } from "primereact/timeline";
 
 interface Props {
   ticket: Ticket;
@@ -96,8 +103,98 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     closeDialogVisible,
   ]);
 
+  const markers: StatusMarker[] = [
+    {
+      name: "Acknowledge",
+      disabled: statusId !== TicketStatus.NEW || isUpdating,
+      onClick: () => handleStatusChange(TicketStatus.ACKNOWLEDGED),
+      type: "button",
+      loading: isUpdating && statusId === TicketStatus.ASSIGNED,
+    },
+    {
+      name:
+        ticket.statusId === TicketStatus.ASSIGNED ||
+        ticket.statusId === TicketStatus.ESCALATED
+          ? "Escalate"
+          : "Assign",
+
+      disabled:
+        (statusId !== TicketStatus.ACKNOWLEDGED &&
+          statusId !== TicketStatus.ASSIGNED &&
+          statusId !== TicketStatus.ESCALATED) ||
+        isUpdating,
+      onClick:
+        ticket.statusId === TicketStatus.ASSIGNED ||
+        ticket.statusId === TicketStatus.ESCALATED
+          ? () => setEscalateUserVisible(true)
+          : () => setAssignUserVisible(true),
+      type: "button",
+      loading: isUpdating && statusId === TicketStatus.ASSIGNED,
+    },
+    {
+      name: "Resolve",
+      disabled:
+        (statusId !== TicketStatus.ASSIGNED &&
+          statusId !== TicketStatus.ESCALATED) ||
+        isUpdating,
+      onClick: () => {
+        if (ticket.reportRequired) {
+          setServiceReportDialogVisible(true);
+        } else {
+          setStatusId(TicketStatus.RESOLVED);
+        }
+      },
+      type: "button",
+      loading: isUpdating && statusId === TicketStatus.ESCALATED,
+    },
+    {
+      name: "Close",
+      disabled: isUpdating || statusId === TicketStatus.CLOSED,
+      type: "button",
+      loading: isUpdating && statusId === TicketStatus.RESOLVED,
+      onClick: () => {
+        setCloseDialogVisible(true);
+      },
+    },
+    {
+      name: "Re-open",
+      disabled:
+        (statusId !== TicketStatus.CLOSED &&
+          statusId !== TicketStatus.RESOLVED) ||
+        isUpdating,
+      onClick: () => handleStatusChange(TicketStatus.NEW),
+      type: "button",
+      loading: isUpdating && statusId === TicketStatus.NEW,
+    },
+    {
+      name: "CResolve",
+      disabled: statusId !== TicketStatus.RESOLVED || isUpdating,
+      onClick: () => handleStatusChange(TicketStatus.NEW),
+      type: "button",
+      loading: isUpdating && statusId === TicketStatus.NEW,
+    },
+  ];
+
   const handleStatusChange = (newStatusId: number) => {
     setStatusId(newStatusId);
+  };
+
+  const customizedMarker = (marker: StatusMarker) => {
+    return (
+      <Button
+        type={"button"}
+        className="rounded-full"
+        loading={marker.loading}
+        disabled={marker.disabled}
+        onClick={marker.onClick}
+      >
+        {marker.name[0]}
+      </Button>
+    );
+  };
+
+  const customizedContent = (marker: StatusMarker) => {
+    return <div className="text-xs">{marker.name}</div>;
   };
 
   return (
@@ -139,101 +236,18 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         <CustomToast ref={toastRef} />
         <h4 className="text-lg font-medium">Status</h4>
         <Divider />
-        <div className="flex items-center">
+        <div className="">
           <div className="w-32">
             <span className="text-md">Current:</span>{" "}
             <span className="font-medium">{ticket.status.type}</span>
           </div>
           <div className="flex items-center justify-center w-full gap-2">
-            <Button
-              disabled={statusId !== TicketStatus.NEW || isUpdating}
-              onClick={() => handleStatusChange(TicketStatus.ACKNOWLEDGED)}
-              type="button"
-              loading={isUpdating && statusId === TicketStatus.ASSIGNED}
-            >
-              Acknowledge
-            </Button>
-            {ticket.statusId === TicketStatus.ASSIGNED ||
-            ticket.statusId === TicketStatus.ESCALATED ? (
-              <Button
-                disabled={
-                  (statusId !== TicketStatus.ACKNOWLEDGED &&
-                    statusId !== TicketStatus.ASSIGNED &&
-                    statusId !== TicketStatus.ESCALATED) ||
-                  isUpdating
-                }
-                onClick={() => setEscalateUserVisible(true)}
-                type="button"
-                loading={isUpdating && statusId === TicketStatus.ASSIGNED}
-              >
-                Escalate
-              </Button>
-            ) : (
-              <Button
-                disabled={
-                  (statusId !== TicketStatus.ACKNOWLEDGED &&
-                    statusId !== TicketStatus.ACKNOWLEDGED) ||
-                  isUpdating
-                }
-                onClick={() => setAssignUserVisible(true)}
-                type="button"
-                loading={isUpdating && statusId === TicketStatus.ASSIGNED}
-              >
-                Assign
-              </Button>
-            )}
-
-            <Button
-              disabled={
-                (statusId !== TicketStatus.ASSIGNED &&
-                  statusId !== TicketStatus.ESCALATED) ||
-                isUpdating
-              }
-              onClick={() => {
-                if (ticket.reportRequired) {
-                  setServiceReportDialogVisible(true);
-                } else {
-                  setStatusId(TicketStatus.RESOLVED);
-                }
-              }}
-              type="button"
-              loading={isUpdating && statusId === TicketStatus.ESCALATED}
-            >
-              Resolve
-            </Button>
-            <Button
-              disabled={isUpdating || statusId === TicketStatus.CLOSED}
-              type="button"
-              loading={isUpdating && statusId === TicketStatus.RESOLVED}
-              onClick={() => {
-                setCloseDialogVisible(true);
-              }}
-            >
-              Close
-            </Button>
-            <Button
-              disabled={
-                (statusId !== TicketStatus.CLOSED &&
-                  statusId !== TicketStatus.RESOLVED) ||
-                isUpdating
-              }
-              onClick={() => handleStatusChange(TicketStatus.NEW)}
-              type="button"
-              loading={isUpdating && statusId === TicketStatus.NEW}
-            >
-              Re-open
-            </Button>
-            <Button
-              disabled={
-                (statusId !== 6 && statusId !== TicketStatus.RESOLVED) ||
-                isUpdating
-              }
-              onClick={() => handleStatusChange(TicketStatus.NEW)}
-              type="button"
-              loading={isUpdating && statusId === TicketStatus.NEW}
-            >
-              Close-Resolve
-            </Button>
+            <Timeline
+              layout="horizontal"
+              value={markers}
+              marker={customizedMarker}
+              content={customizedContent}
+            />
           </div>
         </div>
       </form>

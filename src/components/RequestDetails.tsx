@@ -3,6 +3,7 @@ import { Ticket } from "../types/types";
 import { PrimeIcons } from "primereact/api";
 import UserDetails from "./UserDetails";
 import { InputTextarea } from "primereact/inputtextarea";
+import { TicketStatus } from "../@utils/enums/enum";
 
 interface Props {
   ticket: Ticket;
@@ -27,10 +28,16 @@ const RequestDetails: React.FC<Props> = ({ ticket }) => {
 
       <h4 className="flex items-center gap-2 mx-4 mt-5 mb-4 font-medium">
         <i className={`${PrimeIcons.INFO_CIRCLE}`}></i>
-        Ticket Description
+        {ticket.statusId !== TicketStatus.CLOSED
+          ? "Ticket Description"
+          : "Closing Reason"}
       </h4>
       <InputTextarea
-        value={ticket.description}
+        value={
+          ticket.statusId === TicketStatus.CLOSED
+            ? ticket.closingReason
+            : ticket.description
+        }
         className="w-[93%] mx-4 h-40 bg-slate-800 text-slate-100 disabled:opacity-100 disabled:text-slate-100"
         disabled
       />

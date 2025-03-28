@@ -29,7 +29,7 @@ const DialogTemplate: React.FC<Props> = ({
         },
         content: {
           className:
-            "bg-slate-900 text-slate-100 pt-5 border-x border-slate-700",
+            "bg-slate-900 text-slate-100 pt-5 border-x border-slate-700 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400",
         },
         closeButton: { className: "bg-white" },
       }}
