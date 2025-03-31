@@ -41,8 +41,8 @@ const PriorityLevelFragment: React.FC<Props> = ({ ticket, refetch }) => {
   };
 
   return (
-    <div className="flex gap-2">
-      <p>Severity</p>
+    <div className="flex items-center gap-2">
+      <p>Severity:</p>
       <Dropdown
         value={selectedPriorityLevel}
         options={priorityLevelsData?.data.priorityLevels}

@@ -19,6 +19,7 @@ import EscalateTicketDialog from "./EscalateTicketDialog";
 import ServiceReportDialog from "./ServiceReportDialog";
 import CloseTicketDialog from "./CloseTicketDialog";
 import { Timeline } from "primereact/timeline";
+import { Chip } from "primereact/chip";
 
 interface Props {
   ticket: Ticket;
@@ -167,7 +168,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
       loading: isUpdating && statusId === TicketStatus.NEW,
     },
     {
-      name: "CResolve",
+      name: "Finalize",
       disabled: statusId !== TicketStatus.RESOLVED || isUpdating,
       onClick: () => handleStatusChange(TicketStatus.NEW),
       type: "button",
@@ -199,7 +200,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
 
   return (
     <>
-      <form className="mb-6">
+      <form className="mb-16">
         <CloseTicketDialog
           setStatusId={setStatusId}
           setClosingReason={setClosingReason}
@@ -229,6 +230,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           setVisible={setEscalateUserVisible}
         />
         <ServiceReportDialog
+          ticket={ticket}
           visible={serviceReportDialogVisible}
           setVisible={setServiceReportDialogVisible}
         />
@@ -237,9 +239,12 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         <h4 className="text-lg font-medium">Status</h4>
         <Divider />
         <div className="">
-          <div className="w-32">
-            <span className="text-md">Current:</span>{" "}
-            <span className="font-medium">{ticket.status.type}</span>
+          <div className="mb-6">
+            <span className="mb-2 text-md">Current:</span>{" "}
+            <Chip
+              className="font-medium text-white bg-blue-400"
+              label={ticket.status.type}
+            />
           </div>
           <div className="flex items-center justify-center w-full gap-2">
             <Timeline

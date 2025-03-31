@@ -45,12 +45,18 @@ const Comment: React.FC<Props> = ({ comment, onRightClick }) => {
             {comment.createdAt.split(" at ")[1]}
           </span>
         </p>
-        <p
-          className="w-full hover:bg-slate-600"
-          onContextMenu={(e) => onRightClick(e, comment.id)}
-        >
-          {comment.comment}
-        </p>
+        {comment.comment && (
+          <p
+            className="w-full hover:bg-slate-600"
+            onContextMenu={(e) => onRightClick(e, comment.id)}
+          >
+            {comment.comment}
+          </p>
+        )}
+        {comment.imageLocations.length > 0 &&
+          comment.imageLocations.map((imageLocation) => (
+            <p key={imageLocation.id}>{imageLocation.path}</p>
+          ))}
       </div>
     </div>
   );

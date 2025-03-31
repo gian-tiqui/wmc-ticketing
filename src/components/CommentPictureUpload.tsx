@@ -1,19 +1,24 @@
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
-import { CustomFile, Ticket } from "../types/types";
-import { FileUpload } from "primereact/fileupload";
-import { Button } from "primereact/button";
+import { CustomFile } from "../types/types";
 import { PrimeIcons } from "primereact/api";
+import { Button } from "primereact/button";
+import { FileUpload } from "primereact/fileupload";
 import { Image } from "primereact/image";
 
 interface Props {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
-  ticket: Ticket;
+  files: CustomFile[];
+  setFiles: Dispatch<SetStateAction<CustomFile[]>>;
 }
 
-const ServiceReportDialog: React.FC<Props> = ({ visible, setVisible }) => {
-  const [files, setFiles] = useState<CustomFile[]>([]);
+const CommentPictureUpload: React.FC<Props> = ({
+  visible,
+  setVisible,
+  files,
+  setFiles,
+}) => {
   const fileUploadRef = useRef<FileUpload>(null);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
 
@@ -35,14 +40,15 @@ const ServiceReportDialog: React.FC<Props> = ({ visible, setVisible }) => {
         },
         closeButton: { className: "bg-white" },
       }}
-      header="Upload Service Report"
+      header="Upload Photos"
     >
       <div className="relative ">
         <header className="flex items-center justify-between">
           <FileUpload
             ref={fileUploadRef}
+            accept="image/*"
             mode="basic"
-            chooseLabel="Upload file"
+            chooseLabel="Choose"
             onSelect={(e) => {
               setFiles((prevFiles) => {
                 const existingFileNames = new Set(
@@ -98,4 +104,4 @@ const ServiceReportDialog: React.FC<Props> = ({ visible, setVisible }) => {
   );
 };
 
-export default ServiceReportDialog;
+export default CommentPictureUpload;

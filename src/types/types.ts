@@ -182,6 +182,7 @@ type Comment = {
   user: User;
   ticketId: number;
   ticket: Ticket;
+  imageLocations: ImageLocation[];
 };
 
 type TicketTabs = {
@@ -232,7 +233,10 @@ type StatusMarker = {
   icon?: string;
 };
 
+type CustomFile = { file: File; preview: string };
+
 export type {
+  CustomFile,
   StatusMarker,
   UpdateTicket,
   UpdateComment,

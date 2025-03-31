@@ -18,4 +18,9 @@ enum TicketStatus {
   ON_HOLD = 9,
 }
 
-export { Namespace, URI, TicketStatus };
+enum Directory {
+  ROOT = "",
+  COMMENT = " ",
+}
+
+export { Namespace, URI, TicketStatus, Directory };

@@ -22,9 +22,30 @@ const updateCommentById = async (
   });
 };
 
+const uploadCommentPhotosByCommentId = async (
+  commentId: number,
+  formData: FormData
+) => {
+  return apiClient.post(
+    `${URI.API_URI}/api/v1/comment/${commentId}/upload`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};
+
 const deleteCommentById = async (commentId: number | null) => {
   if (!commentId) return;
   return apiClient.delete(`${URI.API_URI}/api/v1/comment/${commentId}`);
 };
 
-export { createComment, findCommentById, updateCommentById, deleteCommentById };
+export {
+  createComment,
+  findCommentById,
+  updateCommentById,
+  uploadCommentPhotosByCommentId,
+  deleteCommentById,
+};

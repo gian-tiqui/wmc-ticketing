@@ -2,48 +2,72 @@ import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { PrimeIcons } from "primereact/api";
 import { Button } from "primereact/button";
 import { InputTextarea } from "primereact/inputtextarea";
-import React, { useEffect, useRef } from "react";
-import { CreateComment, Ticket } from "../types/types";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import { CreateComment, CustomFile, Ticket } from "../types/types";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { createComment } from "../@utils/services/commentService";
+import {
+  createComment,
+  uploadCommentPhotosByCommentId,
+} from "../@utils/services/commentService";
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
+import CommentPictureUpload from "./CommentPictureUpload";
 
 interface Props {
   ticketId: number;
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<Ticket, Error>>;
+  setFiles: Dispatch<SetStateAction<CustomFile[]>>;
+  files: CustomFile[];
 }
 
-const CommentBar: React.FC<Props> = ({ ticketId, refetch }) => {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    reset,
-    formState: { errors },
-  } = useForm<CreateComment>({
-    defaultValues: {
-      ticketId: ticketId,
-      comment: "",
-    },
-  });
+const CommentBar: React.FC<Props> = ({
+  ticketId,
+  refetch,
+  setFiles,
+  files,
+}) => {
+  const { register, handleSubmit, watch, reset, setValue } =
+    useForm<CreateComment>({
+      defaultValues: {
+        ticketId: ticketId,
+        comment: "",
+      },
+    });
   const toastRef = useRef<Toast>(null);
-
-  useEffect(() => {
-    if (errors.comment) {
-      toastRef.current?.show({
-        summary: "Comment must not be empty",
-        severity: "error",
-      });
-    }
-  }, [errors.comment]);
+  const [uploadDialogVisible, setUploadDialogVisible] =
+    useState<boolean>(false);
 
   const handleCommentSend: SubmitHandler<CreateComment> = async (data) => {
     try {
-      await createComment(data);
+      const response = await createComment(data);
+
+      const id = response.data.commentId;
+
       await refetch();
+
+      if (id && files && files.length > 0) {
+        const formData = new FormData();
+
+        files.forEach((file) => formData.append("files", file.file));
+
+        uploadCommentPhotosByCommentId(id, formData)
+          .then((response) => {
+            if (response.status === 201) {
+              setFiles([]);
+              refetch();
+            }
+          })
+          .catch((error) => console.error(error));
+      }
+
       reset();
     } catch (error) {
       console.error("Error submitting comment:", error);
@@ -59,11 +83,16 @@ const CommentBar: React.FC<Props> = ({ ticketId, refetch }) => {
       className="flex h-20 gap-2 p-4 bg-slate-700 rounded-xl"
       onSubmit={handleSubmit(handleCommentSend)}
     >
+      <CommentPictureUpload
+        files={files}
+        visible={uploadDialogVisible}
+        setVisible={setUploadDialogVisible}
+        setFiles={setFiles}
+      />
       <CustomToast ref={toastRef} />
       <div className="w-full">
         <InputTextarea
           {...register("comment", {
-            required: "Comment cannot be empty",
             onChange: (e) => {
               setValue("comment", e.target.value, {
                 shouldValidate: true,
@@ -75,16 +104,26 @@ const CommentBar: React.FC<Props> = ({ ticketId, refetch }) => {
           placeholder="Write a comment..."
         />
       </div>
-      <div className="flex justify-center w-40 gap-2">
-        <Button
-          icon={PrimeIcons.UPLOAD}
-          className="w-10 h-10 rounded-full"
-          type="button"
-        />
+      <div className="flex items-center justify-center w-40 gap-2">
+        <div className="relative">
+          <Button
+            icon={PrimeIcons.UPLOAD}
+            className="w-10 h-10 rounded-full"
+            type="button"
+            onClick={() => setUploadDialogVisible(true)}
+          />
+          <div
+            className={`bg-white rounded-full cursor-pointer absolute -bottom-1 -right-1 w-5 h-5 text-blue-500 grid place-content-center font-bold text-[13px]`}
+          >
+            {files.length}
+          </div>
+        </div>
+
         <Button
           icon={PrimeIcons.SEND}
           className="w-10 h-10 rounded-full"
           type="submit"
+          disabled={watch("comment") == ""}
           onClick={handleSubmit(handleCommentSend)}
         />
       </div>

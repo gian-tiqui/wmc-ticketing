@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
-import { Ticket } from "../types/types";
+import { CustomFile, Ticket } from "../types/types";
 import { Avatar } from "primereact/avatar";
 import { Divider } from "primereact/divider";
 import CommentBar from "./CommentBar";
@@ -23,6 +23,7 @@ const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
+  const [files, setFiles] = useState<CustomFile[]>([]);
 
   useEffect(() => {
     const scrollContainer = scrollContainerRef.current;
@@ -106,7 +107,12 @@ const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
         </div>
       </div>
 
-      <CommentBar ticketId={ticket.id} refetch={refetch} />
+      <CommentBar
+        ticketId={ticket.id}
+        refetch={refetch}
+        setFiles={setFiles}
+        files={files}
+      />
 
       <ContextMenu
         model={menuItems}

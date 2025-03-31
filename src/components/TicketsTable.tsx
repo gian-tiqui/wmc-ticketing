@@ -62,15 +62,7 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
           header="Requested At"
           field="createdAt"
         ></Column>
-        <Column
-          pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
-          }}
-          className="text-slate-100"
-          header="From Department"
-          body={(rowData: Ticket) => <p>{rowData.issuer.department.name}</p>}
-        ></Column>
+
         <Column
           pt={{
             headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
@@ -80,7 +72,9 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
           header="Assigned to"
           body={(rowData: Ticket) =>
             rowData.assignedUser ? (
-              <p>{rowData.assignedUser.firstName}</p>
+              <p>
+                {rowData.assignedUser.firstName} {rowData.assignedUser.lastName}
+              </p>
             ) : (
               <p>None</p>
             )
