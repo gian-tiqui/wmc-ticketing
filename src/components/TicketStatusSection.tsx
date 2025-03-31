@@ -2,6 +2,7 @@ import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Category,
+  CustomFile,
   Department,
   StatusMarker,
   Ticket,
@@ -12,14 +13,17 @@ import CustomToast from "./CustomToast";
 import { Divider } from "primereact/divider";
 import { useForm } from "react-hook-form";
 import { Button } from "primereact/button";
-import { updateTicketById } from "../@utils/services/ticketService";
+import {
+  updateTicketById,
+  uploadServiceReport,
+} from "../@utils/services/ticketService";
 import { TicketStatus } from "../@utils/enums/enum";
 import AssignUserDialog from "./AssignUserDialog";
 import EscalateTicketDialog from "./EscalateTicketDialog";
-import ServiceReportDialog from "./ServiceReportDialog";
 import CloseTicketDialog from "./CloseTicketDialog";
 import { Timeline } from "primereact/timeline";
 import { Chip } from "primereact/chip";
+import ResolutionDialog from "./ResolutionDialog";
 
 interface Props {
   ticket: Ticket;
@@ -55,6 +59,8 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     defaultValues: { statusId: ticket.statusId },
   });
   const [closeDialogVisible, setCloseDialogVisible] = useState<boolean>(false);
+  const [files, setFiles] = useState<CustomFile[]>([]);
+  const [resolution, setResolution] = useState<string>("");
 
   useEffect(() => {
     if (statusId > 0 && statusId <= 7 && statusId !== ticket.status.id) {
@@ -65,14 +71,27 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         categoryId: selectedCategory?.id,
         deptId: selectedDepartment?.id,
         closingReason,
+        resolution,
       })
         .then((response) => {
           if (response.status === 200) {
+            if (files && files.length > 0) {
+              const formData = new FormData();
+
+              files.forEach((file) => formData.append("files", file.file));
+
+              uploadServiceReport(ticket.id, formData);
+            }
+            setClosingReason("");
+            setResolution("");
+            setFiles([]);
             refetch();
             if (assignUserVisible) setAssignUserVisible(!assignUserVisible);
             if (escalateUserVisible)
               setEscalateUserVisible(!escalateUserVisible);
             if (closeDialogVisible) setCloseDialogVisible(false);
+            if (serviceReportDialogVisible)
+              setServiceReportDialogVisible(false);
           }
         })
         .catch((error) => {
@@ -102,6 +121,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     escalateUserVisible,
     closingReason,
     closeDialogVisible,
+    resolution,
+    files,
+    serviceReportDialogVisible,
   ]);
 
   const markers: StatusMarker[] = [
@@ -229,8 +251,12 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           visible={escalateUserVisible}
           setVisible={setEscalateUserVisible}
         />
-        <ServiceReportDialog
-          ticket={ticket}
+        <ResolutionDialog
+          setStatusId={setStatusId}
+          files={files}
+          setFiles={setFiles}
+          setResolution={setResolution}
+          refetch={refetch}
           visible={serviceReportDialogVisible}
           setVisible={setServiceReportDialogVisible}
         />

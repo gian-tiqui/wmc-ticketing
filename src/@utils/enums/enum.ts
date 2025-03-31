@@ -19,8 +19,8 @@ enum TicketStatus {
 }
 
 enum Directory {
-  ROOT = "",
-  COMMENT = " ",
+  UPLOADS = "uploads",
+  COMMENT = "comment",
 }
 
 export { Namespace, URI, TicketStatus, Directory };

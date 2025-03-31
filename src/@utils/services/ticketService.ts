@@ -20,4 +20,22 @@ const updateTicketById = (ticketId: number, body: UpdateTicket) => {
   });
 };
 
-export { createTicket, getTickets, getTicketById, updateTicketById };
+const uploadServiceReport = async (ticketId: number, formData: FormData) => {
+  return apiClient.post(
+    `${URI.API_URI}/api/v1/ticket/${ticketId}/serviceReport`,
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+};
+
+export {
+  createTicket,
+  getTickets,
+  getTicketById,
+  updateTicketById,
+  uploadServiceReport,
+};

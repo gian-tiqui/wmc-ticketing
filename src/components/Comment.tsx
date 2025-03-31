@@ -1,6 +1,9 @@
 import { Avatar } from "primereact/avatar";
 import React from "react";
 import { Comment as CommentType } from "../types/types";
+import { Image } from "primereact/image";
+import getImageFromServer from "../@utils/functions/getImageFromServer";
+import { Directory } from "../@utils/enums/enum";
 
 interface Props {
   comment: CommentType;
@@ -53,10 +56,20 @@ const Comment: React.FC<Props> = ({ comment, onRightClick }) => {
             {comment.comment}
           </p>
         )}
-        {comment.imageLocations.length > 0 &&
-          comment.imageLocations.map((imageLocation) => (
-            <p key={imageLocation.id}>{imageLocation.path}</p>
-          ))}
+        <div className="flex flex-wrap items-center gap-2">
+          {comment.imageLocations.length > 0 &&
+            comment.imageLocations.map((imageLocation) => (
+              <Image
+                className="w-auto h-auto"
+                src={getImageFromServer(
+                  Directory.UPLOADS,
+                  Directory.COMMENT,
+                  imageLocation.path
+                )}
+                alt={`comment-${comment.id}-image-${imageLocation.id}`}
+              />
+            ))}
+        </div>
       </div>
     </div>
   );

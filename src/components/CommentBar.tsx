@@ -2,13 +2,7 @@ import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import { PrimeIcons } from "primereact/api";
 import { Button } from "primereact/button";
 import { InputTextarea } from "primereact/inputtextarea";
-import React, {
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import { CreateComment, CustomFile, Ticket } from "../types/types";
 import { useForm, SubmitHandler } from "react-hook-form";
 import {
@@ -123,7 +117,7 @@ const CommentBar: React.FC<Props> = ({
           icon={PrimeIcons.SEND}
           className="w-10 h-10 rounded-full"
           type="submit"
-          disabled={watch("comment") == ""}
+          disabled={watch("comment") == "" && files.length === 0}
           onClick={handleSubmit(handleCommentSend)}
         />
       </div>

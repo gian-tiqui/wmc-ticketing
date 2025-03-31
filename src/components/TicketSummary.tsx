@@ -41,7 +41,9 @@ const TicketSummary: React.FC<Props> = ({ ticket }) => {
     },
     {
       details: `${
-        ticket.acknowledgedAt ? ticket.acknowledgedAt : "Unacknowledged yet"
+        ticket.acknowledgedAt
+          ? ticket.acknowledgedAt.split(" at ")[1]
+          : "Unacknowledged yet"
       }`,
       summary: "Time Acknowledged",
       icon: PrimeIcons.CLOCK,

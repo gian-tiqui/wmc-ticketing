@@ -159,7 +159,7 @@ type ServiceReport = {
   ticketId: number;
   ticket: Ticket;
 
-  imageLocation: ImageLocation[];
+  imageLocations: ImageLocation[];
 };
 
 type ImageLocation = {
@@ -222,6 +222,7 @@ type UpdateTicket = {
   statusId?: number;
   acknowledgedAt?: Date;
   closingReason?: string;
+  resolution?: string;
 };
 
 type StatusMarker = {

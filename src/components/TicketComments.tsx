@@ -78,7 +78,7 @@ const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
       />
       <div
         ref={scrollContainerRef}
-        className="w-full p-4 overflow-y-auto h-80 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
+        className="w-full p-4 overflow-y-auto h-[65vh] md:h-80 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400"
       >
         <div>
           <Avatar
