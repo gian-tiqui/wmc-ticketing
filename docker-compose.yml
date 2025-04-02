@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8085:85"
+    restart: unless-stopped
+    volumes:
+      - .:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URI=http://10.10.10.30:8084
