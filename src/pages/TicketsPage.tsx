@@ -130,84 +130,126 @@ const TicketsPage = () => {
       header: (
         <div className="flex items-center">
           <p>New</p>
-          <Avatar
-            label={newTicketsData?.data.count}
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
+          {newTicketsData?.data.count > 0 && (
+            <Avatar
+              label={newTicketsData?.data.count}
+              shape="circle"
+              className="w-6 h-6 text-white bg-blue-400 ms-2"
+            />
+          )}
         </div>
       ),
-      body: <TicketsTable tickets={newTicketsData?.data.tickets} />,
+      body:
+        newTicketsData?.data.count > 0 ? (
+          <TicketsTable tickets={newTicketsData?.data.tickets} />
+        ) : (
+          <p className="text-slate-100">No Tickets yet</p>
+        ),
     },
     {
       icon: PrimeIcons.CHECK,
       header: (
         <div className="flex items-center">
           <p>Acknowledged</p>
-          <Avatar
-            label={acknowledgeTicketsData?.data.count}
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
+          {acknowledgeTicketsData?.data.count > 0 && (
+            <Avatar
+              label={acknowledgeTicketsData?.data.count}
+              shape="circle"
+              className="w-6 h-6 text-white bg-blue-400 ms-2"
+            />
+          )}
         </div>
       ),
-      body: <TicketsTable tickets={acknowledgeTicketsData?.data.tickets} />,
+      body:
+        acknowledgeTicketsData?.data.count > 0 ? (
+          <TicketsTable tickets={acknowledgeTicketsData?.data.tickets} />
+        ) : (
+          <p className="text-slate-100">No Tickets yet</p>
+        ),
     },
     {
       icon: PrimeIcons.USER_PLUS,
       header: (
         <div className="flex items-center">
           <p>Assigned</p>
-          <Avatar
-            label={assignedTickets?.data.count}
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
+          {assignedTickets?.data.count > 0 && (
+            <Avatar
+              label={assignedTickets?.data.count}
+              shape="circle"
+              className="w-6 h-6 text-white bg-blue-400 ms-2"
+            />
+          )}
         </div>
       ),
-      body: <TicketsTable tickets={assignedTickets?.data.tickets} />,
+      body:
+        assignedTickets?.data.count > 0 ? (
+          <TicketsTable tickets={assignedTickets?.data.tickets} />
+        ) : (
+          <p className="text-slate-100">No Tickets yet</p>
+        ),
     },
     {
       icon: PrimeIcons.USER_PLUS,
       header: (
         <div className="flex items-center">
           <p>Escalated</p>
-          <Avatar
-            label={escalatedTickets?.data.count}
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
+          {escalatedTickets?.data.count > 0 && (
+            <Avatar
+              label={escalatedTickets?.data.count}
+              shape="circle"
+              className="w-6 h-6 text-white bg-blue-400 ms-2"
+            />
+          )}
         </div>
       ),
-      body: <TicketsTable tickets={escalatedTickets?.data.tickets} />,
+      body:
+        escalatedTickets?.data.count > 0 ? (
+          <TicketsTable tickets={escalatedTickets?.data.tickets} />
+        ) : (
+          <p className="text-slate-100">No Tickets yet</p>
+        ),
     },
     {
       icon: PrimeIcons.CHECK_CIRCLE,
       header: (
         <div className="flex items-center">
           <p>Resolved</p>
-          <Avatar
-            label={resolvedTickets?.data.count}
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
+          {resolvedTickets?.data.count > 0 && (
+            <Avatar
+              label={resolvedTickets?.data.count}
+              shape="circle"
+              className="w-6 h-6 text-white bg-blue-400 ms-2"
+            />
+          )}
         </div>
       ),
-      body: <TicketsTable tickets={resolvedTickets?.data.tickets} />,
+      body:
+        resolvedTickets?.data.count > 0 ? (
+          <TicketsTable tickets={resolvedTickets?.data.tickets} />
+        ) : (
+          <p className="text-slate-100">No Tickets yet</p>
+        ),
     },
     {
       icon: PrimeIcons.CHECK_CIRCLE,
       header: (
         <div className="flex items-center">
           <p>Closed</p>
-          <Avatar
-            label={closedTickets?.data.count}
-            shape="circle"
-            className="w-6 h-6 text-white bg-blue-400 ms-2"
-          />
+          {closedTickets?.data.count > 0 && (
+            <Avatar
+              label={closedTickets?.data.count}
+              shape="circle"
+              className="w-6 h-6 text-white bg-blue-400 ms-2"
+            />
+          )}
         </div>
       ),
-      body: <TicketsTable tickets={closedTickets?.data.tickets} />,
+      body:
+        closedTickets?.data.count > 0 ? (
+          <TicketsTable tickets={closedTickets?.data.tickets} />
+        ) : (
+          <p className="text-slate-100">No Tickets yet</p>
+        ),
     },
   ];
 
