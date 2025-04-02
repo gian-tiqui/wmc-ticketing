@@ -45,7 +45,9 @@ interface Props {
   header?: ReactNode;
   refetch: (
     options?: RefetchOptions
-  ) => Promise<QueryObserverResult<Ticket[], Error>>;
+  ) => Promise<
+    QueryObserverResult<{ tickets: Ticket[]; count: number }, Error>
+  >;
 }
 
 const NewTicketDialog: React.FC<Props> = ({
