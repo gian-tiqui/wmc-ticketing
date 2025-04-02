@@ -1,15 +1,23 @@
 import { PrimeIcons } from "primereact/api";
 import { Button } from "primereact/button";
 import { ButtonType } from "../types/types";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import useSelectedButtonStore from "../@utils/store/selectedButton";
 import useUserDataStore from "../@utils/store/userDataStore";
 import isAuthorized from "../@utils/functions/isAuthorized"; // Import authorization function
+import { useEffect } from "react";
 
 const CrmUserSidebarSection = () => {
   const navigate = useNavigate();
   const { user } = useUserDataStore();
   const { id, setId } = useSelectedButtonStore();
+  const location = useLocation();
+
+  useEffect(() => {
+    const currentLocation = location.pathname.split("/")[1];
+
+    if (currentLocation) setId(currentLocation);
+  }, [location, setId]);
 
   const allButtons: (ButtonType & { allowedRoles: string[] })[] = [
     {
@@ -20,7 +28,7 @@ const CrmUserSidebarSection = () => {
       allowedRoles: ["admin"],
     },
     {
-      id: "tickets",
+      id: "ticket",
       name: "Tickets",
       icon: PrimeIcons.TICKET,
       path: "/ticket",
