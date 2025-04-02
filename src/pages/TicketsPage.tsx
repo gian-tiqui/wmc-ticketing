@@ -26,7 +26,10 @@ const TicketsPage = () => {
     queryFn: () =>
       roleIncludes(user, "admin")
         ? getTickets({ ...query, statusId: 1 })
-        : getUserTicketsById(user?.sub, query),
+        : getUserTicketsById(user?.sub, {
+            ...query,
+            statusId: TicketStatus.NEW,
+          }),
   });
 
   const { data: acknowledgeTicketsData, refetch: refetchAcknowledgedTickets } =
@@ -40,7 +43,10 @@ const TicketsPage = () => {
       queryFn: () =>
         roleIncludes(user, "admin")
           ? getTickets({ ...query, statusId: TicketStatus.ACKNOWLEDGED })
-          : getUserTicketsById(user?.sub, query),
+          : getUserTicketsById(user?.sub, {
+              ...query,
+              statusId: TicketStatus.ACKNOWLEDGED,
+            }),
     });
 
   const { data: assignedTickets, refetch: refetchAssignedTickets } = useQuery({
@@ -53,7 +59,10 @@ const TicketsPage = () => {
     queryFn: () =>
       roleIncludes(user, "admin")
         ? getTickets({ ...query, statusId: TicketStatus.ASSIGNED })
-        : getUserTicketsById(user?.sub, query),
+        : getUserTicketsById(user?.sub, {
+            ...query,
+            statusId: TicketStatus.ASSIGNED,
+          }),
   });
 
   const { data: escalatedTickets, refetch: refetchEscalatedTickets } = useQuery(
@@ -67,7 +76,10 @@ const TicketsPage = () => {
       queryFn: () =>
         roleIncludes(user, "admin")
           ? getTickets({ ...query, statusId: TicketStatus.ESCALATED })
-          : getUserTicketsById(user?.sub, query),
+          : getUserTicketsById(user?.sub, {
+              ...query,
+              statusId: TicketStatus.ESCALATED,
+            }),
     }
   );
 
@@ -81,7 +93,10 @@ const TicketsPage = () => {
     queryFn: () =>
       roleIncludes(user, "admin")
         ? getTickets({ ...query, statusId: TicketStatus.RESOLVED })
-        : getUserTicketsById(user?.sub, query),
+        : getUserTicketsById(user?.sub, {
+            ...query,
+            statusId: TicketStatus.RESOLVED,
+          }),
   });
 
   const { data: closedTickets, refetch: refetchClosedTickets } = useQuery({
@@ -94,7 +109,10 @@ const TicketsPage = () => {
     queryFn: () =>
       roleIncludes(user, "admin")
         ? getTickets({ ...query, statusId: TicketStatus.CLOSED })
-        : getUserTicketsById(user?.sub, query),
+        : getUserTicketsById(user?.sub, {
+            ...query,
+            statusId: TicketStatus.CLOSED,
+          }),
   });
 
   const refetchAll = () => {

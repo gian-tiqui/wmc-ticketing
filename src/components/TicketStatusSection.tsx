@@ -23,6 +23,8 @@ import CloseTicketDialog from "./CloseTicketDialog";
 import { Timeline } from "primereact/timeline";
 import { Chip } from "primereact/chip";
 import ResolutionDialog from "./ResolutionDialog";
+import useUserDataStore from "../@utils/store/userDataStore";
+import isUserInResolverDepartments from "../@utils/functions/isUserInResolverDepartments";
 
 interface Props {
   ticket: Ticket;
@@ -54,6 +56,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   const [closeDialogVisible, setCloseDialogVisible] = useState<boolean>(false);
   const [files, setFiles] = useState<CustomFile[]>([]);
   const [resolution, setResolution] = useState<string>("");
+  const { user } = useUserDataStore();
 
   useEffect(() => {
     if (statusId > 0 && statusId <= 7 && statusId !== ticket.status.id) {
@@ -195,7 +198,10 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
 
   return (
     <>
-      <form className="mb-16">
+      <form className="relative mb-16">
+        {!isUserInResolverDepartments(user?.deptId) && (
+          <div className="absolute z-10 w-full h-full"></div>
+        )}
         <CloseTicketDialog
           setStatusId={setStatusId}
           setClosingReason={setClosingReason}
