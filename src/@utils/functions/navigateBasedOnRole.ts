@@ -1,14 +1,14 @@
 import { NavigateFunction } from "react-router-dom";
 import { UserData } from "../../types/types";
-import isAuthorized from "./isAuthorized";
+import roleIncludes from "./rolesIncludes";
 
 const navigateBasedOnRole = (
   userData: UserData,
   navigate: NavigateFunction
 ) => {
-  if (isAuthorized(userData, ["user", "admin"])) {
+  if (roleIncludes(userData, "admin")) {
     navigate("/dashboard");
-  } else if (isAuthorized(userData, ["user"])) {
+  } else {
     navigate("/ticket");
   }
 };
