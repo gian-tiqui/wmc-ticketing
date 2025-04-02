@@ -2,7 +2,6 @@ import { TabPanel, TabView } from "primereact/tabview";
 import PageTemplate from "../templates/PageTemplate";
 import useCrmSidebarStore from "../@utils/store/crmSidebar";
 import { PrimeIcons } from "primereact/api";
-import { Avatar } from "primereact/avatar";
 import NewTicketButton from "../components/NewTicketButton";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -129,14 +128,13 @@ const TicketsPage = () => {
       icon: PrimeIcons.PLUS,
       header: (
         <div className="flex items-center">
-          <p>New</p>
-          {newTicketsData?.data.count > 0 && (
-            <Avatar
-              label={newTicketsData?.data.count}
-              shape="circle"
-              className="w-6 h-6 text-white bg-blue-400 ms-2"
-            />
-          )}
+          <p>
+            New
+            <span className="text-slate-100">
+              {newTicketsData?.data.count > 0 &&
+                ` - ${newTicketsData?.data.count}`}
+            </span>
+          </p>
         </div>
       ),
       body:
@@ -150,14 +148,13 @@ const TicketsPage = () => {
       icon: PrimeIcons.CHECK,
       header: (
         <div className="flex items-center">
-          <p>Acknowledged</p>
-          {acknowledgeTicketsData?.data.count > 0 && (
-            <Avatar
-              label={acknowledgeTicketsData?.data.count}
-              shape="circle"
-              className="w-6 h-6 text-white bg-blue-400 ms-2"
-            />
-          )}
+          <p>
+            Acknowledged
+            <span className="text-slate-100">
+              {acknowledgeTicketsData?.data.count > 0 &&
+                ` - ${acknowledgeTicketsData?.data.count}`}
+            </span>
+          </p>
         </div>
       ),
       body:
@@ -171,14 +168,13 @@ const TicketsPage = () => {
       icon: PrimeIcons.USER_PLUS,
       header: (
         <div className="flex items-center">
-          <p>Assigned</p>
-          {assignedTickets?.data.count > 0 && (
-            <Avatar
-              label={assignedTickets?.data.count}
-              shape="circle"
-              className="w-6 h-6 text-white bg-blue-400 ms-2"
-            />
-          )}
+          <p>
+            Assigned
+            <span className="text-slate-100">
+              {assignedTickets?.data.count > 0 &&
+                ` - ${assignedTickets?.data.count}`}
+            </span>
+          </p>
         </div>
       ),
       body:
@@ -192,14 +188,13 @@ const TicketsPage = () => {
       icon: PrimeIcons.USER_PLUS,
       header: (
         <div className="flex items-center">
-          <p>Escalated</p>
-          {escalatedTickets?.data.count > 0 && (
-            <Avatar
-              label={escalatedTickets?.data.count}
-              shape="circle"
-              className="w-6 h-6 text-white bg-blue-400 ms-2"
-            />
-          )}
+          <p>
+            Escalated
+            <span className="text-slate-100">
+              {escalatedTickets?.data.count > 0 &&
+                ` - ${escalatedTickets?.data.count}`}
+            </span>
+          </p>
         </div>
       ),
       body:
@@ -213,14 +208,13 @@ const TicketsPage = () => {
       icon: PrimeIcons.CHECK_CIRCLE,
       header: (
         <div className="flex items-center">
-          <p>Resolved</p>
-          {resolvedTickets?.data.count > 0 && (
-            <Avatar
-              label={resolvedTickets?.data.count}
-              shape="circle"
-              className="w-6 h-6 text-white bg-blue-400 ms-2"
-            />
-          )}
+          <p>
+            Resolved
+            <span className="text-slate-100">
+              {resolvedTickets?.data.count > 0 &&
+                ` - ${resolvedTickets?.data.count}`}
+            </span>
+          </p>
         </div>
       ),
       body:
@@ -234,14 +228,13 @@ const TicketsPage = () => {
       icon: PrimeIcons.CHECK_CIRCLE,
       header: (
         <div className="flex items-center">
-          <p>Closed</p>
-          {closedTickets?.data.count > 0 && (
-            <Avatar
-              label={closedTickets?.data.count}
-              shape="circle"
-              className="w-6 h-6 text-white bg-blue-400 ms-2"
-            />
-          )}
+          <p>
+            Closed
+            <span className="text-slate-100">
+              {closedTickets?.data.count > 0 &&
+                ` - ${closedTickets?.data.count}`}
+            </span>
+          </p>
         </div>
       ),
       body:
