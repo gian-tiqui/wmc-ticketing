@@ -232,6 +232,7 @@ type UpdateTicket = {
   acknowledgedAt?: Date;
   closingReason?: string;
   resolution?: string;
+  resolutionTime?: string;
 };
 
 type StatusMarker = {

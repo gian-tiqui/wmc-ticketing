@@ -9,6 +9,8 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { TicketStatus } from "../@utils/enums/enum";
 import extractOriginalName from "../@utils/functions/extractOriginalName";
+import { Calendar } from "primereact/calendar";
+import { Nullable } from "primereact/ts-helpers";
 
 interface Props {
   visible: boolean;
@@ -20,6 +22,8 @@ interface Props {
   files: CustomFile[];
   setFiles: Dispatch<SetStateAction<CustomFile[]>>;
   setStatusId: Dispatch<SetStateAction<number>>;
+  resolutionTime: Nullable<Date>;
+  setResolutionTime: Dispatch<SetStateAction<Nullable<Date>>>;
 }
 
 const ResolutionDialog: React.FC<Props> = ({
@@ -29,6 +33,8 @@ const ResolutionDialog: React.FC<Props> = ({
   files,
   setResolution,
   setStatusId,
+  resolutionTime,
+  setResolutionTime,
 }) => {
   const fileUploadRef = useRef<FileUpload>(null);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
@@ -67,8 +73,17 @@ const ResolutionDialog: React.FC<Props> = ({
         </div>
         <Divider />
         <InputTextarea
-          className="w-full bg-slate-800 h-52 text-slate-100"
+          className="w-full mb-3 bg-slate-800 h-52 text-slate-100"
           onChange={(e) => setResolution(e.target.value)}
+        />
+        <p>Resolution time</p>
+        <Calendar
+          showTime
+          hourFormat="12"
+          onChange={(e) => {
+            setResolutionTime(e.value);
+          }}
+          value={resolutionTime}
         />
 
         <h4 className="mt-5 text-lg font-medium">Service Report</h4>

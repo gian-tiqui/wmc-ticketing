@@ -25,6 +25,7 @@ import { Chip } from "primereact/chip";
 import ResolutionDialog from "./ResolutionDialog";
 import useUserDataStore from "../@utils/store/userDataStore";
 import isUserInResolverDepartments from "../@utils/functions/isUserInResolverDepartments";
+import { Nullable } from "primereact/ts-helpers";
 
 interface Props {
   ticket: Ticket;
@@ -52,7 +53,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   >(undefined);
   const [isUpdating, setIsUpdating] = useState(false);
   const [assignUserVisible, setAssignUserVisible] = useState<boolean>(false);
-
+  const [resolutionTime, setResolutionTime] = useState<Nullable<Date>>();
   const [closeDialogVisible, setCloseDialogVisible] = useState<boolean>(false);
   const [files, setFiles] = useState<CustomFile[]>([]);
   const [resolution, setResolution] = useState<string>("");
@@ -68,6 +69,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         deptId: selectedDepartment?.id,
         closingReason,
         resolution,
+        resolutionTime: resolutionTime
+          ? new Date(resolutionTime).toISOString()
+          : new Date().toISOString(),
       })
         .then((response) => {
           if (response.status === 200) {
@@ -238,6 +242,8 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           refetch={refetch}
           visible={serviceReportDialogVisible}
           setVisible={setServiceReportDialogVisible}
+          setResolutionTime={setResolutionTime}
+          resolutionTime={resolutionTime}
         />
 
         <CustomToast ref={toastRef} />
