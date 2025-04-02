@@ -13,13 +13,8 @@ import {
   Department,
   PriorityLevel,
   Query,
-  Ticket,
 } from "../types/types";
-import {
-  QueryObserverResult,
-  RefetchOptions,
-  useQuery,
-} from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import {
   getDepartmentCategoriesByDeptId,
   getDepartments,
@@ -43,11 +38,7 @@ interface Props {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
   header?: ReactNode;
-  refetch: (
-    options?: RefetchOptions
-  ) => Promise<
-    QueryObserverResult<{ tickets: Ticket[]; count: number }, Error>
-  >;
+  refetch: () => void;
 }
 
 const NewTicketDialog: React.FC<Props> = ({

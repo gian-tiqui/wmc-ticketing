@@ -220,7 +220,7 @@ const TicketsPage = () => {
           </h4>
           <div className="flex gap-2">
             <InboxButton />
-            <NewTicketButton refetch={refetchNewTickets} />
+            <NewTicketButton refetchAll={refetchAll} />
           </div>
         </div>
 
