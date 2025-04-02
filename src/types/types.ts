@@ -40,6 +40,7 @@ type Query = {
   sortOrder?: string;
   isDeleted?: boolean;
   statusId?: number;
+  deptId?: number;
 };
 
 type Category = {
@@ -158,6 +159,7 @@ type ServiceReport = {
 
   ticketId: number;
   ticket: Ticket;
+  serviceReporter: User;
 
   imageLocations: ImageLocation[];
 };
@@ -168,8 +170,15 @@ type ImageLocation = {
   createdAt: string;
   updatedAt: string;
 
+  fileTypeId: number;
+  fileType: FileType;
   serviceReportId: number;
   serviceReport: ServiceReport;
+};
+
+type FileType = {
+  id: number;
+  type: string;
 };
 
 type Comment = {
@@ -237,6 +246,7 @@ type StatusMarker = {
 type CustomFile = { file: File; preview: string };
 
 export type {
+  FileType,
   CustomFile,
   StatusMarker,
   UpdateTicket,

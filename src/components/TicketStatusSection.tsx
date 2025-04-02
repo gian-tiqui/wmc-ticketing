@@ -11,7 +11,6 @@ import {
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
 import { Divider } from "primereact/divider";
-import { useForm } from "react-hook-form";
 import { Button } from "primereact/button";
 import {
   updateTicketById,
@@ -30,10 +29,6 @@ interface Props {
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<Ticket, Error>>;
-}
-
-interface FormFields {
-  statusId: number;
 }
 
 const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
@@ -55,9 +50,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   >(undefined);
   const [isUpdating, setIsUpdating] = useState(false);
   const [assignUserVisible, setAssignUserVisible] = useState<boolean>(false);
-  const { setValue } = useForm<FormFields>({
-    defaultValues: { statusId: ticket.statusId },
-  });
+
   const [closeDialogVisible, setCloseDialogVisible] = useState<boolean>(false);
   const [files, setFiles] = useState<CustomFile[]>([]);
   const [resolution, setResolution] = useState<string>("");
@@ -108,23 +101,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           setIsUpdating(false);
         });
     }
-  }, [
-    statusId,
-    ticket.status.id,
-    ticket.id,
-    refetch,
-    setValue,
-    selectedUser,
-    selectedCategory,
-    selectedDepartment,
-    assignUserVisible,
-    escalateUserVisible,
-    closingReason,
-    closeDialogVisible,
-    resolution,
-    files,
-    serviceReportDialogVisible,
-  ]);
+  }, [statusId]);
 
   const markers: StatusMarker[] = [
     {
@@ -161,11 +138,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           statusId !== TicketStatus.ESCALATED) ||
         isUpdating,
       onClick: () => {
-        if (ticket.reportRequired) {
-          setServiceReportDialogVisible(true);
-        } else {
-          setStatusId(TicketStatus.RESOLVED);
-        }
+        setServiceReportDialogVisible(true);
       },
       type: "button",
       loading: isUpdating && statusId === TicketStatus.ESCALATED,

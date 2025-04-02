@@ -13,11 +13,12 @@ import useUserDataStore from "../@utils/store/userDataStore";
 import roleIncludes from "../@utils/functions/rolesIncludes";
 import { getUserTicketsById } from "../@utils/services/userService";
 import { TicketStatus } from "../@utils/enums/enum";
+import InboxButton from "../components/InboxButton";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
   const { user } = useUserDataStore();
-  const [query] = useState<Query>({ search: "" });
+  const [query] = useState<Query>({ search: "", deptId: user?.deptId });
   const { data: newTicketsData, refetch: refetchNewTickets } = useQuery({
     queryKey: [
       `new-tickets-${JSON.stringify({ ...query, statusId: TicketStatus.NEW })}`,
@@ -199,7 +200,10 @@ const TicketsPage = () => {
           <h4 className={` text-2xl font-medium ${!isExpanded && "ms-14"} `}>
             <i className={`${PrimeIcons.TICKET} text-xl rotate-90`}></i> Tickets
           </h4>
-          <NewTicketButton refetch={refetchNewTickets} />
+          <div className="flex gap-2">
+            <InboxButton />
+            <NewTicketButton refetch={refetchNewTickets} />
+          </div>
         </div>
 
         <TabView

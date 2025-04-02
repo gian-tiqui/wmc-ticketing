@@ -21,6 +21,12 @@ enum TicketStatus {
 enum Directory {
   UPLOADS = "uploads",
   COMMENT = "comment",
+  SERVICE_REPORT = "service_reports",
 }
 
-export { Namespace, URI, TicketStatus, Directory };
+enum FileType {
+  PDF = 1,
+  IMAGE = 2,
+}
+
+export { Namespace, URI, TicketStatus, Directory, FileType };

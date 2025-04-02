@@ -4,11 +4,11 @@ import { CustomFile, Ticket } from "../types/types";
 import { FileUpload } from "primereact/fileupload";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
-import { Image } from "primereact/image";
 import { Divider } from "primereact/divider";
 import { InputTextarea } from "primereact/inputtextarea";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { TicketStatus } from "../@utils/enums/enum";
+import extractOriginalName from "../@utils/functions/extractOriginalName";
 
 interface Props {
   visible: boolean;
@@ -67,7 +67,7 @@ const ResolutionDialog: React.FC<Props> = ({
         </div>
         <Divider />
         <InputTextarea
-          className="w-full bg-slate-800 h-52"
+          className="w-full bg-slate-800 h-52 text-slate-100"
           onChange={(e) => setResolution(e.target.value)}
         />
 
@@ -78,6 +78,7 @@ const ResolutionDialog: React.FC<Props> = ({
             <FileUpload
               ref={fileUploadRef}
               mode="basic"
+              accept="application/pdf"
               chooseLabel="Upload file"
               onSelect={(e) => {
                 setFiles((prevFiles) => {
@@ -109,13 +110,13 @@ const ResolutionDialog: React.FC<Props> = ({
               />
             </div>
           </header>
-          <section className="grid gap-2 mt-4 grid-cols- md:grid-cols-3">
+          <section className="flex flex-col gap-2 p-4 mt-4 overflow-y-auto rounded bg-slate-800 h-96">
             {files.map((file, index) => (
-              <div key={index} className="relative">
+              <div key={index} className="relative flex">
                 {deleteMode && (
                   <Button
                     icon={PrimeIcons.TIMES}
-                    className="absolute w-10 h-10 p-1 text-white bg-red-500 rounded-full top-2 right-2"
+                    className="absolute z-10 w-10 h-10 p-1 text-white bg-red-500 rounded-full top-2 right-2"
                     onClick={() =>
                       setFiles(files.filter((_, i) => i !== index))
                     }
@@ -123,11 +124,17 @@ const ResolutionDialog: React.FC<Props> = ({
                     tooltipOptions={{ position: "bottom" }}
                   />
                 )}
-                <Image
+                {/* <Image
                   src={file.preview}
                   alt={file.file.name}
                   className="object-cover w-full h-32 rounded-md"
-                />
+                /> */}
+                <Button
+                  icon={`${PrimeIcons.FILE_PDF} text-xl`}
+                  className="w-full h-16 gap-2 font-medium"
+                >
+                  {extractOriginalName(file.file.name)}
+                </Button>
               </div>
             ))}
           </section>

@@ -32,7 +32,7 @@ const TicketActivities: React.FC<Props> = ({ ticket }) => {
   };
 
   return (
-    <div className="w-full p-4 overflow-y-auto h-96 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
+    <div className="w-full p-4 overflow-y-auto h-[75vh] md:h-96 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400">
       <Timeline
         value={ticket.activities}
         align="alternate"

@@ -67,6 +67,7 @@ const Comment: React.FC<Props> = ({ comment, onRightClick }) => {
                   imageLocation.path
                 )}
                 alt={`comment-${comment.id}-image-${imageLocation.id}`}
+                key={imageLocation.id}
               />
             ))}
         </div>

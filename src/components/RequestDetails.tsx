@@ -11,7 +11,7 @@ interface Props {
 
 const RequestDetails: React.FC<Props> = ({ ticket }) => {
   return (
-    <div className="w-full rounded-lg shadow h-90 hover:shadow-blue-900 bg-slate-900">
+    <div className="w-full rounded-lg shadow h-[109%] md:h-96 hover:shadow-blue-900 bg-slate-900">
       <div className="h-[5%] bg-blue-500 rounded-t-lg"></div>
 
       <div className="flex flex-col gap-2 mx-4">
@@ -38,7 +38,7 @@ const RequestDetails: React.FC<Props> = ({ ticket }) => {
             ? ticket.closingReason
             : ticket.description
         }
-        className="w-[93%] mx-4 h-40 bg-slate-800 text-slate-100 disabled:opacity-100 disabled:text-slate-100"
+        className="w-[91%] md:w-[93%] mx-4 md:h-44 bg-slate-800 text-slate-100 disabled:opacity-100 disabled:text-slate-100"
         disabled
       />
     </div>
