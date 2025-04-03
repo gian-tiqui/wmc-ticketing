@@ -17,7 +17,7 @@ const SearchItem: React.FC<Props> = ({ ticket }) => {
       className="items-center w-full gap-2 font-medium"
       onClick={() => navigate(`/ticket/${ticket.id}`)}
     >
-      {ticket.title} ({ticket.status.type})
+      {ticket.title} {ticket.status && `(${ticket.status.type})`}
     </Button>
   );
 };

@@ -26,7 +26,10 @@ const InboxButton = () => {
   }, [query]);
 
   return (
-    <>
+    <div className="relative">
+      <div className="absolute z-10 grid w-5 h-5 text-sm font-bold bg-blue-100 rounded-full -bottom-2 place-content-center text-slate-900 -right-1">
+        {userNotifications?.data.count}
+      </div>
       <Button
         icon={`${PrimeIcons.INBOX}`}
         className="w-9 h-9"
@@ -47,7 +50,7 @@ const InboxButton = () => {
           <p className="font-medium text-slate-100">No notifications yet</p>
         )}
       </OverlayPanel>
-    </>
+    </div>
   );
 };
 
