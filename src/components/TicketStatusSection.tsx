@@ -23,8 +23,8 @@ import CloseTicketDialog from "./CloseTicketDialog";
 import { Timeline } from "primereact/timeline";
 import { Chip } from "primereact/chip";
 import ResolutionDialog from "./ResolutionDialog";
-import useUserDataStore from "../@utils/store/userDataStore";
-import isUserInResolverDepartments from "../@utils/functions/isUserInResolverDepartments";
+// import useUserDataStore from "../@utils/store/userDataStore";
+// import isUserInResolverDepartments from "../@utils/functions/isUserInResolverDepartments";
 import { Nullable } from "primereact/ts-helpers";
 import { PrimeIcons } from "primereact/api";
 import PauseReason from "./PauseReason";
@@ -60,7 +60,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   const [files, setFiles] = useState<CustomFile[]>([]);
   const [resolution, setResolution] = useState<string>("");
   const [pauseReason, setPauseReason] = useState<string>("");
-  const { user } = useUserDataStore();
+  // const { user } = useUserDataStore();
   const [pauseReasonDialogVisible, setPauseReasonDialogVisible] =
     useState<boolean>(false);
 
@@ -213,9 +213,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   return (
     <>
       <form className="relative mb-16">
-        {!isUserInResolverDepartments(user?.deptId) && (
+        {/* {!isUserInResolverDepartments(user?.deptId) && (
           <div className="absolute z-10 w-full h-full"></div>
-        )}
+        )} */}
         <CloseTicketDialog
           setStatusId={setStatusId}
           setClosingReason={setClosingReason}
