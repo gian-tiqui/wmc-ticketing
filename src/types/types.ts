@@ -248,7 +248,24 @@ type StatusMarker = {
 
 type CustomFile = { file: File; preview: string };
 
+type Notification = {
+  id: number;
+  title: string;
+  message: string;
+  viewed: boolean;
+
+  ticket: Ticket;
+};
+
+type UpdateNotificationDto = {
+  title?: string;
+  message?: string;
+  viewed?: number;
+};
+
 export type {
+  UpdateNotificationDto,
+  Notification,
   FileType,
   CustomFile,
   StatusMarker,

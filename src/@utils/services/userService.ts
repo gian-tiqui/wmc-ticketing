@@ -57,6 +57,15 @@ const getUserTicketsById = async (
   });
 };
 
+const getUserNotificationsById = async (
+  userId: number | undefined,
+  params: Query
+) => {
+  return apiClient.get(`${URI.API_URI}/api/v1/user/${userId}/notification`, {
+    params,
+  });
+};
+
 export {
   getUser,
   updateUserById,
@@ -65,4 +74,5 @@ export {
   updateUserSecretById,
   verifyPasswordById,
   getUserTicketsById,
+  getUserNotificationsById,
 };

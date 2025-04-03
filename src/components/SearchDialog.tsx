@@ -36,10 +36,6 @@ const SearchDialog: React.FC<Props> = ({ setVisible, visible }) => {
     return () => clearTimeout(interval);
   }, [searchTerm]);
 
-  useEffect(() => {
-    console.log(query);
-  }, [query]);
-
   const { data: ticketResults } = useQuery({
     queryKey: [
       `search-tickets-${JSON.stringify({
