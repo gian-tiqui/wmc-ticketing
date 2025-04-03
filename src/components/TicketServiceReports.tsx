@@ -9,11 +9,11 @@ interface Props {
 
 const TicketServiceReport: React.FC<Props> = ({ ticket }) => {
   return (
-    <div>
+    <div className={`overflow-auto h-96 ${scrollbarTheme}`}>
       {ticket.serviceReports &&
         ticket.serviceReports.length > 0 &&
         ticket.serviceReports.map((serviceReport) => (
-          <div key={serviceReport.id}>
+          <div key={serviceReport.id} className="mb-6">
             <p>
               {serviceReport.serviceReporter.firstName}{" "}
               {serviceReport.serviceReporter.lastName}'s Service Report

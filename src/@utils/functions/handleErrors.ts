@@ -5,8 +5,6 @@ const handleErrors = (
   error: unknown,
   refObject: MutableRefObject<Toast | null>
 ) => {
-  console.log(error);
-
   const {
     response: {
       data: { message, error: err },

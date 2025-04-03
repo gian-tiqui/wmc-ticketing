@@ -32,8 +32,6 @@ type Query = {
   offset?: number;
   limit?: number;
   sortBy?: string;
-  departmentId?: number;
-  divisionId?: number;
   name?: string;
   code?: string;
   level?: number;
@@ -121,6 +119,9 @@ type Ticket = {
   acknowledgedAt: string;
   reportRequired: boolean;
   closingReason?: string;
+  resolution?: string;
+  resolutionTime?: string;
+  pauseReason?: string;
 
   issuerId: number;
   issuer: User;
@@ -233,6 +234,7 @@ type UpdateTicket = {
   closingReason?: string;
   resolution?: string;
   resolutionTime?: string;
+  pauseReason?: string;
 };
 
 type StatusMarker = {

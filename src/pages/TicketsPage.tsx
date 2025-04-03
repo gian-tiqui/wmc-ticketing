@@ -4,7 +4,7 @@ import useCrmSidebarStore from "../@utils/store/crmSidebar";
 import { PrimeIcons } from "primereact/api";
 import NewTicketButton from "../components/NewTicketButton";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Query, TicketsPageTabItems } from "../types/types";
 import { getTickets } from "../@utils/services/ticketService";
 import TicketsTable from "../components/TicketsTable";
@@ -13,6 +13,7 @@ import roleIncludes from "../@utils/functions/rolesIncludes";
 import { getUserTicketsById } from "../@utils/services/userService";
 import { TicketStatus } from "../@utils/enums/enum";
 import InboxButton from "../components/InboxButton";
+import SearchButton from "../components/SearchButton";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
@@ -114,6 +115,22 @@ const TicketsPage = () => {
           }),
   });
 
+  const { data: onHoldTickets, refetch: refetchOnHoldTickets } = useQuery({
+    queryKey: [
+      `on-hold-tickets-${JSON.stringify({
+        ...query,
+        statusId: TicketStatus.ON_HOLD,
+      })}`,
+    ],
+    queryFn: () =>
+      roleIncludes(user, "admin")
+        ? getTickets({ ...query, statusId: TicketStatus.ON_HOLD })
+        : getUserTicketsById(user?.sub, {
+            ...query,
+            statusId: TicketStatus.ON_HOLD,
+          }),
+  });
+
   const refetchAll = () => {
     refetchNewTickets();
     refetchAcknowledgedTickets();
@@ -121,6 +138,7 @@ const TicketsPage = () => {
     refetchClosedTickets();
     refetchResolvedTickets();
     refetchEscalatedTickets();
+    refetchOnHoldTickets();
   };
 
   const tabs: TicketsPageTabItems[] = [
@@ -205,6 +223,26 @@ const TicketsPage = () => {
         ),
     },
     {
+      icon: PrimeIcons.PAUSE,
+      header: (
+        <div className="flex items-center">
+          <p>
+            On-hold
+            <span className="text-slate-100">
+              {onHoldTickets?.data.count > 0 &&
+                ` - ${onHoldTickets?.data.count}`}
+            </span>
+          </p>
+        </div>
+      ),
+      body:
+        onHoldTickets?.data.count > 0 ? (
+          <TicketsTable tickets={onHoldTickets?.data.tickets} />
+        ) : (
+          <p className="text-slate-100">No Tickets yet</p>
+        ),
+    },
+    {
       icon: PrimeIcons.CHECK_CIRCLE,
       header: (
         <div className="flex items-center">
@@ -246,10 +284,6 @@ const TicketsPage = () => {
     },
   ];
 
-  useEffect(() => {
-    console.log(newTicketsData?.data);
-  }, [newTicketsData]);
-
   return (
     <PageTemplate>
       <div className="w-full h-full p-4 bg-inherit">
@@ -258,6 +292,7 @@ const TicketsPage = () => {
             <i className={`${PrimeIcons.TICKET} text-xl rotate-90`}></i> Tickets
           </h4>
           <div className="flex gap-2">
+            <SearchButton />
             <InboxButton />
             <NewTicketButton refetchAll={refetchAll} />
           </div>

@@ -11,6 +11,7 @@ import { TicketStatus } from "../@utils/enums/enum";
 import extractOriginalName from "../@utils/functions/extractOriginalName";
 import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
+import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
 
 interface Props {
   visible: boolean;
@@ -45,7 +46,7 @@ const ResolutionDialog: React.FC<Props> = ({
       onHide={() => {
         setVisible(false);
       }}
-      className="p-4 w-96 md:w-full md:h-full"
+      className="p-4 w-96 md:w-[500px] md:h-full"
       pt={{
         header: {
           className:
@@ -76,10 +77,14 @@ const ResolutionDialog: React.FC<Props> = ({
           className="w-full mb-3 bg-slate-800 h-52 text-slate-100"
           onChange={(e) => setResolution(e.target.value)}
         />
-        <p>Resolution time</p>
+        <p className="mb-2">Resolution time</p>
         <Calendar
           showTime
           hourFormat="12"
+          inputClassName="bg-slate-800 text-slate-100"
+          panelClassName="bg-slate-900 text-slate-100"
+          pt={{ header: { className: "bg-slate-900 text-slate-100" } }}
+          className="w-full mb-5"
           onChange={(e) => {
             setResolutionTime(e.value);
           }}
@@ -125,7 +130,9 @@ const ResolutionDialog: React.FC<Props> = ({
               />
             </div>
           </header>
-          <section className="flex flex-col gap-2 p-4 mt-4 overflow-y-auto rounded bg-slate-800 h-96">
+          <section
+            className={`${scrollbarTheme} flex flex-col gap-2 p-4 mt-4 overflow-y-auto rounded bg-slate-800 h-96`}
+          >
             {files.map((file, index) => (
               <div key={index} className="relative flex">
                 {deleteMode && (
@@ -139,11 +146,7 @@ const ResolutionDialog: React.FC<Props> = ({
                     tooltipOptions={{ position: "bottom" }}
                   />
                 )}
-                {/* <Image
-                  src={file.preview}
-                  alt={file.file.name}
-                  className="object-cover w-full h-32 rounded-md"
-                /> */}
+
                 <Button
                   icon={`${PrimeIcons.FILE_PDF} text-xl`}
                   className="w-full h-16 gap-2 font-medium"

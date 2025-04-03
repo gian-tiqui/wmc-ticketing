@@ -34,7 +34,7 @@ const PriorityLevelFragment: React.FC<Props> = ({ ticket, refetch }) => {
         priorityLevelId: selectedPriorityLevel.id,
       })
         .then((response) => {
-          console.log(response.data);
+          console.log(response.status);
           refetch();
         })
         .catch((error) => console.error(error));

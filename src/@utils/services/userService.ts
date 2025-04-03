@@ -52,9 +52,6 @@ const getUserTicketsById = async (
   userId: number | undefined,
   params: Query
 ) => {
-  console.log(userId);
-  console.log(params);
-
   return apiClient.get(`${URI.API_URI}/api/v1/user/${userId}/ticket`, {
     params,
   });

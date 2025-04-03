@@ -27,11 +27,11 @@ const NewTicketButton: React.FC<Props> = ({ refetchAll }) => {
         onClick={() => {
           if (!visible) setVisible(true);
         }}
-        className="gap-2 font-medium h-9"
+        className="font-medium w-9 h-9"
         icon={`${PrimeIcons.PLUS_CIRCLE}`}
-      >
-        New Ticket
-      </Button>
+        tooltip="New Ticket"
+        tooltipOptions={{ position: "left" }}
+      ></Button>
     </>
   );
 };

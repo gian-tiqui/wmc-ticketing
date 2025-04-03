@@ -26,6 +26,8 @@ import ResolutionDialog from "./ResolutionDialog";
 import useUserDataStore from "../@utils/store/userDataStore";
 import isUserInResolverDepartments from "../@utils/functions/isUserInResolverDepartments";
 import { Nullable } from "primereact/ts-helpers";
+import { PrimeIcons } from "primereact/api";
+import PauseReason from "./PauseReason";
 
 interface Props {
   ticket: Ticket;
@@ -57,10 +59,13 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   const [closeDialogVisible, setCloseDialogVisible] = useState<boolean>(false);
   const [files, setFiles] = useState<CustomFile[]>([]);
   const [resolution, setResolution] = useState<string>("");
+  const [pauseReason, setPauseReason] = useState<string>("");
   const { user } = useUserDataStore();
+  const [pauseReasonDialogVisible, setPauseReasonDialogVisible] =
+    useState<boolean>(false);
 
   useEffect(() => {
-    if (statusId > 0 && statusId <= 7 && statusId !== ticket.status.id) {
+    if (statusId > 0 && statusId <= 9 && statusId !== ticket.status.id) {
       setIsUpdating(true);
       updateTicketById(ticket.id, {
         statusId,
@@ -72,15 +77,19 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         resolutionTime: resolutionTime
           ? new Date(resolutionTime).toISOString()
           : new Date().toISOString(),
+        pauseReason,
       })
         .then((response) => {
           if (response.status === 200) {
             if (files && files.length > 0) {
               const formData = new FormData();
-
               files.forEach((file) => formData.append("files", file.file));
 
-              uploadServiceReport(ticket.id, formData);
+              uploadServiceReport(ticket.id, formData)
+                .then((response) => {
+                  if (response.status === 201) refetch();
+                })
+                .catch((error) => console.error(error));
             }
             setClosingReason("");
             setResolution("");
@@ -142,6 +151,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
       name: "Resolve",
       disabled:
         (statusId !== TicketStatus.ASSIGNED &&
+          statusId !== TicketStatus.ON_HOLD &&
           statusId !== TicketStatus.ESCALATED) ||
         isUpdating,
       onClick: () => {
@@ -172,9 +182,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     {
       name: "Finalize",
       disabled: statusId !== TicketStatus.RESOLVED || isUpdating,
-      onClick: () => handleStatusChange(TicketStatus.NEW),
+      onClick: () => handleStatusChange(TicketStatus.CLOSED_RESOLVED),
       type: "button",
-      loading: isUpdating && statusId === TicketStatus.NEW,
+      loading: isUpdating && statusId === TicketStatus.CLOSED_RESOLVED,
     },
   ];
 
@@ -245,17 +255,42 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           setResolutionTime={setResolutionTime}
           resolutionTime={resolutionTime}
         />
+        <PauseReason
+          setPauseReason={setPauseReason}
+          setStatusId={setStatusId}
+          setVisible={setPauseReasonDialogVisible}
+          visible={pauseReasonDialogVisible}
+        />
 
         <CustomToast ref={toastRef} />
         <h4 className="text-lg font-medium">Status</h4>
         <Divider />
         <div className="">
-          <div className="mb-6">
-            <span className="mb-2 text-md">Current:</span>{" "}
-            <Chip
-              className="font-medium text-white bg-blue-400"
-              label={ticket.status.type}
-            />
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <span className="mb-2 text-md">Current:</span>{" "}
+              <Chip
+                className="font-medium text-white bg-blue-400"
+                label={ticket.status.type}
+              />
+            </div>
+
+            <Button
+              onClick={() => setPauseReasonDialogVisible(true)}
+              icon={`${PrimeIcons.PAUSE}`}
+              className="gap-2"
+              type="button"
+              loading={isUpdating && statusId === TicketStatus.ON_HOLD}
+              disabled={
+                (statusId !== TicketStatus.ASSIGNED &&
+                  statusId !== TicketStatus.CLOSED &&
+                  statusId !== TicketStatus.ESCALATED &&
+                  statusId !== TicketStatus.CLOSED_RESOLVED) ||
+                isUpdating
+              }
+            >
+              Pause Ticket
+            </Button>
           </div>
           <div className="flex items-center justify-center w-full gap-2">
             <Timeline
