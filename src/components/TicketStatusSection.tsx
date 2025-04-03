@@ -129,8 +129,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     },
     {
       name:
-        ticket.statusId === TicketStatus.ASSIGNED ||
         ticket.statusId === TicketStatus.ESCALATED
+          ? "Assign"
+          : ticket.statusId === TicketStatus.ASSIGNED
           ? "Escalate"
           : "Assign",
 
@@ -139,11 +140,14 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           statusId !== TicketStatus.ASSIGNED &&
           statusId !== TicketStatus.ESCALATED) ||
         isUpdating,
+
       onClick:
-        ticket.statusId === TicketStatus.ASSIGNED ||
         ticket.statusId === TicketStatus.ESCALATED
+          ? () => setAssignUserVisible(true)
+          : ticket.statusId === TicketStatus.ASSIGNED
           ? () => setEscalateUserVisible(true)
           : () => setAssignUserVisible(true),
+
       type: "button",
       loading: isUpdating && statusId === TicketStatus.ASSIGNED,
     },
