@@ -149,7 +149,7 @@ const SettingsDetail = () => {
               className="w-full h-10 bg-inherit text-slate-100"
             />
           </IconField>
-          <div className="flex items-center justify-end w-full">
+          <div className="items-center justify-end hidden w-full md:flex ">
             {errors.firstName && (
               <div className="flex items-center gap-2 text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
@@ -171,7 +171,7 @@ const SettingsDetail = () => {
               className="w-full h-10 bg-inherit text-slate-100"
             />
           </IconField>
-          <div className="w-full"></div>
+          <div className="items-center justify-end hidden w-full md:flex "></div>
         </div>
         <Divider />
 
@@ -186,7 +186,7 @@ const SettingsDetail = () => {
               className="w-full h-10 bg-inherit text-slate-100"
             />
           </IconField>
-          <div className="flex items-center justify-end w-full">
+          <div className="items-center justify-end hidden w-full md:flex">
             {errors.lastName && (
               <div className="flex items-center gap-2 text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
@@ -236,7 +236,7 @@ const SettingsDetail = () => {
             </IconField>
           )}
 
-          <div className="w-full"></div>
+          <div className="items-center justify-end hidden w-full md:flex "></div>
         </div>
       </ScrollPanel>
       <div className="flex justify-end gap-2">

@@ -69,7 +69,7 @@ const SearchDialog: React.FC<Props> = ({ setVisible, visible }) => {
           />
         </IconField>
       }
-      className="w-96 md:w-[40%] h-96 md:h-[70%]"
+      className="w-92 md:w-[40%]  h-96 md:h-[70%]"
     >
       <div
         className={`w-full h-72 flex flex-col gap-3 ${scrollbarTheme} overflow-auto`}

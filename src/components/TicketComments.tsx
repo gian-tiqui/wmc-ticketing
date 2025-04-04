@@ -91,7 +91,7 @@ const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
           <h6>{ticket.description}</h6>
           <div className="flex items-center gap-2">
             <Divider />
-            <p className="mx-2 text-sm text-center w-80">March 23, 2023</p>
+            <p className="mx-2 text-sm text-center w-80">Chat starts here</p>
             <Divider />
           </div>
         </div>

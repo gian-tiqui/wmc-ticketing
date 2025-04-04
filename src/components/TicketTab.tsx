@@ -45,10 +45,12 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
     },
   ];
   return (
-    <div>
+    <div className="flex flex-col h-full">
       <TabView
+        className="flex flex-col flex-1"
         pt={{
-          panelContainer: { className: "h-full bg-inherit" },
+          root: { className: "flex-1 flex flex-col" },
+          panelContainer: { className: "flex-1 bg-inherit overflow-hidden" },
           nav: { className: "bg-inherit" },
         }}
       >
@@ -58,7 +60,9 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
             key={index}
             header={tab.name}
             pt={{
-              content: { className: "h-80 bg-inherit text-slate-100" },
+              content: {
+                className: "h-full bg-inherit text-slate-100 overflow-auto",
+              },
               header: { className: "bg-inherit" },
               headerAction: { className: "bg-inherit" },
             }}

@@ -1,7 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import PageTemplate from "../templates/PageTemplate";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { URI } from "../@utils/enums/enum";
 import TicketHeader from "../components/TicketHeader";
 import TicketTab from "../components/TicketTab";
@@ -9,6 +8,7 @@ import { useEffect } from "react";
 import useUserDataStore from "../@utils/store/userDataStore";
 import roleIncludes from "../@utils/functions/rolesIncludes";
 import TicketSkeleton from "../components/TicketSkeleton";
+import apiClient from "../@utils/http-common/apiClient";
 
 const TicketPage = () => {
   const param = useParams();
@@ -17,7 +17,7 @@ const TicketPage = () => {
 
   const fetchTicket = async (ticketId: number) => {
     try {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `${URI.API_URI}/api/v1/ticket/${ticketId}`
       );
       return response.data;

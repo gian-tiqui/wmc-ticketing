@@ -12,7 +12,7 @@ import { Divider } from "primereact/divider";
 const InboxButton = () => {
   const overlayPanelRef = useRef<OverlayPanel>(null);
   const { user } = useUserDataStore();
-  const [query, setQuery] = useState<Query>({ offset: 0, limit: 10 });
+  const [query, setQuery] = useState<Query>({ offset: 0, limit: 5 });
 
   const { data: userNotifications, refetch: refetchUserNotifications } =
     useQuery({

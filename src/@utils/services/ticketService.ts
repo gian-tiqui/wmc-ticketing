@@ -11,7 +11,7 @@ const getTickets = (params: Query) => {
 };
 
 const getTicketById = (ticketId: number) => {
-  return apiClient.get(`${URI.API_URI}/api/v1/ticket/${ticketId}`);
+  return apiClient.get(`${URI.API_URI}/api/v1/ticket/${ticketId}`, {});
 };
 
 const updateTicketById = (ticketId: number, body: UpdateTicket) => {

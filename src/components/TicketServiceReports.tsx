@@ -10,8 +10,7 @@ interface Props {
 const TicketServiceReport: React.FC<Props> = ({ ticket }) => {
   return (
     <div className={`overflow-auto h-96 ${scrollbarTheme}`}>
-      {ticket.serviceReports &&
-        ticket.serviceReports.length > 0 &&
+      {ticket.serviceReports && ticket.serviceReports.length > 0 ? (
         ticket.serviceReports.map((serviceReport) => (
           <div key={serviceReport.id} className="mb-6">
             <p>
@@ -32,7 +31,10 @@ const TicketServiceReport: React.FC<Props> = ({ ticket }) => {
               ))}
             </div>
           </div>
-        ))}
+        ))
+      ) : (
+        <p>No service reports yet</p>
+      )}
     </div>
   );
 };
