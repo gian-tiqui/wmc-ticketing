@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { PrimeIcons } from "primereact/api";
 import { Button } from "primereact/button";
 import { OverlayPanel } from "primereact/overlaypanel";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import useUserDataStore from "../@utils/store/userDataStore";
 import { Query } from "../types/types";
 import { getUserNotificationsById } from "../@utils/services/userService";
@@ -20,10 +20,6 @@ const InboxButton = () => {
       queryFn: () => getUserNotificationsById(user?.sub, query),
       enabled: !!user,
     });
-
-  useEffect(() => {
-    console.log(query);
-  }, [query]);
 
   return (
     <div className="relative">
