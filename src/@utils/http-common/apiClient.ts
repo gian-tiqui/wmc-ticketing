@@ -46,7 +46,7 @@ apiClient.interceptors.request.use(
         accessToken = response.data.accessToken;
         if (!accessToken) {
           removeTokensAndReload();
-          throw new Error("No token was generated");
+          throw new Error("No access token generated");
         }
 
         localStorage.setItem(Namespace.BASE, accessToken);
@@ -90,7 +90,7 @@ apiClient.interceptors.response.use(
         const { accessToken } = response.data;
         if (!accessToken) {
           removeTokensAndReload();
-          throw new Error("No token generated");
+          throw new Error("No access token generated");
         }
 
         localStorage.setItem(Namespace.BASE, accessToken);
