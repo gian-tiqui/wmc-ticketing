@@ -2,10 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Chart } from "primereact/chart";
 import { Query } from "../types/types";
-import {
-  getDepartmentTicketsPerMonth,
-  getDepartmentTicketsPerYear,
-} from "../@utils/services/dashboardService";
+import { getDepartmentTicketsPerMonth } from "../@utils/services/dashboardService";
 import useUserDataStore from "../@utils/store/userDataStore";
 import { getAllStatus } from "../@utils/services/statusService";
 import { Dropdown } from "primereact/dropdown";
@@ -15,15 +12,17 @@ import { Calendar } from "primereact/calendar";
 const MonthlyDepartmentGraph = () => {
   const [query, setQuery] = useState<Query>({ statusId: 1 });
   const [date, setDate] = useState<Nullable<Date>>(null);
-  const [year, setYear] = useState<number | undefined>(undefined);
+  const [year, setYear] = useState<number | undefined>(
+    new Date().getFullYear()
+  );
   const { user } = useUserDataStore();
   const [chartData, setChartData] = useState({});
   const [status, setStatus] = useState(undefined);
   const [chartOptions, setChartOptions] = useState({});
   const [noData, setNoData] = useState<boolean>(false);
 
-  const { data: yearlyTicketsData } = useQuery({
-    queryKey: [`yearly-tickets-${JSON.stringify(query)}`],
+  const { data: monthlyTicketsData } = useQuery({
+    queryKey: [`yearly-tickets-${JSON.stringify(query)}-${year}`],
     queryFn: () => getDepartmentTicketsPerMonth(user?.deptId, year, query),
   });
 
@@ -33,16 +32,16 @@ const MonthlyDepartmentGraph = () => {
   });
 
   useEffect(() => {
-    if (!yearlyTicketsData?.data?.yearlyTicketsData) return;
+    if (!monthlyTicketsData?.data?.monthlyTicketsData) return;
 
-    if (yearlyTicketsData?.data?.yearlyTicketsData.labels.length < 1) {
+    if (monthlyTicketsData?.data?.monthlyTicketsData.labels.length < 1) {
       setNoData(true);
       return;
     }
 
     setNoData(false);
 
-    const { labels, dataSet } = yearlyTicketsData.data.yearlyTicketsData;
+    const { labels, dataSet } = monthlyTicketsData.data.monthlyTicketsData;
     const documentStyle = getComputedStyle(document.documentElement);
     const textColorSecondary = documentStyle.getPropertyValue(
       "--text-color-secondary"
@@ -86,7 +85,7 @@ const MonthlyDepartmentGraph = () => {
         },
       },
     });
-  }, [yearlyTicketsData]);
+  }, [monthlyTicketsData]);
 
   if (noData) {
     return (
