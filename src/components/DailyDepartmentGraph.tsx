@@ -9,7 +9,7 @@ import { Dropdown } from "primereact/dropdown";
 import { Nullable } from "primereact/ts-helpers";
 import { Calendar } from "primereact/calendar";
 
-const MonthlyDepartmentGraph = () => {
+const DailyDepartmentGraph = () => {
   const [query, setQuery] = useState<Query>({ statusId: 1 });
   const [date, setDate] = useState<Nullable<Date>>(null);
   const [year, setYear] = useState<number | undefined>(
@@ -22,7 +22,7 @@ const MonthlyDepartmentGraph = () => {
   const [noData, setNoData] = useState<boolean>(false);
 
   const { data: monthlyTicketsData } = useQuery({
-    queryKey: [`monthly-tickets-${JSON.stringify(query)}-${year}`],
+    queryKey: [`daily-tickets-${JSON.stringify(query)}-${year}`],
     queryFn: () => getDepartmentTicketsPerMonth(user?.deptId, year, query),
   });
 
@@ -155,4 +155,4 @@ const MonthlyDepartmentGraph = () => {
   );
 };
 
-export default MonthlyDepartmentGraph;
+export default DailyDepartmentGraph;

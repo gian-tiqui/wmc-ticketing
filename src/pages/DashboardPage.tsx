@@ -2,6 +2,7 @@ import PageTemplate from "../templates/PageTemplate";
 import YearlyDepartmentsGraph from "../components/YearlyDepartmentsGraph";
 import MonthlyDepartmentGraph from "../components/MonthlyDepartmentGraph";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
+import DailyDepartmentGraph from "../components/DailyDepartmentGraph";
 
 const DashboardPage = () => {
   return (
@@ -11,6 +12,7 @@ const DashboardPage = () => {
       >
         <YearlyDepartmentsGraph />
         <MonthlyDepartmentGraph />
+        <DailyDepartmentGraph />
       </div>
     </PageTemplate>
   );
