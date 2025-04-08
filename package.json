@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.64.2",
     "axios": "^1.7.9",
+    "chart.js": "^4.4.8",
     "js-cookie": "^3.0.5",
     "jwt-decode": "^4.0.0",
     "konva": "^9.3.18",
