@@ -191,6 +191,7 @@ const NewTicketDialog: React.FC<Props> = ({
           </div>
 
           {/* Category Dropdown */}
+
           <div className="w-full h-24">
             <label
               htmlFor="categoriesDropdown"
@@ -238,6 +239,7 @@ const NewTicketDialog: React.FC<Props> = ({
           </div>
 
           {/* Priority Level Dropdown */}
+
           <div className="w-full h-24">
             <label
               htmlFor="priorityLevelDropdown"
