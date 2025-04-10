@@ -1,31 +1,40 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Chart } from "primereact/chart";
-import { Query } from "../types/types";
-import { getDepartmentTicketsPerDay } from "../@utils/services/dashboardService";
+import { Category, Query } from "../types/types";
+import { getCategoriesTicketsPerYear } from "../@utils/services/dashboardService";
 import useUserDataStore from "../@utils/store/userDataStore";
 import { getAllStatus } from "../@utils/services/statusService";
 import { Dropdown } from "primereact/dropdown";
-import { Nullable } from "primereact/ts-helpers";
-import { Calendar } from "primereact/calendar";
+import { getDepartmentCategoriesByDeptId } from "../@utils/services/departmentService";
 
-const DailyDepartmentGraph = () => {
+const YearlyCategoriesGraph = () => {
   const [query, setQuery] = useState<Query>({ statusId: 1 });
-  const [date, setDate] = useState<Nullable<Date>>(null);
-  const [year, setYear] = useState<number | undefined>(
-    new Date().getFullYear()
-  );
   const { user } = useUserDataStore();
   const [chartData, setChartData] = useState({});
   const [status, setStatus] = useState(undefined);
   const [chartOptions, setChartOptions] = useState({});
   const [noData, setNoData] = useState<boolean>(false);
-  const [month, setMonth] = useState<number | undefined>(undefined);
-  const [monthName, setMonthName] = useState<string>("");
+  const [categoryQuery] = useState<Query>({ search: "", offset: 0, limit: 50 });
+  const [selectedCategory, setSelectedCategory] = useState<
+    Category | undefined
+  >(undefined);
 
-  const { data: dailyTicketsData } = useQuery({
-    queryKey: [`daily-tickets-${JSON.stringify(query)}-${year}-${month}`],
-    queryFn: () => getDepartmentTicketsPerDay(user?.deptId, year, month, query),
+  const { data: departmentCategoriesData } = useQuery({
+    queryKey: [
+      `department-${user?.deptId}-categories-${JSON.stringify(categoryQuery)}`,
+    ],
+    queryFn: () => getDepartmentCategoriesByDeptId(user?.deptId, query),
+    enabled: !!user,
+  });
+
+  const { data: yearlyTicketsData } = useQuery({
+    queryKey: [
+      `categories-yearly-tickets-${JSON.stringify(query)}-${user?.deptId}-${
+        selectedCategory?.id
+      }`,
+    ],
+    queryFn: () => getCategoriesTicketsPerYear(selectedCategory?.id, query),
   });
 
   const { data: statuses } = useQuery({
@@ -34,26 +43,16 @@ const DailyDepartmentGraph = () => {
   });
 
   useEffect(() => {
-    if (month && year) {
-      const monthName = new Date(year, month);
+    if (!yearlyTicketsData?.data?.yearlyTicketsData) return;
 
-      setMonthName(
-        monthName?.toLocaleDateString("default", { month: "short" })
-      );
-    }
-  }, [month, year, date]);
-
-  useEffect(() => {
-    if (!dailyTicketsData?.data?.dailyTicketsData) return;
-
-    if (dailyTicketsData?.data?.dailyTicketsData.labels.length < 1) {
+    if (yearlyTicketsData?.data?.yearlyTicketsData.labels.length < 1) {
       setNoData(true);
       return;
     }
 
     setNoData(false);
 
-    const { labels, dataSet } = dailyTicketsData.data.dailyTicketsData;
+    const { labels, dataSet } = yearlyTicketsData.data.yearlyTicketsData;
     const documentStyle = getComputedStyle(document.documentElement);
     const textColorSecondary = documentStyle.getPropertyValue(
       "--text-color-secondary"
@@ -97,30 +96,14 @@ const DailyDepartmentGraph = () => {
         },
       },
     });
-  }, [dailyTicketsData]);
+  }, [yearlyTicketsData]);
 
   if (noData) {
     return (
       <div className="w-[60%] mx-auto mb-6">
         <div className="flex items-center justify-between w-full mb-8">
-          <p className="font-medium">
-            Department Tickets per day ({monthName} {year})
-          </p>
-
-          <div className="flex gap-4">
-            <Calendar
-              className="w-32 h-10"
-              value={date}
-              view="month"
-              dateFormat="mm/yy"
-              onChange={(e) => {
-                const m = e.value?.getMonth();
-                setDate(e.value);
-                setMonth(m !== undefined ? m + 1 : undefined);
-                setYear(e.value?.getFullYear());
-              }}
-            />
-
+          <p className="font-medium">Categories tickets per year</p>
+          <div className="flex gap-2">
             <Dropdown
               pt={{
                 header: { className: "bg-slate-800" },
@@ -142,6 +125,32 @@ const DailyDepartmentGraph = () => {
                 setQuery((prev) => ({ ...prev, statusId: e.value.id }));
               }}
             />
+
+            <Dropdown
+              id="categoriesDropdown"
+              pt={{
+                header: { className: "bg-slate-800" },
+                filterInput: { className: "bg-inherit text-slate-100" },
+                list: { className: "bg-slate-800" },
+                item: {
+                  className:
+                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                },
+                input: { className: "text-slate-100" },
+              }}
+              options={departmentCategoriesData?.data.categories}
+              value={selectedCategory}
+              optionLabel="name"
+              onChange={(e) => {
+                setSelectedCategory(e.value);
+              }}
+              filter
+              disabled={
+                user && departmentCategoriesData?.data.categories.length === 0
+              }
+              className={`w-52 bg-inherit border-slate-400 h-10 items-center`}
+              placeholder="Select a category"
+            />
           </div>
         </div>
         <div className="h-80">
@@ -154,23 +163,8 @@ const DailyDepartmentGraph = () => {
   return (
     <div className="w-[60%] mx-auto mb-6">
       <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">
-          Department Tickets per day ({monthName} {year})
-        </p>
-        <div className="flex gap-4">
-          <Calendar
-            className="w-32 h-10"
-            value={date}
-            view="month"
-            dateFormat="mm/yy"
-            onChange={(e) => {
-              const m = e.value?.getMonth();
-              setDate(e.value);
-              setMonth(m !== undefined ? m + 1 : undefined); // Jan = 1, Dec = 12
-              setYear(e.value?.getFullYear());
-            }}
-          />
-
+        <p className="font-medium">Categories tickets per year</p>
+        <div className="flex gap-2">
           <Dropdown
             pt={{
               header: { className: "bg-slate-800" },
@@ -192,6 +186,32 @@ const DailyDepartmentGraph = () => {
               setQuery((prev) => ({ ...prev, statusId: e.value.id }));
             }}
           />
+
+          <Dropdown
+            id="categoriesDropdown"
+            pt={{
+              header: { className: "bg-slate-800" },
+              filterInput: { className: "bg-inherit text-slate-100" },
+              list: { className: "bg-slate-800" },
+              item: {
+                className:
+                  "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+              },
+              input: { className: "text-slate-100" },
+            }}
+            options={departmentCategoriesData?.data.categories}
+            value={selectedCategory}
+            optionLabel="name"
+            onChange={(e) => {
+              setSelectedCategory(e.value);
+            }}
+            filter
+            disabled={
+              user && departmentCategoriesData?.data.categories.length === 0
+            }
+            className={`w-52 bg-inherit border-slate-400 h-10 items-center`}
+            placeholder="Select a category"
+          />
         </div>
       </div>
 
@@ -205,4 +225,4 @@ const DailyDepartmentGraph = () => {
   );
 };
 
-export default DailyDepartmentGraph;
+export default YearlyCategoriesGraph;

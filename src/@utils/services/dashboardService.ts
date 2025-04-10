@@ -26,9 +26,9 @@ const getDepartmentTicketsPerMonth = async (
 };
 
 const getDepartmentTicketsPerDay = async (
-  deptId: number,
-  year: number,
-  month: number,
+  deptId: number | undefined,
+  year: number | undefined,
+  month: number | undefined,
   params: Query
 ) => {
   return apiClient.get(
@@ -37,8 +37,46 @@ const getDepartmentTicketsPerDay = async (
   );
 };
 
+const getCategoriesTicketsPerYear = async (
+  categoryId: number | undefined,
+  params: Query
+) => {
+  return apiClient.get(
+    `${URI.API_URI}/api/v1/dashboard/category/${categoryId}/year`,
+    {
+      params,
+    }
+  );
+};
+
+const getCategoryTicketsPerMonth = async (
+  categoryId: number | undefined,
+  year: number | undefined,
+  params: Query
+) => {
+  return apiClient.get(
+    `${URI.API_URI}/api/v1/category/${categoryId}/year/${year}`,
+    { params }
+  );
+};
+
+const getCategoryTicketsPerDay = async (
+  categoryId: number | undefined,
+  year: number | undefined,
+  month: number | undefined,
+  params: Query
+) => {
+  return apiClient.get(
+    `${URI.API_URI}/api/v1/category/${categoryId}/year/${year}/month/${month}`,
+    { params }
+  );
+};
+
 export {
   getDepartmentTicketsPerYear,
   getDepartmentTicketsPerMonth,
   getDepartmentTicketsPerDay,
+  getCategoriesTicketsPerYear,
+  getCategoryTicketsPerMonth,
+  getCategoryTicketsPerDay,
 };

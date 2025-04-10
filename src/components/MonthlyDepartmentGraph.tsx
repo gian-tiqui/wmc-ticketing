@@ -89,23 +89,37 @@ const MonthlyDepartmentGraph = () => {
 
   if (noData) {
     return (
-      <div className="w-[80%] mx-auto">
-        <Dropdown
-          options={statuses?.data.statuses}
-          optionLabel="type"
-          value={status}
-          className="mb-6 bg-inherit text-slate-100"
-          placeholder="Select a status"
-          onChange={(e) => {
-            setStatus(e.value);
-            setQuery((prev) => ({ ...prev, statusId: e.value.id }));
-          }}
-        />
-        no data
+      <div className="w-[60%] mx-auto mb-6">
+        <div className="flex items-center justify-between w-full mb-8">
+          <p className="font-medium">Department Tickets per year</p>
+          <Dropdown
+            pt={{
+              header: { className: "bg-slate-800" },
+              filterInput: { className: "bg-inherit text-slate-100" },
+              list: { className: `bg-slate-800` },
+              item: {
+                className:
+                  "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+              },
+              input: { className: "text-slate-100" },
+            }}
+            options={statuses?.data.statuses}
+            optionLabel="type"
+            value={status}
+            className="items-center h-10 bg-inherit"
+            placeholder="Select a status"
+            onChange={(e) => {
+              setStatus(e.value);
+              setQuery((prev) => ({ ...prev, statusId: e.value.id }));
+            }}
+          />
+        </div>
+        <div className="h-80">
+          <p className="font-medium">No data to show</p>
+        </div>
       </div>
     );
   }
-
   return (
     <div className="w-[60%] mx-auto mb-6">
       <div className="flex items-center justify-between w-full mb-8">
