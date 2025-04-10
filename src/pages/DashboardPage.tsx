@@ -2,6 +2,10 @@ import PageTemplate from "../templates/PageTemplate";
 import YearlyDepartmentsGraph from "../components/YearlyDepartmentsGraph";
 import MonthlyDepartmentGraph from "../components/MonthlyDepartmentGraph";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
+import DailyDepartmentGraph from "../components/DailyDepartmentGraph";
+import YearlyCategoriesGraph from "../components/YearlyCategoriesGraph";
+import MonthlyCategoriesGraph from "../components/MonthlyCategoriesGraph";
+import DailyCategoriesGraph from "../components/DailyCategoriesGraph";
 
 const DashboardPage = () => {
   return (
@@ -11,6 +15,10 @@ const DashboardPage = () => {
       >
         <YearlyDepartmentsGraph />
         <MonthlyDepartmentGraph />
+        <DailyDepartmentGraph />
+        <YearlyCategoriesGraph />
+        <MonthlyCategoriesGraph />
+        <DailyCategoriesGraph />
       </div>
     </PageTemplate>
   );
