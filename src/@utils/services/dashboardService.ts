@@ -55,7 +55,7 @@ const getCategoryTicketsPerMonth = async (
   params: Query
 ) => {
   return apiClient.get(
-    `${URI.API_URI}/api/v1/category/${categoryId}/year/${year}`,
+    `${URI.API_URI}/api/v1/dashboard/category/${categoryId}/year/${year}`,
     { params }
   );
 };
@@ -67,7 +67,7 @@ const getCategoryTicketsPerDay = async (
   params: Query
 ) => {
   return apiClient.get(
-    `${URI.API_URI}/api/v1/category/${categoryId}/year/${year}/month/${month}`,
+    `${URI.API_URI}/api/v1/dashboard/category/${categoryId}/year/${year}/month/${month}`,
     { params }
   );
 };
