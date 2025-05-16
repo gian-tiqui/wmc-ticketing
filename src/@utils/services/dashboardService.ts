@@ -72,6 +72,19 @@ const getCategoryTicketsPerDay = async (
   );
 };
 
+const getUsersTcketsPerYear = async (
+  deptId: number | undefined,
+  params: Query,
+  year: number | undefined
+) => {
+  return apiClient.get(
+    `${URI.API_URI}/api/v1/dashboard/user/${deptId}/year/${year}`,
+    {
+      params,
+    }
+  );
+};
+
 export {
   getDepartmentTicketsPerYear,
   getDepartmentTicketsPerMonth,
@@ -79,4 +92,5 @@ export {
   getCategoriesTicketsPerYear,
   getCategoryTicketsPerMonth,
   getCategoryTicketsPerDay,
+  getUsersTcketsPerYear,
 };

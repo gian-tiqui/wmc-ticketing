@@ -6,6 +6,7 @@ import DailyDepartmentGraph from "../components/DailyDepartmentGraph";
 import YearlyCategoriesGraph from "../components/YearlyCategoriesGraph";
 import MonthlyCategoriesGraph from "../components/MonthlyCategoriesGraph";
 import DailyCategoriesGraph from "../components/DailyCategoriesGraph";
+import YearlyUsersTickets from "../components/YearlyUsersTickets";
 
 const DashboardPage = () => {
   return (
@@ -19,6 +20,7 @@ const DashboardPage = () => {
         <YearlyCategoriesGraph />
         <MonthlyCategoriesGraph />
         <DailyCategoriesGraph />
+        <YearlyUsersTickets />
       </div>
     </PageTemplate>
   );
