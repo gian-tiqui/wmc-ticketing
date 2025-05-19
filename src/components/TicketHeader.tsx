@@ -44,7 +44,7 @@ const TicketHeader: React.FC<Props> = ({ ticket, refetch }) => {
         <div className="flex items-center gap-3">
           <Avatar
             label={ticket.id.toString()}
-            className="w-10 h-10 text-xl font-extrabold bg-blue-500"
+            className="w-10 h-10 text-xl font-extrabold text-white bg-blue-600"
           />
           <h4 className="text-xl font-medium ">{ticket.title}</h4>
         </div>

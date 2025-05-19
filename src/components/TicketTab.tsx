@@ -61,7 +61,7 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
             header={tab.name}
             pt={{
               content: {
-                className: "h-full bg-inherit text-slate-100 overflow-auto",
+                className: "h-full bg-inherit overflow-auto",
               },
               header: { className: "bg-inherit" },
               headerAction: { className: "bg-inherit" },

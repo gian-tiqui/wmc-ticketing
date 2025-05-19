@@ -21,54 +21,54 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         rows={4}
         size="small"
         pt={{
-          bodyRow: { className: "bg-slate-900" },
-          headerRow: { className: "bg-slate-900" },
-          paginator: { root: { className: "bg-slate-900" } },
+          bodyRow: { className: "bg-[#EEEEEE]" },
+          headerRow: { className: "bg-[#EEEEEE]" },
+          paginator: { root: { className: "bg-[#EEEEEE]" } },
         }}
       >
         <Column
           pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
+            headerCell: { className: "bg-white h-14 " },
+            sortIcon: { className: "" },
           }}
-          className="text-slate-100"
+          className=""
           header="Ticket Number"
           field="id"
         ></Column>
         <Column
           pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
+            headerCell: { className: "bg-white h-14 " },
+            sortIcon: { className: "" },
           }}
-          className="text-slate-100"
+          className=""
           header="Title"
           field="title"
         ></Column>
         <Column
           pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
+            headerCell: { className: "bg-white h-14 " },
+            sortIcon: { className: "" },
           }}
-          className="text-slate-100"
+          className=""
           header="Category"
           body={(rowData: Ticket) => <p>{rowData.category.name}</p>}
         ></Column>
         <Column
           pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
+            headerCell: { className: "bg-white h-14 " },
+            sortIcon: { className: "" },
           }}
-          className="text-slate-100"
+          className=""
           header="Requested At"
           field="createdAt"
         ></Column>
 
         <Column
           pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
+            headerCell: { className: "bg-white h-14 " },
+            sortIcon: { className: "" },
           }}
-          className="text-slate-100"
+          className=""
           header="Assigned to"
           body={(rowData: Ticket) =>
             rowData.assignedUser ? (
@@ -82,10 +82,10 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         ></Column>
         <Column
           pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
+            headerCell: { className: "bg-white h-14 " },
+            sortIcon: { className: "" },
           }}
-          className="text-slate-100"
+          className=""
           header="Priority"
           body={(rowData: Ticket) => <p>{rowData.priorityLevel.name}</p>}
         ></Column>
@@ -93,10 +93,10 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         <Column
           header="Action"
           pt={{
-            headerCell: { className: "bg-slate-950 h-14 text-slate-100" },
-            sortIcon: { className: "text-slate-100" },
+            headerCell: { className: "bg-white h-14 " },
+            sortIcon: { className: "" },
           }}
-          className="text-slate-100"
+          className=""
           body={(rowData: Ticket) => (
             <Button
               icon={PrimeIcons.DIRECTIONS}
