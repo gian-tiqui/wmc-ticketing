@@ -54,7 +54,7 @@ const TicketSummary: React.FC<Props> = ({ ticket }) => {
     <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
       <div className="grid grid-cols-1 gap-4">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-          <div className="flex w-full h-20 col-span-1 rounded-lg shadow md:col-span-2 h-18 hover:shadow-blue-900 bg-slate-900">
+          <div className="flex w-full h-20 col-span-1 rounded-lg shadow md:col-span-2 h-18 hover:shadow-blue-900 bg-[#EEEEEE]">
             <div className="w-5 h-full bg-blue-500 rounded-s-lg"></div>
             <div className="flex flex-col justify-between p-4">
               <div className="flex items-center gap-2">

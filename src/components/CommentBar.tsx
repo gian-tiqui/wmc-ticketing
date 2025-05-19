@@ -74,7 +74,7 @@ const CommentBar: React.FC<Props> = ({
 
   return (
     <div
-      className="flex h-20 gap-2 p-4 bg-slate-700 rounded-xl"
+      className="flex h-20 gap-2 p-4 bg-[#EEEEEE] rounded-xl"
       onSubmit={handleSubmit(handleCommentSend)}
     >
       <CommentPictureUpload
@@ -94,7 +94,7 @@ const CommentBar: React.FC<Props> = ({
             },
           })}
           name="comment"
-          className="w-full h-12 border-none bg-inherit text-slate-100"
+          className="w-full h-12 border-none bg-inherit"
           placeholder="Write a comment..."
         />
       </div>

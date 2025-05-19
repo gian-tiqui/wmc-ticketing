@@ -27,7 +27,7 @@ const UserDetails: React.FC<Props> = ({ user, mode }) => {
     <div className="flex gap-2">
       <Avatar
         label={user ? user.firstName[0] + user.lastName[0].toLowerCase() : "??"}
-        className="w-12 h-12 font-extrabold bg-blue-500"
+        className="w-12 h-12 font-extrabold text-white bg-blue-600"
       />
       <div>
         {user ? (

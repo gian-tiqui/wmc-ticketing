@@ -133,8 +133,7 @@ const CrmSidebarFooter = () => {
           setVisible={setSettingsDialogVisible}
         />
         <Button
-          className="w-full h-12 text-sm border-none bg-inherit hover:bg-gray-800"
-          severity="contrast"
+          className="w-full h-12 text-sm bg-white border border-black border-none text-slate-900 hover:bg-gray-200"
           icon={`${PrimeIcons.COG} text-sm me-2`}
           onClick={() => setSettingsDialogVisible(true)}
         >
@@ -142,8 +141,7 @@ const CrmSidebarFooter = () => {
         </Button>
         <Button
           onClick={handleLogoutClicked}
-          className="w-full h-12 text-sm border-none bg-inherit hover:bg-gray-800"
-          severity="contrast"
+          className="w-full h-12 text-sm bg-white border border-black border-none text-slate-900 hover:bg-gray-200"
           icon={`${PrimeIcons.SIGN_OUT} text-sm me-2`}
         >
           Logout

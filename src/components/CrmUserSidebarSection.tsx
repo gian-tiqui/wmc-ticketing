@@ -74,11 +74,10 @@ const CrmUserSidebarSection = () => {
         {buttons.map((button: ButtonType, index: number) => (
           <Button
             key={index}
-            className={`items-center w-full h-12 font-medium ${
+            className={`items-center w-full bg-white border-none text-slate-900 h-12 font-medium ${
               id === button.id && "bg-gray-600"
             }`}
             icon={`${button.icon} me-3`}
-            severity="contrast"
             onClick={() => {
               setId(button.id);
               navigate(button.path);

@@ -23,7 +23,8 @@ const CrmSidebarHeader = () => {
       <div className="flex gap-2">
         <Avatar
           label={avatarLabel}
-          className="w-12 h-12 font-extrabold bg-blue-500"
+          className="w-12 h-12 font-extrabold text-white bg-blue-600"
+          shape="circle"
         />
         <div>
           <p className="font-medium">

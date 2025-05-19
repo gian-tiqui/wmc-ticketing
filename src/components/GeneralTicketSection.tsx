@@ -80,7 +80,7 @@ const GeneralTicketSection: React.FC<Props> = ({ ticket, refetch }) => {
       <InputText
         {...register("title")}
         id="ticketNameInput"
-        className="mb-6 w-96 bg-slate-700 text-slate-100"
+        className="mb-6 bg-white w-96"
       />
 
       <label htmlFor="ticketDescription" className="text-sm font-medium">
@@ -89,7 +89,7 @@ const GeneralTicketSection: React.FC<Props> = ({ ticket, refetch }) => {
       <InputTextarea
         {...register("description")}
         id="ticketDescription"
-        className="mb-6 w-96 h-52 bg-slate-700 text-slate-100"
+        className="mb-6 bg-white w-96 h-52"
       />
       <Button
         type="submit"
