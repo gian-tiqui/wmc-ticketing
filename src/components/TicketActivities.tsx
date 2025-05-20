@@ -17,15 +17,19 @@ const TicketActivities: React.FC<Props> = ({ ticket }) => {
         title={item.title}
         subTitle={item.createdAt}
         className="bg-[#EEEEEE]"
+        pt={{
+          subTitle: { className: "text-xs" },
+          title: { className: "text-lg" },
+        }}
       >
-        <p>{item.activity}</p>
+        <p className="text-sm font-medium">{item.activity}</p>
       </Card>
     );
   };
 
   const customizedMarker = (item: Activity) => {
     return (
-      <div className="grid w-10 h-10 text-white bg-blue-500 rounded-full place-content-center">
+      <div className="grid w-10 h-10 text-white bg-blue-600 rounded-full place-content-center">
         <i className={`${item.icon}`}></i>
       </div>
     );

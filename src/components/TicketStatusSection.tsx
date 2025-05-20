@@ -200,7 +200,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     return (
       <Button
         type={"button"}
-        className="rounded-full"
+        className="bg-blue-600 rounded-full"
         loading={marker.loading}
         disabled={marker.disabled}
         onClick={marker.onClick}
@@ -274,7 +274,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
             <div>
               <span className="mb-2 text-md">Current:</span>{" "}
               <Chip
-                className="font-medium text-white bg-blue-400"
+                className="font-medium text-white bg-blue-600"
                 label={ticket.status.type}
               />
             </div>
@@ -282,7 +282,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
             <Button
               onClick={() => setPauseReasonDialogVisible(true)}
               icon={`${PrimeIcons.PAUSE}`}
-              className="gap-2"
+              className="gap-2 bg-blue-600"
               type="button"
               loading={isUpdating && statusId === TicketStatus.ON_HOLD}
               disabled={

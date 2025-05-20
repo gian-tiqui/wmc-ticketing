@@ -107,12 +107,10 @@ const ChangePasswordDialog: React.FC<Props> = ({ onHide, visible, userId }) => {
         className="p-4 w-96"
         pt={{
           header: {
-            className:
-              "bg-slate-900 text-slate-100 border-t border-x border-slate-700",
+            className: "bg-[#EEEEEE] border-t border-x",
           },
           content: {
-            className:
-              "bg-slate-900 text-slate-100 pt-5 border-x border-b border-slate-700",
+            className: "bg-[#EEEEEE] pt-5 border-x border-b",
           },
         }}
       >

@@ -146,7 +146,7 @@ const SettingsDetail = () => {
               {...register("firstName", { required: true })}
               disabled={!isEditMode}
               placeholder="Jonathan"
-              className="w-full h-10 bg-inherit text-slate-100"
+              className="w-full h-12 bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex ">
@@ -168,7 +168,7 @@ const SettingsDetail = () => {
               {...register("middleName")}
               disabled={!isEditMode}
               placeholder="Jason"
-              className="w-full h-10 bg-inherit text-slate-100"
+              className="w-full h-12 bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex "></div>
@@ -183,7 +183,7 @@ const SettingsDetail = () => {
               {...register("lastName", { required: true })}
               disabled={!isEditMode}
               placeholder="Ric"
-              className="w-full h-10 bg-inherit text-slate-100"
+              className="w-full h-12 bg-white border-black "
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex">
@@ -203,13 +203,12 @@ const SettingsDetail = () => {
             <Dropdown
               pt={{
                 header: { className: "bg-slate-800" },
-                filterInput: { className: "bg-inherit text-slate-100" },
-                list: { className: "bg-slate-800 text-slate-100" },
+                filterInput: { className: "bg-inherit " },
+                list: { className: "bg-slate-800 " },
                 item: {
-                  className:
-                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                  className: " focus:bg-slate-700 focus:",
                 },
-                input: { className: "text-slate-100" },
+                input: { className: "" },
               }}
               disabled={!isEditMode}
               className="w-full h-12 bg-inherit border-slate-400"
@@ -231,7 +230,7 @@ const SettingsDetail = () => {
                 value={user?.deptName}
                 disabled={!isEditMode}
                 placeholder="Ric"
-                className="w-full h-10 bg-inherit text-slate-100"
+                className="w-full h-10 bg-inherit "
               />
             </IconField>
           )}
@@ -253,7 +252,7 @@ const SettingsDetail = () => {
         )}
         {isEditMode && (
           <Button
-            className="w-52"
+            className="bg-blue-600 w-52"
             icon={`${PrimeIcons.SAVE} mr-2 text-xl`}
             type="submit"
           >
@@ -262,7 +261,7 @@ const SettingsDetail = () => {
         )}
         {!isEditMode && (
           <Button
-            className="w-52"
+            className="bg-blue-600 w-52"
             type="button"
             onClick={() => setIsEditMode(true)}
             icon={`${PrimeIcons.USER_EDIT} mr-2 text-xl`}

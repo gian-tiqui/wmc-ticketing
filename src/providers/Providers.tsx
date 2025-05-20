@@ -15,16 +15,15 @@ const Providers = () => {
           <ConfirmDialog
             pt={{
               header: {
-                className:
-                  "bg-slate-900 text-slate-100 border-x border-t border-slate-700",
+                className: "bg-[#EEEEEE]  border-x border-t border-slate-700",
               },
               content: {
-                className:
-                  "bg-slate-900 text-slate-100 border-x border-slate-700",
+                className: "bg-[#EEEEEE]  border-x border-slate-700",
               },
               footer: {
-                className: "bg-slate-900 border-x border-b border-slate-700",
+                className: "bg-[#EEEEEE] border-x border-b border-slate-700",
               },
+              acceptButton: { className: "bg-blue-600" },
             }}
           />
           <RouteProvider />

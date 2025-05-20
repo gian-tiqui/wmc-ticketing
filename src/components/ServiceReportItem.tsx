@@ -24,7 +24,7 @@ const ServiceReportItem: React.FC<Props> = ({ imageLocation }) => {
         <Button
           icon={`${PrimeIcons.FILE_PDF}`}
           onClick={() => window.open(fileUrl, "_blank")}
-          className="w-full gap-2"
+          className="w-full h-12 gap-2 text-black bg-white border-none shadow-lg"
         >
           {extractOriginalName(imageLocation.path)}
         </Button>

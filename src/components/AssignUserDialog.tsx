@@ -61,17 +61,16 @@ const AssignUserDialog: React.FC<Props> = ({
           options={departmentUsers?.data.users}
           optionLabel="fullName"
           value={selectedUser}
-          className={`w-full bg-inherit border-slate-400 mb-4`}
+          className={`w-full bg-inherit border-black bg-white mb-4 h-12`}
           onChange={(e) => setSelectedUser(e.value)}
           pt={{
-            header: { className: "bg-slate-800" },
-            filterInput: { className: "bg-inherit text-slate-100" },
-            list: { className: "bg-slate-800" },
+            header: { className: "bg-white " },
+            filterInput: { className: "bg-inherit " },
+            list: { className: "bg-white" },
             item: {
-              className:
-                "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+              className: "focus:bg-[#EEEEEE] ",
             },
-            input: { className: "text-slate-100" },
+            input: { className: "text-sm" },
           }}
           placeholder="Assign a person to this"
         />
@@ -79,7 +78,7 @@ const AssignUserDialog: React.FC<Props> = ({
         <Button
           type="submit"
           icon={PrimeIcons.CHECK_CIRCLE}
-          className="items-center justify-center w-full gap-2"
+          className="items-center justify-center w-full gap-2 bg-blue-600"
           disabled={!selectedUser}
         >
           Confirm

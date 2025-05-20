@@ -132,7 +132,7 @@ const RecoveryMethod = () => {
       );
     }
 
-    return <span className="bg-slate-800">{props.placeholder}</span>;
+    return <span className="">{props.placeholder}</span>;
   };
 
   const questionOptionTemplate = (option: { question: string }) => {
@@ -157,17 +157,16 @@ const RecoveryMethod = () => {
           {isEditMode ? (
             <Dropdown
               pt={{
-                header: { className: "bg-slate-800" },
-                filterInput: { className: "bg-inherit text-slate-100" },
-                list: { className: "bg-slate-800" },
+                header: { className: "" },
+                filterInput: { className: "bg-inherit" },
+                list: { className: "bg-inherit" },
                 item: {
-                  className:
-                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                  className: "",
                 },
-                input: { className: "text-slate-100" },
+                input: { className: "" },
               }}
               disabled={!isEditMode}
-              className="h-12 min-w-80 bg-inherit border-slate-400"
+              className="w-full h-12 bg-white border-black"
               value={selectedQuestion}
               onChange={(e) => {
                 setSelectedQuestion(e.value);
@@ -185,7 +184,7 @@ const RecoveryMethod = () => {
               <InputText
                 disabled={!isEditMode}
                 placeholder={"Please select a secret"}
-                className="w-full h-12 bg-inherit text-slate-100"
+                className="w-full h-12 bg-white border-black bg-inherit"
                 {...register("question")}
               />
             </IconField>
@@ -202,7 +201,7 @@ const RecoveryMethod = () => {
               disabled={!isEditMode}
               {...register("answer", { required: true })}
               placeholder="Your answer"
-              className="w-full h-10 bg-inherit text-slate-100"
+              className="w-full h-12 bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
@@ -230,7 +229,7 @@ const RecoveryMethod = () => {
         )}
         {isEditMode && (
           <Button
-            className="w-52"
+            className="bg-blue-600 w-52"
             type="submit"
             icon={`${PrimeIcons.SAVE} mr-2 text-xl`}
           >
@@ -239,7 +238,7 @@ const RecoveryMethod = () => {
         )}
         {!isEditMode && (
           <Button
-            className="w-52"
+            className="bg-blue-600 w-52"
             type="button"
             onClick={() => setIsEditMode(true)}
             icon={`${PrimeIcons.USER_EDIT} mr-2 text-xl`}

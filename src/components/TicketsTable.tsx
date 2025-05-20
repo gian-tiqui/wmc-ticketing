@@ -15,6 +15,7 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
 
   return (
     <div>
+      <div className="w-full bg-[#FFF] h-4 rounded-t-3xl"></div>
       <DataTable
         value={tickets}
         paginator
@@ -24,7 +25,7 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
           bodyRow: { className: "bg-[#EEEEEE]" },
           headerRow: { className: "bg-[#EEEEEE]" },
           paginator: {
-            root: { className: "bg-[#EEEEEE]" },
+            root: { className: "bg-[#EEEEEE] rounded-b-3xl" },
           },
 
           root: { className: "text-xs" },
@@ -104,7 +105,7 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
           body={(rowData: Ticket) => (
             <Button
               icon={PrimeIcons.DIRECTIONS}
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 bg-blue-600 rounded-full"
               onClick={() => {
                 navigate(`/ticket/${rowData.id}`);
               }}
