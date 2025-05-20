@@ -21,7 +21,7 @@ const TicketServiceReport: React.FC<Props> = ({ ticket }) => {
               {serviceReport.createdAt}
             </p>
             <div
-              className={`${scrollbarTheme} flex flex-col gap-3 p-3 overflow-x-auto rounded h-72 bg-slate-700`}
+              className={`${scrollbarTheme} flex flex-col gap-3 p-3 overflow-x-auto rounded h-72 bg-[#EEEEEE]`}
             >
               {serviceReport.imageLocations.map((imageLocation) => (
                 <ServiceReportItem

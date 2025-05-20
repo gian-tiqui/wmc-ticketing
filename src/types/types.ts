@@ -208,7 +208,7 @@ type SummaryCardType = {
 };
 
 type TicketsPageTabItems = {
-  icon: string;
+  icon: string | ReactNode;
   header: ReactNode;
   body: ReactNode;
 };

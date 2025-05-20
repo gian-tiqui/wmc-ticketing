@@ -49,17 +49,19 @@ const PriorityLevelFragment: React.FC<Props> = ({ ticket, refetch }) => {
         optionLabel="name"
         onChange={(e) => setSelectedPriorityLevel(e.value)}
         pt={{
-          header: { className: "bg-slate-800" },
-          filterInput: { className: "bg-inherit text-slate-100" },
-          list: { className: "bg-slate-800" },
+          header: { className: "" },
+          filterInput: { className: "bg-inherit" },
+          list: { className: "bg-[#EEEEEE]" },
           item: {
-            className: "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+            className: "focus:bg-slate-700 ",
           },
-          input: { className: "text-slate-100" },
+          input: { className: "" },
         }}
         className={`bg-inherit border-slate-400`}
       />
-      <Button onClick={handleSeverityUpdate}>Update</Button>
+      <Button onClick={handleSeverityUpdate} className="bg-blue-600">
+        Update
+      </Button>
     </div>
   );
 };

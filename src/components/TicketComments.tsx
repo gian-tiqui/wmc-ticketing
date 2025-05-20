@@ -83,15 +83,17 @@ const TicketComments: React.FC<Props> = ({ ticket, refetch }) => {
         <div>
           <Avatar
             label={ticket.id.toString()}
-            className="w-12 h-12 mb-6 text-xl font-extrabold bg-blue-500"
+            className="w-10 h-10 mb-6 font-extrabold text-white bg-blue-500"
           />
-          <h4 className="mb-2 text-2xl font-extrabold">
+          <h4 className="mb-2 font-medium">
             {ticket.title} - {ticket.category.name}
           </h4>
-          <h6>{ticket.description}</h6>
+          <h6 className="text-sm font-medium">{ticket.description}</h6>
           <div className="flex items-center gap-2">
             <Divider />
-            <p className="mx-2 text-sm text-center w-80">Chat starts here</p>
+            <p className="mx-2 text-sm font-medium text-center w-80">
+              Chat starts here
+            </p>
             <Divider />
           </div>
         </div>

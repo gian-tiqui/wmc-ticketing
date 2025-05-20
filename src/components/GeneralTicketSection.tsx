@@ -74,26 +74,26 @@ const GeneralTicketSection: React.FC<Props> = ({ ticket, refetch }) => {
       <CustomToast ref={toastRef} />
       <h4 className="text-lg font-medium">General</h4>
       <Divider />
-      <label htmlFor="ticketNameInput" className="text-sm font-medium">
+      <label htmlFor="ticketNameInput" className="text-xs font-medium">
         Ticket Name
       </label>
       <InputText
         {...register("title")}
         id="ticketNameInput"
-        className="mb-6 bg-white w-96"
+        className="mb-6 bg-white border-black w-96"
       />
 
-      <label htmlFor="ticketDescription" className="text-sm font-medium">
+      <label htmlFor="ticketDescription" className="text-xs font-medium">
         Ticket Description
       </label>
       <InputTextarea
         {...register("description")}
         id="ticketDescription"
-        className="mb-6 bg-white w-96 h-52"
+        className="mb-6 bg-white border-black w-96 h-52"
       />
       <Button
         type="submit"
-        className="w-96"
+        className="justify-center bg-blue-600 w-96"
         disabled={!isDirty || isLoading}
         loading={isLoading}
       >

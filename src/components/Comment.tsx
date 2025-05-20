@@ -38,19 +38,20 @@ const Comment: React.FC<Props> = ({ comment, onRightClick }) => {
     <div key={comment.id} className="flex w-full gap-2">
       <Avatar
         label={comment.user.firstName[0] + comment.user.lastName[0]}
-        className="w-12 h-12 font-extrabold bg-blue-500"
+        className="w-12 h-12 font-extrabold text-white bg-blue-600"
+        shape="circle"
       />
       <div className="w-full">
-        <p className="font-medium">
+        <p className="text-sm font-medium">
           {`${comment.user.firstName} ${comment.user.lastName}`}{" "}
-          <span className="text-sm font-light text-gray-400">
+          <span className="text-xs font-light text-gray-400">
             {formatDate(new Date(comment.createdAt.split(" at ")[0]))} at{" "}
             {comment.createdAt.split(" at ")[1]}
           </span>
         </p>
         {comment.comment && (
           <p
-            className="w-full hover:bg-slate-600"
+            className="w-full text-sm font-medium hover:bg-[#EEEEEE]"
             onContextMenu={(e) => onRightClick(e, comment.id)}
           >
             {comment.comment}

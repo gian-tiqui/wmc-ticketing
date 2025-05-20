@@ -72,7 +72,7 @@ const ChangePassword = () => {
     >
       <CustomToast ref={toastRef} />
       <ScrollPanel style={{ height: "calc(72vh - 200px)" }} className="mb-5">
-        <div className="flex justify-between w-full">
+        <div className="flex items-center justify-between w-full">
           <p className="w-full">Old Password</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
@@ -80,7 +80,7 @@ const ChangePassword = () => {
               {...register("oldPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-10 bg-inherit text-slate-100"
+              className="w-full h-12 bg-white border-black "
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
@@ -104,7 +104,7 @@ const ChangePassword = () => {
               {...register("newPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-10 bg-inherit text-slate-100"
+              className="w-full h-12 bg-white border-black "
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
@@ -128,7 +128,7 @@ const ChangePassword = () => {
               {...register("confirmNewPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-10 bg-inherit text-slate-100"
+              className="w-full h-12 bg-white border-black "
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
@@ -145,7 +145,11 @@ const ChangePassword = () => {
         <Divider />
       </ScrollPanel>
       <div className="flex justify-end gap-2">
-        <Button className="w-52" type="submit" icon={`${PrimeIcons.KEY} mr-2`}>
+        <Button
+          className="bg-blue-600 w-52"
+          type="submit"
+          icon={`${PrimeIcons.KEY} mr-2`}
+        >
           Change Password
         </Button>
       </div>

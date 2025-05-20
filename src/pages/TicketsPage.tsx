@@ -147,11 +147,8 @@ const TicketsPage = () => {
       header: (
         <div className="flex items-center">
           <p>
-            New
-            <span className="text-slate-100">
-              {newTicketsData?.data.count > 0 &&
-                ` - ${newTicketsData?.data.count}`}
-            </span>
+            {newTicketsData?.data.count > 0 && `${newTicketsData?.data.count}`}{" "}
+            - New
           </p>
         </div>
       ),
@@ -159,7 +156,7 @@ const TicketsPage = () => {
         newTicketsData?.data.count > 0 ? (
           <TicketsTable tickets={newTicketsData?.data.tickets} />
         ) : (
-          <p className="text-slate-100">No Tickets yet</p>
+          <p className="text-sm font-medium">No Tickets yet</p>
         ),
     },
     {
@@ -167,11 +164,9 @@ const TicketsPage = () => {
       header: (
         <div className="flex items-center">
           <p>
+            {acknowledgeTicketsData?.data.count > 0 &&
+              `${acknowledgeTicketsData?.data.count} - `}{" "}
             Acknowledged
-            <span className="text-slate-100">
-              {acknowledgeTicketsData?.data.count > 0 &&
-                ` - ${acknowledgeTicketsData?.data.count}`}
-            </span>
           </p>
         </div>
       ),
@@ -179,7 +174,7 @@ const TicketsPage = () => {
         acknowledgeTicketsData?.data.count > 0 ? (
           <TicketsTable tickets={acknowledgeTicketsData?.data.tickets} />
         ) : (
-          <p className="text-slate-100">No Tickets yet</p>
+          <p className="text-sm font-medium">No Tickets yet</p>
         ),
     },
     {
@@ -199,7 +194,7 @@ const TicketsPage = () => {
         assignedTickets?.data.count > 0 ? (
           <TicketsTable tickets={assignedTickets?.data.tickets} />
         ) : (
-          <p className="text-slate-100">No Tickets yet</p>
+          <p className="text-sm font-medium">No Tickets yet</p>
         ),
     },
     {
@@ -219,7 +214,7 @@ const TicketsPage = () => {
         escalatedTickets?.data.count > 0 ? (
           <TicketsTable tickets={escalatedTickets?.data.tickets} />
         ) : (
-          <p className="text-slate-100">No Tickets yet</p>
+          <p className="text-sm font-medium">No Tickets yet</p>
         ),
     },
     {
@@ -239,7 +234,7 @@ const TicketsPage = () => {
         onHoldTickets?.data.count > 0 ? (
           <TicketsTable tickets={onHoldTickets?.data.tickets} />
         ) : (
-          <p className="text-slate-100">No Tickets yet</p>
+          <p className="text-sm font-medium">No Tickets yet</p>
         ),
     },
     {
@@ -259,7 +254,7 @@ const TicketsPage = () => {
         resolvedTickets?.data.count > 0 ? (
           <TicketsTable tickets={resolvedTickets?.data.tickets} />
         ) : (
-          <p className="text-slate-100">No Tickets yet</p>
+          <p className="text-sm font-medium">No Tickets yet</p>
         ),
     },
     {
@@ -279,7 +274,7 @@ const TicketsPage = () => {
         closedTickets?.data.count > 0 ? (
           <TicketsTable tickets={closedTickets?.data.tickets} />
         ) : (
-          <p className="text-slate-100">No Tickets yet</p>
+          <p className="text-sm font-medium">No Tickets yet</p>
         ),
     },
   ];
@@ -312,8 +307,7 @@ const TicketsPage = () => {
               key={index}
               pt={{ headerAction: { className: "bg-inherit" } }}
               header={tab.header}
-              leftIcon={`${tab.icon} me-2`}
-              headerClassName="text-sm"
+              headerClassName="text-xs"
             >
               {tab.body}
             </TabPanel>

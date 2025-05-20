@@ -47,12 +47,12 @@ const CloseTicketDialog: React.FC<Props> = ({
       header="Close this Ticket?"
     >
       <form onSubmit={handleSubmit(handleCloseTicket)}>
-        <h4 className="mb-1 text-slate-100">
+        <h4 className="mb-1 ">
           Enter your closing reason here to close the ticket.
         </h4>
         <InputTextarea
           {...register("closingReason", { required: true })}
-          className="w-full h-52 bg-slate-800 text-slate-100"
+          className="w-full bg-white h-52"
         />
         <span className="text-sm text-red-400">
           {errors.closingReason?.message && "This field is required"}

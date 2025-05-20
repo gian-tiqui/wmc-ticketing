@@ -9,7 +9,6 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { TicketStatus } from "../@utils/enums/enum";
 import extractOriginalName from "../@utils/functions/extractOriginalName";
-import { Calendar } from "primereact/calendar";
 import { Nullable } from "primereact/ts-helpers";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
 
@@ -34,8 +33,6 @@ const ResolutionDialog: React.FC<Props> = ({
   files,
   setResolution,
   setStatusId,
-  resolutionTime,
-  setResolutionTime,
 }) => {
   const fileUploadRef = useRef<FileUpload>(null);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
@@ -62,7 +59,7 @@ const ResolutionDialog: React.FC<Props> = ({
         <div className="flex items-center justify-between">
           <h4 className="text-lg font-medium">Resolution Details</h4>
           <Button
-            className="h-10 gap-2"
+            className="h-10 gap-2 bg-blue-600"
             type="submit"
             icon={`${PrimeIcons.CHECK_CIRCLE}`}
             onClick={() => setStatusId(TicketStatus.RESOLVED)}
@@ -72,21 +69,8 @@ const ResolutionDialog: React.FC<Props> = ({
         </div>
         <Divider />
         <InputTextarea
-          className="w-full mb-3 bg-slate-800 h-52 text-slate-100"
+          className="w-full mb-3 bg-white border-black h-52"
           onChange={(e) => setResolution(e.target.value)}
-        />
-        <p className="mb-2">Resolution time</p>
-        <Calendar
-          showTime
-          hourFormat="12"
-          inputClassName="bg-slate-800 text-slate-100"
-          panelClassName="bg-slate-900 text-slate-100"
-          pt={{ header: { className: "bg-slate-900 text-slate-100" } }}
-          className="w-full mb-5"
-          onChange={(e) => {
-            setResolutionTime(e.value);
-          }}
-          value={resolutionTime}
         />
 
         <h4 className="mt-5 text-lg font-medium">Service Report</h4>
@@ -96,6 +80,7 @@ const ResolutionDialog: React.FC<Props> = ({
             <FileUpload
               ref={fileUploadRef}
               mode="basic"
+              pt={{ basicButton: { className: "bg-blue-600" } }}
               accept="application/pdf"
               chooseLabel="Upload file"
               onSelect={(e) => {
@@ -129,7 +114,7 @@ const ResolutionDialog: React.FC<Props> = ({
             </div>
           </header>
           <section
-            className={`${scrollbarTheme} flex flex-col gap-2 p-4 mt-4 overflow-y-auto rounded bg-slate-800 h-96`}
+            className={`${scrollbarTheme} flex flex-col gap-2 p-4 mt-4 overflow-y-auto rounded bg-white border-black h-96`}
           >
             {files.map((file, index) => (
               <div key={index} className="relative flex">
@@ -147,7 +132,7 @@ const ResolutionDialog: React.FC<Props> = ({
 
                 <Button
                   icon={`${PrimeIcons.FILE_PDF} text-xl`}
-                  className="w-full h-16 gap-2 font-medium"
+                  className="w-full h-16 gap-2 font-medium text-black bg-white border-none shadow-xl"
                 >
                   {extractOriginalName(file.file.name)}
                 </Button>
