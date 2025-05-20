@@ -16,18 +16,13 @@ const NewTicketButton: React.FC<Props> = ({ refetchAll }) => {
         visible={visible}
         setVisible={setVisible}
         refetch={refetchAll}
-        header={
-          <div className="flex items-center gap-2">
-            <i className={`${PrimeIcons.TICKET} text-lg rotate-90`}></i>
-            <p>New Ticket</p>
-          </div>
-        }
+        header={<p className="text-md">New Ticket</p>}
       />
       <Button
         onClick={() => {
           if (!visible) setVisible(true);
         }}
-        className="font-medium w-9 h-9"
+        className="font-medium bg-blue-600 w-9 h-9"
         icon={`${PrimeIcons.PLUS_CIRCLE}`}
         tooltip="New Ticket"
         tooltipOptions={{ position: "left" }}

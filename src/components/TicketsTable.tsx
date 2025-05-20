@@ -23,12 +23,16 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         pt={{
           bodyRow: { className: "bg-[#EEEEEE]" },
           headerRow: { className: "bg-[#EEEEEE]" },
-          paginator: { root: { className: "bg-[#EEEEEE]" } },
+          paginator: {
+            root: { className: "bg-[#EEEEEE]" },
+          },
+
+          root: { className: "text-xs" },
         }}
       >
         <Column
           pt={{
-            headerCell: { className: "bg-white h-14 " },
+            headerCell: { className: "bg-white h-14" },
             sortIcon: { className: "" },
           }}
           className=""

@@ -14,14 +14,14 @@ const SearchButton = () => {
         setVisible={setSearchDialogVisible}
       />
       <Button
-        className="hidden w-40 gap-2 md:flex hover:border-blue-500 h-9 hover:border"
+        className="hidden w-40 gap-2 bg-blue-600 md:flex hover:border-blue-500 h-9 hover:border"
         icon={`${PrimeIcons.SEARCH}`}
         onClick={() => setSearchDialogVisible(true)}
       >
         Search
       </Button>
       <Button
-        className="justify-center md:hidden w-9 hover:border-blue-500 h-9 hover:border"
+        className="justify-center bg-blue-600 md:hidden w-9 hover:border-blue-500 h-9 hover:border"
         icon={`${PrimeIcons.SEARCH}`}
         onClick={() => setSearchDialogVisible(true)}
       ></Button>

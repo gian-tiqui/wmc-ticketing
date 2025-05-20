@@ -28,13 +28,11 @@ const InboxButton = () => {
       </div>
       <Button
         icon={`${PrimeIcons.INBOX}`}
-        className="w-9 h-9"
+        className="bg-blue-600 w-9 h-9"
         onClick={(e) => overlayPanelRef.current?.toggle(e)}
       ></Button>
-      <OverlayPanel ref={overlayPanelRef} className="w-72 h-96 bg-slate-800">
-        <header className="font-medium text-md text-slate-100">
-          Notifications
-        </header>
+      <OverlayPanel ref={overlayPanelRef} className="w-72 h-96 bg-[#EEEEEE]">
+        <header className="font-medium text-md">Notifications</header>
         <Divider />
         {userNotifications?.data && userNotifications.data.count > 0 ? (
           <Notifications
@@ -43,7 +41,7 @@ const InboxButton = () => {
             setQuery={setQuery}
           />
         ) : (
-          <p className="font-medium text-slate-100">No notifications yet</p>
+          <p className="font-medium">No notifications yet</p>
         )}
       </OverlayPanel>
     </div>
