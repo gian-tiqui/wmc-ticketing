@@ -14,7 +14,7 @@ const SearchItem: React.FC<Props> = ({ ticket }) => {
   return (
     <Button
       icon={`${PrimeIcons.TICKET} text-xl`}
-      className="items-center w-full gap-2 font-medium"
+      className="items-center w-full h-12 gap-2 mb-2 font-medium text-black bg-white border-none shadow"
       onClick={() => navigate(`/ticket/${ticket.id}`)}
     >
       {ticket.title} {ticket.status && `(${ticket.status.type})`}

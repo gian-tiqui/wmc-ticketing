@@ -34,15 +34,13 @@ const NotificationItem: React.FC<Props> = ({ notification, refetch }) => {
     <div
       onClick={handleNotificationClicked}
       key={notification.id}
-      className={`w-full rounded text-slate-100 cursor-pointer ${
+      className={`w-full rounded cursor-pointer ${
         notification.viewed
-          ? "bg-slate-950 hover:bg-slate-900"
-          : "bg-slate-900 hover:bg-slate-700"
+          ? "hover:bg-gray-200 bg-white"
+          : "hover:bg-gray-200 bg-white"
       }`}
     >
-      <header className="p-3 rounded-t bg-slate-950">
-        {notification.title}
-      </header>
+      <header className="p-3 rounded-t">{notification.title}</header>
       <div className="p-3">{notification.message}</div>
     </div>
   );

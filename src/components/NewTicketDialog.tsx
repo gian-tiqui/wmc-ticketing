@@ -151,23 +151,19 @@ const NewTicketDialog: React.FC<Props> = ({
         <form onSubmit={handleSubmit(handleCreateTicket)}>
           {/* Department Dropdown */}
           <div className="w-full h-24">
-            <label
-              htmlFor="departmentsDropdown"
-              className="text-sm text-blue-400"
-            >
-              To department
+            <label htmlFor="departmentsDropdown" className="text-xs text-black">
+              Department
             </label>
             <Dropdown
               id="departmentsDropdown"
               pt={{
-                header: { className: "bg-slate-800" },
-                filterInput: { className: "bg-inherit text-slate-100" },
-                list: { className: "bg-slate-800" },
+                header: { className: "bg-[#EEEEEE]" },
+                filterInput: { className: "bg-inherit " },
+                list: { className: "bg-[#EEEEEE]" },
                 item: {
-                  className:
-                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                  className: " bg-inherit ",
                 },
-                input: { className: "text-slate-100" },
+                input: { className: "text-sm" },
               }}
               options={departmentsData}
               value={selectedDepartment}
@@ -178,7 +174,7 @@ const NewTicketDialog: React.FC<Props> = ({
               }}
               filter
               placeholder="Select a department"
-              className={`w-full bg-inherit border-slate-400 ${
+              className={`w-full bg-inherit border-black bg-white h-12 items-center ${
                 errors.deptId ? "p-invalid" : ""
               }`}
             />
@@ -193,23 +189,19 @@ const NewTicketDialog: React.FC<Props> = ({
           {/* Category Dropdown */}
 
           <div className="w-full h-24">
-            <label
-              htmlFor="categoriesDropdown"
-              className="text-sm text-blue-400"
-            >
+            <label htmlFor="categoriesDropdown" className="text-xs text-black">
               Category
             </label>
             <Dropdown
               id="categoriesDropdown"
               pt={{
-                header: { className: "bg-slate-800" },
-                filterInput: { className: "bg-inherit text-slate-100" },
-                list: { className: "bg-slate-800" },
+                header: { className: "bg-inherit" },
+                filterInput: { className: "bg-inherit " },
+                list: { className: "bg-inherit" },
                 item: {
-                  className:
-                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                  className: "bg-inherit",
                 },
-                input: { className: "text-slate-100" },
+                input: { className: "text-sm" },
               }}
               options={departmentCategoriesData?.data.categories}
               value={selectedCategory}
@@ -223,7 +215,7 @@ const NewTicketDialog: React.FC<Props> = ({
                 selectedDepartment &&
                 departmentCategoriesData?.data.categories.length === 0
               }
-              className={`w-full bg-inherit border-slate-400 ${
+              className={`w-full bg-inherit h-12 items-center border-black bg-white ${
                 errors.categoryId ? "p-invalid" : ""
               }`}
               placeholder="Select a category"
@@ -243,21 +235,20 @@ const NewTicketDialog: React.FC<Props> = ({
           <div className="w-full h-24">
             <label
               htmlFor="priorityLevelDropdown"
-              className="text-sm text-blue-400"
+              className="text-xs text-black"
             >
               Priority Level
             </label>
             <Dropdown
               id="priorityLevelDropdown"
               pt={{
-                header: { className: "bg-slate-800" },
-                filterInput: { className: "bg-inherit text-slate-100" },
-                list: { className: "bg-slate-800" },
+                header: { className: "bg-inherit" },
+                filterInput: { className: "bg-inherit " },
+                list: { className: "bg-inherit" },
                 item: {
-                  className:
-                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                  className: " bg-inherit ",
                 },
-                input: { className: "text-slate-100" },
+                input: { className: "text-sm" },
               }}
               options={priorityLevelsData?.data.priorityLevels}
               value={selectedPriorityLevel}
@@ -268,7 +259,7 @@ const NewTicketDialog: React.FC<Props> = ({
                   shouldValidate: true,
                 });
               }}
-              className={`w-full bg-inherit border-slate-400 ${
+              className={`w-full bg-inherit h-12 items-center border-black bg-white ${
                 errors.priorityLevelId ? "p-invalid" : ""
               }`}
               placeholder="Select a priority level"
@@ -285,7 +276,7 @@ const NewTicketDialog: React.FC<Props> = ({
 
           {/* Title Input */}
           <div className="h-24">
-            <label htmlFor="titleInput" className="text-sm text-blue-400">
+            <label htmlFor="titleInput" className="text-sm text-black">
               Title
             </label>
             <IconField id="titleInput" iconPosition="left">
@@ -293,7 +284,7 @@ const NewTicketDialog: React.FC<Props> = ({
               <InputText
                 {...register("title", { required: "Title is required." })}
                 placeholder="Search"
-                className={`bg-inherit w-full text-slate-100 ${
+                className={`bg-inherit w-full text-sm border-black bg-white ${
                   errors.title ? "p-invalid" : ""
                 }`}
               />
@@ -307,13 +298,13 @@ const NewTicketDialog: React.FC<Props> = ({
           </div>
 
           {/* Description Textarea (No Validation) */}
-          <label htmlFor="descriptionInput" className="text-sm text-blue-400">
+          <label htmlFor="descriptionInput" className="text-sm text-black">
             Description
           </label>
           <InputTextarea
             {...register("description", { required: false })}
             id="descriptionInput"
-            className="w-full mb-3 bg-inherit h-52 text-slate-100"
+            className="w-full mb-3 text-sm bg-white border-black bg-inherit h-52"
             placeholder="Enter your description"
           />
 
@@ -325,12 +316,11 @@ const NewTicketDialog: React.FC<Props> = ({
               checked={isChecked}
               pt={{ box: { className: `${!isChecked && "bg-inherit"}` } }}
             />
-            <p className="text-sm hover:underline">Require service report</p>
+            <p className="text-xs hover:underline">Require service report</p>
           </div>
 
           <Button
-            className="justify-center w-full gap-2"
-            icon={`${PrimeIcons.PLUS_CIRCLE}`}
+            className="justify-center w-full h-12 gap-2 text-sm font-bold bg-blue-600"
             type="submit"
           >
             Create Ticket

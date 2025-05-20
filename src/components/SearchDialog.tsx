@@ -55,8 +55,8 @@ const SearchDialog: React.FC<Props> = ({ setVisible, visible }) => {
       onHide={() => {
         if (visible) setVisible(false);
       }}
-      contentClassName="bg-slate-800 text-slate-100"
-      headerClassName="bg-slate-800 text-slate-100"
+      contentClassName="bg-[#EEEEEE]"
+      headerClassName="bg-[#EEEEEE]"
       visible={visible}
       header={
         <IconField iconPosition="left">
@@ -65,15 +65,13 @@ const SearchDialog: React.FC<Props> = ({ setVisible, visible }) => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Search"
-            className="w-full bg-slate-700 text-slate-100"
+            className="items-center w-full h-12 text-sm bg-white border-black"
           />
         </IconField>
       }
       className="w-92 md:w-[40%]  h-96 md:h-[70%]"
     >
-      <div
-        className={`w-full h-72 flex flex-col gap-3 ${scrollbarTheme} overflow-auto`}
-      >
+      <div className={`w-full h-72 gap-2 ${scrollbarTheme} overflow-auto`}>
         {ticketResults?.data.tickets && ticketResults?.data.count > 0 ? (
           ticketResults.data.tickets.map((ticket: Ticket) => (
             <SearchItem ticket={ticket} key={ticket.id} />

@@ -49,12 +49,10 @@ const ResolutionDialog: React.FC<Props> = ({
       className="p-4 w-96 md:w-[500px] md:h-full"
       pt={{
         header: {
-          className:
-            "bg-blue-500 text-slate-100 border-t border-x border-slate-700",
+          className: "bg-[#EEEEEE] rounded-t-3xl",
         },
         content: {
-          className:
-            "bg-slate-900 text-slate-100 pt-5 border-x border-slate-700",
+          className: "bg-[#EEEEEE] pt-5 rounded-b-3xl",
         },
         closeButton: { className: "bg-white" },
       }}
