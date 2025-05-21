@@ -12,7 +12,7 @@ const DashboardPage = () => {
   return (
     <PageTemplate>
       <div
-        className={`grid w-full h-screen pt-10 overflow-auto ${scrollbarTheme}`}
+        className={`w-full h-screen grid grid-cols-2 gap-4 p-4 overflow-auto ${scrollbarTheme}`}
       >
         <YearlyDepartmentsGraph />
         <MonthlyDepartmentGraph />

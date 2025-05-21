@@ -2,7 +2,7 @@ import { ChangePassword, Query, User } from "../../types/types";
 import { URI } from "../enums/enum";
 import apiClient from "../http-common/apiClient";
 
-const getUser = async (id: number) => {
+const getUser = async (id: number | null) => {
   return apiClient.get(`${URI.API_URI}/api/v1/user/${id}`);
 };
 
@@ -66,6 +66,10 @@ const getUserNotificationsById = async (
   });
 };
 
+const getUsers = async (params: Query) => {
+  return apiClient.get(`${URI.API_URI}/api/v1/user`, { params });
+};
+
 export {
   getUser,
   updateUserById,
@@ -75,4 +79,5 @@ export {
   verifyPasswordById,
   getUserTicketsById,
   getUserNotificationsById,
+  getUsers,
 };

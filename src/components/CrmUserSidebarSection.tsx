@@ -75,7 +75,7 @@ const CrmUserSidebarSection = () => {
           <Button
             key={index}
             className={`items-center w-full bg-white text-xs border-none text-slate-900 h-12 font-medium ${
-              id === button.id && "bg-gray-600"
+              id === button.id && "bg-gray-300"
             }`}
             icon={`${button.icon} me-3`}
             onClick={() => {

@@ -121,7 +121,7 @@ const MonthlyDepartmentGraph = () => {
     );
   }
   return (
-    <div className="w-[60%] mx-auto mb-6">
+    <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex items-center justify-between w-full mb-8">
         <p className="font-medium">Department Tickets per month ({year})</p>
         <div className="flex gap-4">

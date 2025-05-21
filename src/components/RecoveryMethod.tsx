@@ -153,20 +153,20 @@ const RecoveryMethod = () => {
       />
       <ScrollPanel style={{ height: "calc(72vh - 200px)" }} className="mb-5">
         <div className="flex justify-between w-full">
-          <p className="w-full">Question</p>
+          <p className="w-full text-sm">Question</p>
           {isEditMode ? (
             <Dropdown
               pt={{
-                header: { className: "" },
-                filterInput: { className: "bg-inherit" },
-                list: { className: "bg-inherit" },
+                header: { className: "text-sm" },
+                filterInput: { className: "bg-inherit text-sm" },
+                list: { className: "bg-inherit text-sm" },
                 item: {
-                  className: "",
+                  className: "text-sm",
                 },
-                input: { className: "" },
+                input: { className: "text-sm" },
               }}
               disabled={!isEditMode}
-              className="w-full h-12 bg-white border-black"
+              className="w-full h-12 text-sm bg-white border-black"
               value={selectedQuestion}
               onChange={(e) => {
                 setSelectedQuestion(e.value);
@@ -184,7 +184,7 @@ const RecoveryMethod = () => {
               <InputText
                 disabled={!isEditMode}
                 placeholder={"Please select a secret"}
-                className="w-full h-12 bg-white border-black bg-inherit"
+                className="w-full h-12 text-sm bg-white border-black bg-inherit"
                 {...register("question")}
               />
             </IconField>
@@ -194,14 +194,14 @@ const RecoveryMethod = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full">Answer</p>
+          <p className="w-full text-sm">Answer</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               disabled={!isEditMode}
               {...register("answer", { required: true })}
               placeholder="Your answer"
-              className="w-full h-12 bg-white border-black"
+              className="w-full h-12 text-sm bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">

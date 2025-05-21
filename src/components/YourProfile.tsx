@@ -122,7 +122,7 @@ const SettingsDetail = () => {
       );
     }
 
-    return <span className="bg-slate-800">{props.placeholder}</span>;
+    return <span className="">{props.placeholder}</span>;
   };
 
   const departmentOptionTemplate = (option: { code: string; name: string }) => {
@@ -139,14 +139,14 @@ const SettingsDetail = () => {
       <CustomToast ref={toastRef} />
       <ScrollPanel style={{ height: "calc(72vh - 200px)" }} className="mb-5">
         <div className="flex justify-between w-full">
-          <p className="w-full">First name</p>
+          <p className="w-full text-sm">First name</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.USER}> </InputIcon>
             <InputText
               {...register("firstName", { required: true })}
               disabled={!isEditMode}
               placeholder="Jonathan"
-              className="w-full h-12 bg-white border-black"
+              className="w-full h-12 text-sm bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex ">
@@ -161,14 +161,14 @@ const SettingsDetail = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full">Middle name</p>
+          <p className="w-full text-sm">Middle name</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.USER}> </InputIcon>
             <InputText
               {...register("middleName")}
               disabled={!isEditMode}
               placeholder="Jason"
-              className="w-full h-12 bg-white border-black"
+              className="w-full h-12 text-sm bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex "></div>
@@ -176,14 +176,14 @@ const SettingsDetail = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full">Last name</p>
+          <p className="w-full text-sm">Last name</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.USER}> </InputIcon>
             <InputText
               {...register("lastName", { required: true })}
               disabled={!isEditMode}
               placeholder="Ric"
-              className="w-full h-12 bg-white border-black "
+              className="w-full h-12 text-sm bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex">
@@ -198,20 +198,20 @@ const SettingsDetail = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full">Department</p>
+          <p className="w-full text-sm">Department</p>
           {isEditMode ? (
             <Dropdown
               pt={{
-                header: { className: "bg-slate-800" },
+                header: { className: "" },
                 filterInput: { className: "bg-inherit " },
-                list: { className: "bg-slate-800 " },
+                list: { className: "" },
                 item: {
-                  className: " focus:bg-slate-700 focus:",
+                  className: " focus:",
                 },
                 input: { className: "" },
               }}
               disabled={!isEditMode}
-              className="w-full h-12 bg-inherit border-slate-400"
+              className="w-full h-12 text-sm bg-white border-black"
               value={selectedDepartment}
               onChange={(e) => {
                 setSelectedDepartment(e.value);
@@ -230,7 +230,7 @@ const SettingsDetail = () => {
                 value={user?.deptName}
                 disabled={!isEditMode}
                 placeholder="Ric"
-                className="w-full h-10 bg-inherit "
+                className="w-full h-12 text-sm bg-white border-black"
               />
             </IconField>
           )}

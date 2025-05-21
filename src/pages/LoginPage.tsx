@@ -19,6 +19,8 @@ import wmcLogo from "../assets/wmcLogo.png";
 import CustomToast from "../components/CustomToast";
 import navigateBasedOnRole from "../@utils/functions/navigateBasedOnRole";
 import { Image } from "primereact/image";
+import LoginSection from "../components/LoginSection";
+import polygon4 from "../assets/polygon-4.png";
 
 interface FormFields {
   username: string;
@@ -93,10 +95,15 @@ const LoginPage = () => {
   return (
     <PageTemplate>
       <CustomToast ref={toastRef} />
-      <main className="w-screen">
+      <Image
+        src={polygon4}
+        alt="polygon-4"
+        className="absolute top-0 right-0 h-96 w-96"
+      />
+      <main className="flex w-screen">
         <form
           onSubmit={handleSubmit(handleLogin)}
-          className="flex flex-col relative pt-28 items-center h-screen gap-3 border rounded shadow-md p-9 bg-[#EEEEEE] w-[425px]"
+          className="flex flex-col relative pt-28  items-center h-screen gap-3 border rounded shadow-md p-9 bg-[#EEEEEE] w-[400px]"
         >
           <div
             onClick={() => navigate("/")}
@@ -188,6 +195,7 @@ const LoginPage = () => {
             </p>
           </footer>
         </form>
+        <LoginSection />
       </main>
     </PageTemplate>
   );

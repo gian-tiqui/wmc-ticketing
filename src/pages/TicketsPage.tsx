@@ -283,7 +283,11 @@ const TicketsPage = () => {
     <PageTemplate>
       <div className="w-full h-full p-4 bg-inherit">
         <div className="flex items-center justify-between mb-10">
-          <h4 className={` text-2xl font-medium ${!isExpanded && "ms-14"} `}>
+          <h4
+            className={` text-lg text-blue-600 font-semibold ${
+              !isExpanded && "ms-14"
+            } `}
+          >
             Tickets
           </h4>
           <div className="flex gap-2">
