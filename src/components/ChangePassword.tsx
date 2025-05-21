@@ -73,14 +73,14 @@ const ChangePassword = () => {
       <CustomToast ref={toastRef} />
       <ScrollPanel style={{ height: "calc(72vh - 200px)" }} className="mb-5">
         <div className="flex items-center justify-between w-full">
-          <p className="w-full">Old Password</p>
+          <p className="w-full text-sm">Old Password</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               {...register("oldPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-12 bg-white border-black "
+              className="w-full h-12 text-sm bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
@@ -97,14 +97,14 @@ const ChangePassword = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full">New Password</p>
+          <p className="w-full text-sm">New Password</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               {...register("newPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-12 bg-white border-black "
+              className="w-full h-12 text-sm bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
@@ -121,14 +121,14 @@ const ChangePassword = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full">Confirm New Password</p>
+          <p className="w-full text-sm">Confirm New Password</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               {...register("confirmNewPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-12 bg-white border-black "
+              className="w-full h-12 text-sm bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">

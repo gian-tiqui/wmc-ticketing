@@ -83,7 +83,7 @@ const YearlyDepartmentsGraph = () => {
 
   if (noData) {
     return (
-      <div className="w-[60%] mx-auto mb-6">
+      <div className="p-4 mb-6 bg-[#EEEEEE] w-[50%]">
         <div className="flex items-center justify-between w-full mb-8">
           <p className="font-medium">Department Tickets per year</p>
           <Dropdown
@@ -116,9 +116,9 @@ const YearlyDepartmentsGraph = () => {
   }
 
   return (
-    <div className="w-[60%] mx-auto mb-6">
+    <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">Department Tickets per year</p>
+        <p className="text-sm font-medium">Department Tickets per year</p>
         <Dropdown
           pt={{
             header: { className: "bg-slate-800" },

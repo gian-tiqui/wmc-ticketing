@@ -23,12 +23,12 @@ const InboxButton = () => {
 
   return (
     <div className="relative">
-      <div className="absolute z-10 grid w-5 h-5 text-sm font-bold bg-blue-100 rounded-full -bottom-2 place-content-center text-slate-900 -right-1">
+      <div className="absolute z-10 grid w-4 h-4 text-xs font-bold bg-blue-100 rounded-full -bottom-1 place-content-center text-slate-900 -right-1">
         {userNotifications?.data.count}
       </div>
       <Button
         icon={`${PrimeIcons.INBOX}`}
-        className="bg-blue-600 w-9 h-9"
+        className="w-8 h-8 bg-blue-600"
         onClick={(e) => overlayPanelRef.current?.toggle(e)}
       ></Button>
       <OverlayPanel ref={overlayPanelRef} className="w-72 h-96 bg-[#EEEEEE]">

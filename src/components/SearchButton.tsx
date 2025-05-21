@@ -14,8 +14,8 @@ const SearchButton = () => {
         setVisible={setSearchDialogVisible}
       />
       <Button
-        className="hidden w-40 gap-2 bg-blue-600 md:flex hover:border-blue-500 h-9 hover:border"
-        icon={`${PrimeIcons.SEARCH}`}
+        className="hidden h-8 gap-2 text-xs bg-blue-600 md:flex hover:border-blue-500 hover:border"
+        icon={`${PrimeIcons.SEARCH} text-xs`}
         onClick={() => setSearchDialogVisible(true)}
       >
         Search

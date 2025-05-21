@@ -137,7 +137,7 @@ const YearlyUsersTickets = () => {
   }
 
   return (
-    <div className="w-[60%] mx-auto mb-6">
+    <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow col-span-2">
       <div className="flex items-center justify-between w-full mb-8">
         <p className="font-medium">User Tickets per year</p>
         <div className="flex gap-2">

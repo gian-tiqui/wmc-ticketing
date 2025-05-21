@@ -128,7 +128,7 @@ const ChangePasswordDialog: React.FC<Props> = ({ onHide, visible, userId }) => {
                 {...register("newPassword", { required: true })}
                 placeholder="**********"
                 type="password"
-                className="w-full bg-inherit border-slate-600 text-slate-100 hover:border-blue-400"
+                className="w-full text-sm bg-inherit border-slate-600 text-slate-100 hover:border-blue-400"
               />
             </IconField>
             {errors.newPassword && (
@@ -155,7 +155,7 @@ const ChangePasswordDialog: React.FC<Props> = ({ onHide, visible, userId }) => {
                 {...register("confirmPassword", { required: true })}
                 placeholder="**********"
                 type="password"
-                className="w-full bg-inherit border-slate-600 text-slate-100 hover:border-blue-400"
+                className="w-full text-sm bg-inherit border-slate-600 text-slate-100 hover:border-blue-400"
               />
             </IconField>
             {errors.confirmPassword && (

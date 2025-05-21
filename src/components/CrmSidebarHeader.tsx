@@ -13,8 +13,8 @@ const CrmSidebarHeader = () => {
       return;
     }
     setAvatarLabel(
-      user?.firstName.charAt(0).toUpperCase() +
-        user?.lastName.charAt(0).toLowerCase()
+      user?.firstName.charAt(0).toUpperCase().toUpperCase() +
+        user?.lastName.charAt(0).toLowerCase().toUpperCase()
     );
   }, [user]);
 

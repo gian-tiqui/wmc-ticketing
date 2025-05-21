@@ -22,7 +22,7 @@ const NewTicketButton: React.FC<Props> = ({ refetchAll }) => {
         onClick={() => {
           if (!visible) setVisible(true);
         }}
-        className="font-medium bg-blue-600 w-9 h-9"
+        className="w-8 h-8 font-medium bg-blue-600"
         icon={`${PrimeIcons.PLUS_CIRCLE}`}
         tooltip="New Ticket"
         tooltipOptions={{ position: "left" }}
