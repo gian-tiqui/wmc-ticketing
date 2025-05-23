@@ -11,7 +11,7 @@ import { Calendar } from "primereact/calendar";
 
 const MonthlyDepartmentGraph = () => {
   const [query, setQuery] = useState<Query>({ statusId: 1 });
-  const [date, setDate] = useState<Nullable<Date>>(null);
+  const [date, setDate] = useState<Nullable<Date>>(new Date());
   const [year, setYear] = useState<number | undefined>(
     new Date().getFullYear()
   );
@@ -30,6 +30,12 @@ const MonthlyDepartmentGraph = () => {
     queryKey: [`statuses-dashboard`],
     queryFn: () => getAllStatus({ limit: 20 }),
   });
+
+  useEffect(() => {
+    if (statuses) {
+      setStatus(statuses.data.statuses[0]);
+    }
+  }, [statuses]);
 
   useEffect(() => {
     if (!monthlyTicketsData?.data?.monthlyTicketsData) return;
@@ -91,22 +97,23 @@ const MonthlyDepartmentGraph = () => {
     return (
       <div className="w-[60%] mx-auto mb-6">
         <div className="flex items-center justify-between w-full mb-8">
-          <p className="font-medium">Department Tickets per year</p>
+          <p className="text-sm font-medium text-blue-600">
+            Department Tickets per year
+          </p>
           <Dropdown
             pt={{
-              header: { className: "bg-slate-800" },
-              filterInput: { className: "bg-inherit text-slate-100" },
-              list: { className: `bg-slate-800` },
+              header: { className: "bg-[#eeeeee] text-xs" },
+              filterInput: { className: "bg-inherit text-xs" },
+              list: { className: `bg-[#eeeeee] text-xs` },
               item: {
-                className:
-                  "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                className: "text-xs",
               },
-              input: { className: "text-slate-100" },
+              input: { className: "text-xs" },
             }}
             options={statuses?.data.statuses}
             optionLabel="type"
             value={status}
-            className="items-center h-10 bg-inherit"
+            className="items-center h-8 bg-white"
             placeholder="Select a status"
             onChange={(e) => {
               setStatus(e.value);
@@ -123,10 +130,12 @@ const MonthlyDepartmentGraph = () => {
   return (
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">Department Tickets per month ({year})</p>
+        <p className="text-sm font-medium text-blue-600">
+          Department Tickets per month
+        </p>
         <div className="flex gap-4">
           <Calendar
-            className="w-16 h-10"
+            className="w-16 h-8 border-black"
             value={date}
             view="year"
             dateFormat="yy"
@@ -134,22 +143,31 @@ const MonthlyDepartmentGraph = () => {
               setDate(e.value);
               setYear(e.value?.getFullYear());
             }}
+            pt={{
+              panel: { className: "text-xs" },
+              header: { className: "text-xs" },
+              day: { className: "text-xs" },
+              year: { className: "text-xs" },
+              month: { className: "text-xs" },
+              title: { className: "text-xs" },
+              select: { className: "text-xs" },
+            }}
           />
+
           <Dropdown
             pt={{
-              header: { className: "bg-slate-800" },
-              filterInput: { className: "bg-inherit text-slate-100" },
-              list: { className: `bg-slate-800` },
+              header: { className: "bg-[#eeeeee] text-xs" },
+              filterInput: { className: "bg-inherit text-xs" },
+              list: { className: `bg-[#eeeeee] text-xs` },
               item: {
-                className:
-                  "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                className: "text-xs",
               },
-              input: { className: "text-slate-100" },
+              input: { className: "text-xs" },
             }}
             options={statuses?.data.statuses}
             optionLabel="type"
             value={status}
-            className="items-center h-10 bg-inherit"
+            className="items-center h-8 bg-white border-black"
             placeholder="Select a status"
             onChange={(e) => {
               setStatus(e.value);

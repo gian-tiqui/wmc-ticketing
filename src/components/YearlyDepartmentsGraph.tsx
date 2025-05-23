@@ -83,24 +83,25 @@ const YearlyDepartmentsGraph = () => {
 
   if (noData) {
     return (
-      <div className="p-4 mb-6 bg-[#EEEEEE] w-[50%]">
+      <div className="p-4 rounded-3xl bg-[#EEEEEE] w-full">
         <div className="flex items-center justify-between w-full mb-8">
-          <p className="font-medium">Department Tickets per year</p>
+          <p className="text-sm font-medium text-blue-600">
+            Department Tickets per year
+          </p>
           <Dropdown
             pt={{
-              header: { className: "bg-slate-800" },
-              filterInput: { className: "bg-inherit text-slate-100" },
-              list: { className: `bg-slate-800` },
+              header: { className: "bg-[#eeeeee] text-xs" },
+              filterInput: { className: "bg-inherit text-xs" },
+              list: { className: `bg-[#eeeeee] text-xs` },
               item: {
-                className:
-                  "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                className: "text-xs",
               },
-              input: { className: "text-slate-100" },
+              input: { className: "text-xs" },
             }}
             options={statuses?.data.statuses}
             optionLabel="type"
             value={status}
-            className="items-center h-10 bg-inherit"
+            className="items-center h-8 bg-white border-black"
             placeholder="Select a status"
             onChange={(e) => {
               setStatus(e.value);
@@ -118,22 +119,23 @@ const YearlyDepartmentsGraph = () => {
   return (
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex items-center justify-between w-full mb-8">
-        <p className="text-sm font-medium">Department Tickets per year</p>
+        <p className="text-sm font-medium text-blue-600">
+          Department Tickets per year
+        </p>
         <Dropdown
           pt={{
-            header: { className: "bg-slate-800" },
-            filterInput: { className: "bg-inherit text-slate-100" },
-            list: { className: `bg-slate-800` },
+            header: { className: "bg-[#eeeeee] text-xs" },
+            filterInput: { className: "bg-inherit text-xs" },
+            list: { className: `bg-[#eeeeee] text-xs` },
             item: {
-              className:
-                "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+              className: "text-xs",
             },
-            input: { className: "text-slate-100" },
+            input: { className: "text-xs" },
           }}
           options={statuses?.data.statuses}
           optionLabel="type"
           value={status}
-          className="items-center h-10 bg-inherit"
+          className="items-center h-8 bg-white border-black"
           placeholder="Select a status"
           onChange={(e) => {
             setStatus(e.value);
