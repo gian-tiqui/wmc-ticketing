@@ -85,6 +85,7 @@ const UpdateUserDialog: React.FC<Props> = ({
         header: { className: "rounded-t-3xl bg-[#EEEEEE]" },
         root: { className: "shadow-none" },
         content: { className: "rounded-b-3xl bg-[#EEEEEE] overflow-hidden" },
+        mask: { className: "backdrop-blur" },
       }}
     >
       <form

@@ -100,25 +100,26 @@ const YearlyCategoriesGraph = () => {
 
   if (noData) {
     return (
-      <div className="w-[60%] mx-auto mb-6">
+      <div className="w-full mx-auto p-5 bg-[#EEEEEE] rounded-3xl">
         <div className="flex items-center justify-between w-full mb-8">
-          <p className="font-medium">Categories tickets per year</p>
+          <p className="text-sm font-medium text-blue-600">
+            Categories tickets per year
+          </p>
           <div className="flex gap-2">
             <Dropdown
               pt={{
-                header: { className: "bg-slate-800" },
-                filterInput: { className: "bg-inherit text-slate-100" },
-                list: { className: `bg-slate-800` },
+                header: { className: "bg-[#eeeeee] text-xs" },
+                filterInput: { className: "bg-inherit text-xs" },
+                list: { className: `bg-[#eeeeee] text-xs` },
                 item: {
-                  className:
-                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                  className: "text-xs",
                 },
-                input: { className: "text-slate-100" },
+                input: { className: "text-xs" },
               }}
               options={statuses?.data.statuses}
               optionLabel="type"
               value={status}
-              className="items-center h-10 bg-inherit"
+              className="items-center h-8 bg-white"
               placeholder="Select a status"
               onChange={(e) => {
                 setStatus(e.value);
@@ -167,14 +168,13 @@ const YearlyCategoriesGraph = () => {
         <div className="flex gap-2">
           <Dropdown
             pt={{
-              header: { className: "bg-slate-800" },
-              filterInput: { className: "bg-inherit text-slate-100" },
-              list: { className: `bg-slate-800` },
+              header: { className: "bg-[#eeeeee] text-xs" },
+              filterInput: { className: "bg-inherit text-xs" },
+              list: { className: `bg-[#eeeeee] text-xs` },
               item: {
-                className:
-                  "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                className: "text-xs",
               },
-              input: { className: "text-slate-100" },
+              input: { className: "text-xs" },
             }}
             options={statuses?.data.statuses}
             optionLabel="type"

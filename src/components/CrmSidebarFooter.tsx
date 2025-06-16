@@ -87,13 +87,13 @@ const CrmSidebarFooter = () => {
       <Dialog
         pt={{
           header: {
-            className:
-              "bg-slate-900 text-slate-100 border-x border-t border-slate-700",
+            className: "bg-[#EEE] rounded-t-3xl",
           },
           content: {
-            className:
-              "bg-slate-900 text-slate-100 border-x border-b border-slate-700",
+            className: "bg-[#EEE] rounded-b-3xl",
           },
+          root: { className: "rounded-3xl" },
+          mask: { className: "backdrop-blur" },
         }}
         visible={noSecretDialogVisible}
         onHide={() => {

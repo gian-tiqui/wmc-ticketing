@@ -58,6 +58,9 @@ const SearchDialog: React.FC<Props> = ({ setVisible, visible }) => {
       contentClassName="bg-[#EEEEEE]"
       headerClassName="bg-[#EEEEEE]"
       visible={visible}
+      pt={{
+        mask: { className: "backdrop-blur" },
+      }}
       header={
         <IconField iconPosition="left">
           <InputIcon className="pi pi-search"> </InputIcon>

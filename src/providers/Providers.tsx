@@ -15,16 +15,17 @@ const Providers = () => {
           <ConfirmDialog
             pt={{
               header: {
-                className: "bg-[#EEEEEE]  border-x border-t border-slate-700",
+                className: "bg-[#EEEEEE]  ",
               },
               content: {
-                className: "bg-[#EEEEEE]  border-x border-slate-700",
+                className: "bg-[#EEEEEE]  ",
               },
               footer: {
-                className: "bg-[#EEEEEE] border-x border-b border-slate-700",
+                className: "bg-[#EEEEEE] ",
               },
               acceptButton: { className: "bg-blue-600" },
             }}
+            maskClassName="backdrop-blur"
           />
           <RouteProvider />
         </PrimeReactProvider>

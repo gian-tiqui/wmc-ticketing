@@ -112,6 +112,7 @@ const ChangePasswordDialog: React.FC<Props> = ({ onHide, visible, userId }) => {
           content: {
             className: "bg-[#EEEEEE] pt-5 border-x border-b",
           },
+          mask: { className: "backdrop-blur" },
         }}
       >
         <form onSubmit={handleSubmit(onSubmit)}>

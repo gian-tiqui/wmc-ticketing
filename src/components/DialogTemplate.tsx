@@ -31,6 +31,8 @@ const DialogTemplate: React.FC<Props> = ({
           className:
             "bg-[#EEEEEE] pt-5 rounded-b-3xl scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400",
         },
+        mask: { className: "backdrop-blur" },
+
         closeButton: { className: "bg-white" },
       }}
     >

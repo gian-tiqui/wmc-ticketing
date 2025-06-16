@@ -27,6 +27,7 @@ const UpdateCommentDialog: React.FC<Props> = ({
           className:
             "bg-slate-900 text-slate-100 pt-5 border-x border-b border-slate-700",
         },
+        mask: { className: "backdrop-blur" },
       }}
       className="h-96 w-96"
       header="Update comment"

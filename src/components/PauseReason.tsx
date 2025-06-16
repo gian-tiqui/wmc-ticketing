@@ -51,6 +51,7 @@ const PauseReason: React.FC<Props> = ({
         },
         closeButton: { className: "bg-white" },
         root: { className: "shadow-none" },
+        mask: { className: "backdrop-blur" },
       }}
       className="w-96"
     >

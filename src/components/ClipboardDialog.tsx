@@ -38,13 +38,13 @@ const ClipboardDialog: React.FC<Props> = ({ visible, onHide, secrets }) => {
         }}
         pt={{
           header: {
-            className:
-              "bg-slate-900 text-slate-100 border-t border-x border-slate-700",
+            className: "bg-[#EEE] rounded-t-3xl",
           },
           content: {
-            className:
-              "bg-slate-900 text-slate-100 pt-5 border-x border-slate-700",
+            className: "bg-[#EEE] rounded-b-3xl",
           },
+          root: { className: "rounded-3xl" },
+          mask: { className: "backdrop-blur" },
         }}
         header="Your secrets"
       >
@@ -53,12 +53,12 @@ const ClipboardDialog: React.FC<Props> = ({ visible, onHide, secrets }) => {
           your password.
         </p>
         <div
-          className="px-4 pb-4 border rounded border-slate-700 bg-slate-800 hover:cursor-pointer"
+          className="px-4 pb-4 bg-white border rounded hover:cursor-pointer"
           onClick={handleClipboardClicked}
         >
           <div className="flex items-center justify-between w-full py-1 mb-4 border-b">
             <small>Copy to clipboard</small>
-            <div className="grid w-8 h-8 rounded place-content-center hover:bg-slate-600">
+            <div className="grid w-8 h-8 rounded place-content-center hover:bg-white">
               <i className={`pi pi-clipboard`}></i>
             </div>
           </div>

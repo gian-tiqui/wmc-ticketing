@@ -39,6 +39,7 @@ const CommentPictureUpload: React.FC<Props> = ({
             "bg-slate-900 text-slate-100 pt-5 border-x border-slate-700",
         },
         closeButton: { className: "bg-white" },
+        mask: { className: "backdrop-blur" },
       }}
       header="Upload Photos"
     >

@@ -11,16 +11,19 @@ import { Calendar } from "primereact/calendar";
 
 const DailyDepartmentGraph = () => {
   const [query, setQuery] = useState<Query>({ statusId: 1 });
-  const [date, setDate] = useState<Nullable<Date>>(null);
+  const initialDate = new Date();
+  const [date, setDate] = useState<Nullable<Date>>(initialDate);
+  const [month, setMonth] = useState<number | undefined>(
+    initialDate.getMonth() + 1
+  );
   const [year, setYear] = useState<number | undefined>(
-    new Date().getFullYear()
+    initialDate.getFullYear()
   );
   const { user } = useUserDataStore();
   const [chartData, setChartData] = useState({});
   const [status, setStatus] = useState(undefined);
   const [chartOptions, setChartOptions] = useState({});
   const [noData, setNoData] = useState<boolean>(false);
-  const [month, setMonth] = useState<number | undefined>(undefined);
   const [monthName, setMonthName] = useState<string>("");
 
   const { data: dailyTicketsData } = useQuery({
@@ -101,15 +104,15 @@ const DailyDepartmentGraph = () => {
 
   if (noData) {
     return (
-      <div className="w-[60%] mx-auto mb-6">
+      <div className="w-full mx-auto rounded-3xl p-4 bg-[#EEEEEE] ">
         <div className="flex items-center justify-between w-full mb-8">
-          <p className="font-medium">
-            Department Tickets per day ({monthName} {year})
+          <p className="text-sm font-medium text-blue-600">
+            Department Tickets per day
           </p>
 
           <div className="flex gap-4">
             <Calendar
-              className="w-32 h-10"
+              className="w-24 h-8"
               value={date}
               view="month"
               dateFormat="mm/yy"
@@ -123,19 +126,18 @@ const DailyDepartmentGraph = () => {
 
             <Dropdown
               pt={{
-                header: { className: "bg-slate-800" },
-                filterInput: { className: "bg-inherit text-slate-100" },
-                list: { className: `bg-slate-800` },
+                header: { className: "text-xs" },
+                filterInput: { className: "bg-inherit text-xs" },
+                list: { className: `text-xs` },
                 item: {
-                  className:
-                    "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                  className: "text-xs",
                 },
-                input: { className: "text-slate-100" },
+                input: { className: "text-xs" },
               }}
               options={statuses?.data.statuses}
               optionLabel="type"
               value={status}
-              className="items-center h-10 bg-inherit"
+              className="items-center h-8 bg-white border-black"
               placeholder="Select a status"
               onChange={(e) => {
                 setStatus(e.value);
@@ -154,38 +156,37 @@ const DailyDepartmentGraph = () => {
   return (
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">
-          Department Tickets per day ({monthName} {year})
+        <p className="text-sm font-medium text-blue-600">
+          Department Tickets per day
         </p>
         <div className="flex gap-4">
           <Calendar
-            className="w-32 h-10"
+            className="w-24 h-8"
             value={date}
             view="month"
             dateFormat="mm/yy"
             onChange={(e) => {
               const m = e.value?.getMonth();
               setDate(e.value);
-              setMonth(m !== undefined ? m + 1 : undefined); // Jan = 1, Dec = 12
+              setMonth(m !== undefined ? m + 1 : undefined);
               setYear(e.value?.getFullYear());
             }}
           />
 
           <Dropdown
             pt={{
-              header: { className: "bg-slate-800" },
-              filterInput: { className: "bg-inherit text-slate-100" },
-              list: { className: `bg-slate-800` },
+              header: { className: "text-xs" },
+              filterInput: { className: "bg-inherit text-xs" },
+              list: { className: `text-xs` },
               item: {
-                className:
-                  "text-slate-100 focus:bg-slate-700 focus:text-slate-100",
+                className: "text-xs",
               },
-              input: { className: "text-slate-100" },
+              input: { className: "text-xs" },
             }}
             options={statuses?.data.statuses}
             optionLabel="type"
             value={status}
-            className="items-center h-10 bg-inherit"
+            className="items-center h-8 bg-white border-black"
             placeholder="Select a status"
             onChange={(e) => {
               setStatus(e.value);
