@@ -52,6 +52,7 @@ const ResolutionDialog: React.FC<Props> = ({
           className: "bg-[#EEEEEE] pt-5 rounded-b-3xl",
         },
         closeButton: { className: "bg-white" },
+        mask: { className: "backdrop-blur" },
       }}
       header="Resolution"
     >

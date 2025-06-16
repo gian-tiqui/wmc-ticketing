@@ -8,7 +8,7 @@ interface Props {
 const CustomToast = forwardRef<Toast, Props>((_, ref) => {
   return (
     <Toast
-      pt={{ content: { className: "bg-slate-800" } }}
+      pt={{ content: { className: "bg-[#EEE]/50 backdrop-blur" } }}
       className=""
       ref={ref}
     />

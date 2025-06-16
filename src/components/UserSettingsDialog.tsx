@@ -48,6 +48,7 @@ const SettingsDialog: React.FC<Props> = ({ visible, setVisible }) => {
           content: {
             className: "bg-[#EEEEEE] border-x border-b border-slate-700",
           },
+          mask: { className: "backdrop-blur" },
         }}
         visible={visible}
         onHide={() => {
