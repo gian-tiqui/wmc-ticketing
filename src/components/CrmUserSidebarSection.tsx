@@ -69,15 +69,16 @@ const CrmUserSidebarSection = () => {
   );
 
   return (
-    <section className="flex-1 px-5 overflow-hidden">
-      <div className="flex flex-col gap-2">
+    <section className="flex-1 overflow-hidden">
+      <small className="mx-3 font-medium">Pages</small>
+      <div className="flex flex-col gap-1 mx-2 mt-2">
         {buttons.map((button: ButtonType, index: number) => (
           <Button
             key={index}
-            className={`items-center w-full bg-white text-xs border-none text-slate-900 h-12 font-medium ${
+            className={`items-center w-full px-1 bg-inherit text-xs border-none text-slate-900 h-8 font-medium hover:bg-blue-200/50 ${
               id === button.id && "bg-gray-300"
-            }`}
-            icon={`${button.icon} me-3`}
+            } focus:outline-none focus:ring-0`}
+            icon={`${button.icon} me-4 text-xl`}
             onClick={() => {
               setId(button.id);
               navigate(button.path);

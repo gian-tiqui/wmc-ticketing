@@ -73,21 +73,21 @@ const ChangePassword = () => {
       <CustomToast ref={toastRef} />
       <ScrollPanel style={{ height: "calc(72vh - 200px)" }} className="mb-5">
         <div className="flex items-center justify-between w-full">
-          <p className="w-full text-sm">Old Password</p>
+          <p className="w-full text-xs">Old Password</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               {...register("oldPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
             {errors.oldPassword && (
               <div className="flex items-center gap-2 text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
-                <small className="text-red-400">
+                <small className="text-xs text-red-400">
                   Old password is required.
                 </small>
               </div>
@@ -97,21 +97,21 @@ const ChangePassword = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">New Password</p>
+          <p className="w-full text-xs">New Password</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               {...register("newPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
             {errors.newPassword && (
               <div className="flex items-center gap-2 text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
-                <small className="text-red-400">
+                <small className="text-xs text-red-400">
                   New password is required.
                 </small>
               </div>
@@ -121,21 +121,21 @@ const ChangePassword = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">Confirm New Password</p>
+          <p className="w-full text-xs">Confirm New Password</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               {...register("confirmNewPassword", { required: true })}
               placeholder="********"
               type="password"
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
             {errors.confirmNewPassword && (
               <div className="flex items-center gap-2 text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
-                <small className="text-red-400">
+                <small className="text-xs text-red-400">
                   Confirm new password is required.
                 </small>
               </div>
@@ -146,9 +146,9 @@ const ChangePassword = () => {
       </ScrollPanel>
       <div className="flex justify-end gap-2">
         <Button
-          className="bg-blue-600 w-52"
+          className="px-3 text-xs bg-blue-600"
           type="submit"
-          icon={`${PrimeIcons.KEY} mr-2`}
+          icon={`${PrimeIcons.KEY} text-sm mr-2`}
         >
           Change Password
         </Button>

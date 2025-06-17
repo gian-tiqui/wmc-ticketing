@@ -139,19 +139,19 @@ const SettingsDetail = () => {
       <CustomToast ref={toastRef} />
       <ScrollPanel style={{ height: "calc(72vh - 200px)" }} className="mb-5">
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">First name</p>
+          <p className="w-full text-xs">First name</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.USER}> </InputIcon>
             <InputText
               {...register("firstName", { required: true })}
               disabled={!isEditMode}
               placeholder="Jonathan"
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex ">
             {errors.firstName && (
-              <div className="flex items-center gap-2 text-red-500">
+              <div className="flex items-center gap-2 text-sm text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
                 <small>First name is required.</small>
               </div>
@@ -161,14 +161,14 @@ const SettingsDetail = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">Middle name</p>
+          <p className="w-full text-xs">Middle name</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.USER}> </InputIcon>
             <InputText
               {...register("middleName")}
               disabled={!isEditMode}
               placeholder="Jason"
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex "></div>
@@ -176,19 +176,19 @@ const SettingsDetail = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">Last name</p>
+          <p className="w-full text-xs">Last name</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.USER}> </InputIcon>
             <InputText
               {...register("lastName", { required: true })}
               disabled={!isEditMode}
               placeholder="Ric"
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
             />
           </IconField>
           <div className="items-center justify-end hidden w-full md:flex">
             {errors.lastName && (
-              <div className="flex items-center gap-2 text-red-500">
+              <div className="flex items-center gap-2 text-sm text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
                 <small className="text-red-400">Last name is required.</small>
               </div>
@@ -198,7 +198,7 @@ const SettingsDetail = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">Department</p>
+          <p className="w-full text-xs">Department</p>
           {isEditMode ? (
             <Dropdown
               pt={{
@@ -211,7 +211,7 @@ const SettingsDetail = () => {
                 input: { className: "" },
               }}
               disabled={!isEditMode}
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
               value={selectedDepartment}
               onChange={(e) => {
                 setSelectedDepartment(e.value);
@@ -230,7 +230,7 @@ const SettingsDetail = () => {
                 value={user?.deptName}
                 disabled={!isEditMode}
                 placeholder="Ric"
-                className="w-full h-12 text-sm bg-white border-black"
+                className="w-full h-12 text-xs bg-white border-black"
               />
             </IconField>
           )}
@@ -241,19 +241,19 @@ const SettingsDetail = () => {
       <div className="flex justify-end gap-2">
         {isEditMode && (
           <Button
-            className="w-52"
+            className="w-40 text-sm"
             severity="danger"
             type="button"
             onClick={() => setIsEditMode(false)}
-            icon={`${PrimeIcons.SIGN_OUT} mr-2 text-xl`}
+            icon={`${PrimeIcons.SIGN_OUT} mr-2 text-sm`}
           >
             Cancel
           </Button>
         )}
         {isEditMode && (
           <Button
-            className="bg-blue-600 w-52"
-            icon={`${PrimeIcons.SAVE} mr-2 text-xl`}
+            className="w-40 text-sm bg-blue-600"
+            icon={`${PrimeIcons.SAVE} mr-2 text-sm`}
             type="submit"
           >
             Save
@@ -261,10 +261,10 @@ const SettingsDetail = () => {
         )}
         {!isEditMode && (
           <Button
-            className="bg-blue-600 w-52"
+            className="w-40 text-sm bg-blue-600"
             type="button"
             onClick={() => setIsEditMode(true)}
-            icon={`${PrimeIcons.USER_EDIT} mr-2 text-xl`}
+            icon={`${PrimeIcons.USER_EDIT} mr-2 text-sm`}
           >
             Edit
           </Button>
