@@ -85,15 +85,6 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
             )
           }
         ></Column>
-        <Column
-          pt={{
-            headerCell: { className: "bg-white h-14 " },
-            sortIcon: { className: "" },
-          }}
-          className=""
-          header="Priority"
-          body={(rowData: Ticket) => <p>{rowData.priorityLevel.name}</p>}
-        ></Column>
 
         <Column
           header="Action"

@@ -15,11 +15,7 @@ const TicketSummary: React.FC<Props> = ({ ticket }) => {
       summary: "",
       icon: PrimeIcons.CHECK_CIRCLE,
     },
-    {
-      details: `Priority Level: ${ticket.priorityLevel.name}`,
-      summary: "",
-      icon: PrimeIcons.INFO_CIRCLE,
-    },
+
     {
       details: `${ticket.createdAt.split(" at ")[0]}`,
       summary: "Date Requested",

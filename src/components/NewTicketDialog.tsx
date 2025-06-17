@@ -7,26 +7,18 @@ import React, {
   useState,
 } from "react";
 import DialogTemplate from "./DialogTemplate";
-import {
-  Category,
-  CreateTicket,
-  Department,
-  PriorityLevel,
-  Query,
-} from "../types/types";
+import { Category, CreateTicket, Department, Query } from "../types/types";
 import { useQuery } from "@tanstack/react-query";
 import {
   getDepartmentCategoriesByDeptId,
   getDepartments,
 } from "../@utils/services/departmentService";
 import { Dropdown } from "primereact/dropdown";
-import { getPriorityLevels } from "../@utils/services/priorityLevelService";
+import { TreeSelect, TreeSelectChangeEvent } from "primereact/treeselect";
 import { useForm } from "react-hook-form";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { InputTextarea } from "primereact/inputtextarea";
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
 import { InputText } from "primereact/inputtext";
 import { createTicket } from "../@utils/services/ticketService";
 import handleErrors from "../@utils/functions/handleErrors";
@@ -58,7 +50,6 @@ const NewTicketDialog: React.FC<Props> = ({
     defaultValues: {
       deptId: undefined,
       categoryId: undefined,
-      priorityLevelId: undefined,
       title: "",
       description: "",
       reportRequired: 0,
@@ -70,7 +61,6 @@ const NewTicketDialog: React.FC<Props> = ({
       reset();
       setSelectedCategory(undefined);
       setSelectedDepartment(undefined);
-      setSelectedPriorityLevel(undefined);
     }
   }, [visible, reset]);
 
@@ -81,9 +71,6 @@ const NewTicketDialog: React.FC<Props> = ({
   >(undefined);
   const [selectedCategory, setSelectedCategory] = useState<
     Category | undefined
-  >(undefined);
-  const [selectedPriorityLevel, setSelectedPriorityLevel] = useState<
-    PriorityLevel | undefined
   >(undefined);
 
   const { data: departmentsData } = useQuery({
@@ -103,10 +90,17 @@ const NewTicketDialog: React.FC<Props> = ({
     enabled: !!selectedDepartment,
   });
 
-  const { data: priorityLevelsData } = useQuery({
-    queryKey: [`priority-levels-${JSON.stringify(query)}`],
-    queryFn: () => getPriorityLevels(query),
-  });
+  const buildCategoryTree = (categories: Category[]): object[] => {
+    return categories.map((category) => ({
+      key: category.id.toString(),
+      label: category.name,
+      icon: PrimeIcons.TAG,
+      value: category.id.toString(),
+      children: category.subCategories
+        ? buildCategoryTree(category.subCategories)
+        : undefined,
+    }));
+  };
 
   const handleCreateTicket = (data: CreateTicket) => {
     createTicket(data)
@@ -123,7 +117,6 @@ const NewTicketDialog: React.FC<Props> = ({
         setVisible(false);
         setSelectedCategory(undefined);
         setSelectedDepartment(undefined);
-        setSelectedPriorityLevel(undefined);
         setIsChecked(false);
       })
       .catch((error) => {
@@ -140,15 +133,21 @@ const NewTicketDialog: React.FC<Props> = ({
 
     register("deptId", { required: "Department is required" });
     register("categoryId", { required: "Category is required" });
-    register("priorityLevelId", { required: "Priority level is required" });
   }, [register, visible]);
+
+  useEffect(() => {
+    if (selectedDepartment) {
+      setSelectedCategory(undefined);
+      setValue("categoryId", undefined);
+    }
+  }, [selectedDepartment, setValue]);
 
   return (
     <>
       <CustomToast ref={toastRef} />
 
       <DialogTemplate visible={visible} setVisible={setVisible} header={header}>
-        <form onSubmit={handleSubmit(handleCreateTicket)}>
+        <form onSubmit={handleSubmit(handleCreateTicket)} noValidate>
           {/* Department Dropdown */}
           <div className="w-full h-24">
             <label htmlFor="departmentsDropdown" className="text-xs text-black">
@@ -186,39 +185,85 @@ const NewTicketDialog: React.FC<Props> = ({
             )}
           </div>
 
-          {/* Category Dropdown */}
-
+          {/* Category TreeSelect */}
           <div className="w-full h-24">
-            <label htmlFor="categoriesDropdown" className="text-xs text-black">
+            <label
+              htmlFor="categoriesTreeSelect"
+              className="text-xs text-black"
+            >
               Category
             </label>
-            <Dropdown
-              id="categoriesDropdown"
+            <TreeSelect
+              id="categoriesTreeSelect"
+              filter
               pt={{
-                header: { className: "bg-inherit" },
-                filterInput: { className: "bg-inherit " },
-                list: { className: "bg-inherit" },
-                item: {
+                root: {
+                  className: "bg-white border-black",
+                },
+                tree: {
+                  root: { className: "bg-[#EEEEEE]" },
+                  content: {
+                    className: "bg-[#EEEEEE]",
+                  },
+                },
+                wrapper: { className: "bg-[#EEEEEE]" },
+                header: {
+                  className: "bg-[#EEEEEE]",
+                },
+                filter: {
                   className: "bg-inherit",
                 },
-                input: { className: "text-sm" },
               }}
-              options={departmentCategoriesData?.data.categories}
-              value={selectedCategory}
-              optionLabel="name"
-              onChange={(e) => {
-                setSelectedCategory(e.value);
-                setValue("categoryId", e.value?.id, { shouldValidate: true });
+              className={`w-full h-12 border border-black items-center bg-inherit ${
+                errors.categoryId ? "p-invalid" : ""
+              }`}
+              options={buildCategoryTree(
+                departmentCategoriesData?.data.categories || []
+              )}
+              onChange={(e: TreeSelectChangeEvent) => {
+                if (!e.value) {
+                  setSelectedCategory(undefined);
+                  setValue("categoryId", undefined, { shouldValidate: true });
+                  return;
+                }
+
+                const findCategoryById = (
+                  categories: Category[],
+                  id: string
+                ): Category | undefined => {
+                  for (const category of categories) {
+                    if (category.id.toString() === id) {
+                      return category;
+                    }
+                    if (category.subCategories) {
+                      const found = findCategoryById(
+                        category.subCategories,
+                        id
+                      );
+                      if (found) return found;
+                    }
+                  }
+                  return undefined;
+                };
+
+                const selectedCat = findCategoryById(
+                  departmentCategoriesData?.data.categories || [],
+                  e.value.toString()
+                );
+
+                if (selectedCat) {
+                  setSelectedCategory(selectedCat);
+                  setValue("categoryId", selectedCat.id, {
+                    shouldValidate: true,
+                  });
+                }
               }}
-              filter
+              value={selectedCategory?.id.toString()}
+              placeholder="Select a category"
               disabled={
                 selectedDepartment &&
                 departmentCategoriesData?.data.categories.length === 0
               }
-              className={`w-full bg-inherit h-12 items-center border-black bg-white ${
-                errors.categoryId ? "p-invalid" : ""
-              }`}
-              placeholder="Select a category"
             />
             {errors.categoryId && (
               <div className="flex items-center gap-2 text-red-500">
@@ -230,65 +275,19 @@ const NewTicketDialog: React.FC<Props> = ({
             )}
           </div>
 
-          {/* Priority Level Dropdown */}
-
-          <div className="w-full h-24">
-            <label
-              htmlFor="priorityLevelDropdown"
-              className="text-xs text-black"
-            >
-              Priority Level
-            </label>
-            <Dropdown
-              id="priorityLevelDropdown"
-              pt={{
-                header: { className: "bg-inherit" },
-                filterInput: { className: "bg-inherit " },
-                list: { className: "bg-inherit" },
-                item: {
-                  className: " bg-inherit ",
-                },
-                input: { className: "text-sm" },
-              }}
-              options={priorityLevelsData?.data.priorityLevels}
-              value={selectedPriorityLevel}
-              optionLabel="name"
-              onChange={(e) => {
-                setSelectedPriorityLevel(e.value);
-                setValue("priorityLevelId", e.value?.id, {
-                  shouldValidate: true,
-                });
-              }}
-              className={`w-full bg-inherit h-12 items-center border-black bg-white ${
-                errors.priorityLevelId ? "p-invalid" : ""
-              }`}
-              placeholder="Select a priority level"
-            />
-            {errors.priorityLevelId && (
-              <div className="flex items-center gap-2 text-red-500">
-                <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
-                <small className="text-red-400">
-                  {errors.priorityLevelId.message}
-                </small>
-              </div>
-            )}
-          </div>
-
           {/* Title Input */}
           <div className="h-24">
             <label htmlFor="titleInput" className="text-sm text-black">
               Title
             </label>
-            <IconField id="titleInput" iconPosition="left">
-              <InputIcon className="pi pi-search"> </InputIcon>
-              <InputText
-                {...register("title", { required: "Title is required." })}
-                placeholder="Search"
-                className={`bg-inherit w-full text-sm border-black bg-white ${
-                  errors.title ? "p-invalid" : ""
-                }`}
-              />
-            </IconField>
+
+            <InputText
+              {...register("title", { required: "Title is required." })}
+              placeholder="Change Printer Drum"
+              className={`bg-inherit w-full text-sm border-black bg-white ${
+                errors.title ? "p-invalid" : ""
+              }`}
+            />
             {errors.title && (
               <div className="flex items-center gap-2 text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
@@ -297,7 +296,6 @@ const NewTicketDialog: React.FC<Props> = ({
             )}
           </div>
 
-          {/* Description Textarea (No Validation) */}
           <label htmlFor="descriptionInput" className="text-sm text-black">
             Description
           </label>
