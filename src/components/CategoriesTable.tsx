@@ -1,5 +1,5 @@
 const CategoriesTable = () => {
-  return <div></div>;
+  return <div>table</div>;
 };
 
 export default CategoriesTable;

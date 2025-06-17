@@ -44,6 +44,10 @@ type Query = {
 type Category = {
   id: number;
   name: string;
+  SLA: number;
+  parentId: number;
+
+  subCategories: Category[];
 };
 
 type User = {
@@ -94,8 +98,7 @@ type PriorityLevel = {
 
 type CreateTicket = {
   deptId: number;
-  categoryId: number;
-  priorityLevelId: number;
+  categoryId: number | undefined;
   title: string;
   description: string;
   reportRequired: number;
