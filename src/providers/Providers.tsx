@@ -15,15 +15,18 @@ const Providers = () => {
           <ConfirmDialog
             pt={{
               header: {
-                className: "bg-[#EEEEEE]  ",
+                className: "bg-[#EEEEEE]  text-sm",
               },
+              headerTitle: { className: "text-lg font-medium" },
               content: {
-                className: "bg-[#EEEEEE]  ",
+                className: "bg-[#EEEEEE]  text-sm",
               },
               footer: {
-                className: "bg-[#EEEEEE] ",
+                className: "bg-[#EEEEEE] text-xs",
               },
-              acceptButton: { className: "bg-blue-600" },
+              acceptButton: { className: "bg-blue-600 text-xs" },
+              rejectButton: { className: "text-xs" },
+              icon: { className: "text-lg" },
             }}
             maskClassName="backdrop-blur"
           />

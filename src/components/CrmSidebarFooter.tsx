@@ -127,22 +127,22 @@ const CrmSidebarFooter = () => {
           </Button>
         </div>
       </Dialog>
-      <footer className="flex flex-col gap-2 mx-5">
+      <footer className="flex flex-col gap-1 mx-3">
         <SettingsDialog
           visible={settingsDialogVisible}
           setVisible={setSettingsDialogVisible}
         />
         <Button
-          className="w-full h-12 text-xs bg-white border border-black border-none text-slate-900 hover:bg-gray-200"
-          icon={`${PrimeIcons.COG} text-sm me-2`}
+          className={`items-center w-full px-0 bg-inherit text-xs border-none text-slate-900 h-8 font-medium  focus:outline-none focus:ring-0`}
+          icon={`${PrimeIcons.COG} me-4 text-xl`}
           onClick={() => setSettingsDialogVisible(true)}
         >
           Account Settings
         </Button>
         <Button
           onClick={handleLogoutClicked}
-          className="w-full h-12 text-xs bg-white border border-black border-none text-slate-900 hover:bg-gray-200"
-          icon={`${PrimeIcons.SIGN_OUT} text-sm me-2`}
+          className={`items-center w-full px-0 bg-inherit text-xs border-none text-slate-900 h-8 font-medium  focus:outline-none focus:ring-0`}
+          icon={`${PrimeIcons.SIGN_OUT} me-4 text-xl`}
         >
           Logout
         </Button>

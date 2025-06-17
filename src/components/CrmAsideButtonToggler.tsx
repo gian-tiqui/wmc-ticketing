@@ -10,7 +10,7 @@ const CrmAsideButtonToggler = () => {
       onClick={() => setIsExpanded(!isExpanded)}
       icon={`${PrimeIcons.BARS} `}
       severity="contrast"
-      className={`w-10 h-10 bg-blue-600 border-none`}
+      className={`w-7 h-7 bg-blue-600/50 backdrop-blur hover:bg-blue-600 border-none`}
     ></Button>
   );
 };

@@ -43,7 +43,7 @@ const SettingsDialog: React.FC<Props> = ({ visible, setVisible }) => {
         className="w-80 md:w-[80%] h-[85vh]"
         pt={{
           header: {
-            className: "bg-[#EEEEEE] border-x border-t border-slate-700",
+            className: "bg-[#EEEEEE] border-x border-t border-slate-700 h-16",
           },
           content: {
             className: "bg-[#EEEEEE] border-x border-b border-slate-700",
@@ -63,7 +63,7 @@ const SettingsDialog: React.FC<Props> = ({ visible, setVisible }) => {
           if (visible === true) setVisible(false);
         }}
         header={
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 text-sm">
             <p>User Settings</p>
           </div>
         }
@@ -80,7 +80,9 @@ const SettingsDialog: React.FC<Props> = ({ visible, setVisible }) => {
               key={index}
               leftIcon={settingsPanel.icon}
               header={settingsPanel.header}
-              pt={{ headerAction: { className: "bg-inherit" } }}
+              pt={{
+                headerAction: { className: "bg-inherit text-xs" },
+              }}
             >
               {settingsPanel.panel}
             </TabPanel>

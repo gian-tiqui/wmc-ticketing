@@ -19,18 +19,18 @@ const CrmSidebarHeader = () => {
   }, [user]);
 
   return (
-    <header className="flex justify-between mx-5 mb-4 cursor-default">
+    <header className="flex justify-between mx-3 mb-4 cursor-default">
       <div className="flex gap-2">
         <Avatar
           label={avatarLabel}
-          className="w-12 h-12 font-extrabold text-white bg-blue-600"
+          className="text-xs font-extrabold text-white bg-blue-600 w-7 h-7"
           shape="circle"
         />
         <div>
-          <p className="font-medium">
+          <p className="text-sm font-medium">
             {user?.firstName} {user?.lastName}
           </p>
-          <p className="text-sm">{user?.deptName}</p>
+          <p className="text-xs">{user?.deptName}</p>
         </div>
       </div>
       <CrmAsideButtonToggler />

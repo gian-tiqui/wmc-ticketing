@@ -153,20 +153,20 @@ const RecoveryMethod = () => {
       />
       <ScrollPanel style={{ height: "calc(72vh - 200px)" }} className="mb-5">
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">Question</p>
+          <p className="w-full text-xs">Question</p>
           {isEditMode ? (
             <Dropdown
               pt={{
-                header: { className: "text-sm" },
-                filterInput: { className: "bg-inherit text-sm" },
-                list: { className: "bg-inherit text-sm" },
+                header: { className: "text-xs" },
+                filterInput: { className: "bg-inherit text-xs" },
+                list: { className: "bg-inherit text-xs" },
                 item: {
-                  className: "text-sm",
+                  className: "text-xs",
                 },
-                input: { className: "text-sm" },
+                input: { className: "text-xs" },
               }}
               disabled={!isEditMode}
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
               value={selectedQuestion}
               onChange={(e) => {
                 setSelectedQuestion(e.value);
@@ -184,7 +184,7 @@ const RecoveryMethod = () => {
               <InputText
                 disabled={!isEditMode}
                 placeholder={"Please select a secret"}
-                className="w-full h-12 text-sm bg-white border-black bg-inherit"
+                className="w-full h-12 text-xs bg-white border-black bg-inherit"
                 {...register("question")}
               />
             </IconField>
@@ -194,21 +194,23 @@ const RecoveryMethod = () => {
         <Divider />
 
         <div className="flex justify-between w-full">
-          <p className="w-full text-sm">Answer</p>
+          <p className="w-full text-xs">Answer</p>
           <IconField iconPosition="left" className="w-full">
             <InputIcon className={PrimeIcons.LOCK}> </InputIcon>
             <InputText
               disabled={!isEditMode}
               {...register("answer", { required: true })}
               placeholder="Your answer"
-              className="w-full h-12 text-sm bg-white border-black"
+              className="w-full h-12 text-xs bg-white border-black"
             />
           </IconField>
           <div className="flex items-center justify-end w-full">
             {errors.answer && (
               <div className="flex items-center gap-2 text-red-500">
                 <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
-                <small className="text-red-400">Answer is required.</small>
+                <small className="text-xs text-red-400">
+                  Answer is required.
+                </small>
               </div>
             )}
           </div>
@@ -238,10 +240,10 @@ const RecoveryMethod = () => {
         )}
         {!isEditMode && (
           <Button
-            className="bg-blue-600 w-52"
+            className="px-5 text-sm bg-blue-600"
             type="button"
             onClick={() => setIsEditMode(true)}
-            icon={`${PrimeIcons.USER_EDIT} mr-2 text-xl`}
+            icon={`${PrimeIcons.USER_EDIT} mr-2 text-sm`}
           >
             Edit
           </Button>
