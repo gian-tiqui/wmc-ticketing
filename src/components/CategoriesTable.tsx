@@ -27,7 +27,7 @@ const CategoriesTable = () => {
   const { user } = useUserDataStore();
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
   const [visible, setVisible] = useState<boolean>(false);
-  const { data, isLoading, isError, error } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: [`department-categories-${user?.deptId}`],
     queryFn: () =>
       getDepartmentCategoriesByDeptId(user?.deptId, { limit: 100 }),
@@ -60,13 +60,14 @@ const CategoriesTable = () => {
   return (
     <div className="px-4">
       <CategorySettingsDialog
+        refetch={refetch}
         categoryId={selectedId}
         visible={visible}
         setVisible={setVisible}
       />
       {data?.data.categories && (
         <>
-          <header className="w-full h-20 bg-white"></header>
+          <header className="w-full h-4 bg-white rounded-t-3xl"></header>
           <TreeTable
             pt={{
               headerRow: { className: "bg-[#EEEEEE]" },
@@ -85,7 +86,7 @@ const CategoriesTable = () => {
               header="Category Name"
               expander
               pt={{
-                headerCell: { className: "bg-white h-14 " },
+                headerCell: { className: "bg-white h-14" },
                 sortIcon: { className: "" },
               }}
             />
