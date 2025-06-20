@@ -3,7 +3,12 @@ import { Dispatch, ReactNode, SetStateAction } from "react";
 
 interface Props {
   visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>;
+  setVisible: (
+    val: boolean
+  ) =>
+    | void
+    | Dispatch<SetStateAction<boolean>>
+    | Dispatch<SetStateAction<boolean>>;
   children?: ReactNode;
   header?: ReactNode;
 }
@@ -34,6 +39,7 @@ const DialogTemplate: React.FC<Props> = ({
         mask: { className: "backdrop-blur" },
 
         closeButton: { className: "bg-white" },
+        headerTitle: { className: "text-sm" },
       }}
     >
       {children}

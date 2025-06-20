@@ -1,7 +1,12 @@
 import { URI } from "../enums/enum";
 import apiClient from "../http-common/apiClient";
 
-type Category = { name: string; SLA: number; parentId: number | null };
+type Category = {
+  name: string;
+  SLA: number;
+  parentId: number | undefined;
+  deptId?: number;
+};
 
 const createCategory = async (category: Category) => {
   return apiClient.post(`${URI.API_URI}/api/v1/categories`, { ...category });

@@ -42,7 +42,7 @@ interface Props {
 interface FormFields {
   id: number;
   name: string;
-  parentId: number | null;
+  parentId: number | undefined;
   SLA: number;
 }
 
@@ -55,7 +55,7 @@ const CategorySettingsDialog: React.FC<Props> = ({
   const { data, isLoading, isError, error } = useQuery({
     queryKey: [`category-${categoryId}`],
     queryFn: () => findCategoryById(categoryId),
-    enabled: !!categoryId && categoryId !== undefined && categoryId > 0,
+    enabled: !!categoryId && categoryId > 0,
   });
   const toastRef = useRef<Toast>(null);
   const {
@@ -76,6 +76,13 @@ const CategorySettingsDialog: React.FC<Props> = ({
       getDepartmentCategoriesByDeptId(user?.deptId, { limit: 100 }),
     enabled: !!user && user !== undefined,
   });
+
+  useEffect(() => {
+    if (!visible) {
+      reset();
+      setSelectedCategory(undefined);
+    }
+  }, [visible, reset]);
 
   const onUpdate = (data: FormFields) => {
     updateCategoryByID(categoryId, {
@@ -213,7 +220,7 @@ const CategorySettingsDialog: React.FC<Props> = ({
                 }`}
                 placeholder="Enter category SLA"
               />
-              {errors.name && (
+              {errors.SLA && (
                 <div className="flex items-center gap-2 mt-1 text-red-500">
                   <i className={PrimeIcons.EXCLAMATION_CIRCLE}></i>
                   <small>{errors.SLA?.message}</small>
@@ -247,7 +254,7 @@ const CategorySettingsDialog: React.FC<Props> = ({
                   if (!e.value) {
                     setSelectedCategory(undefined);
                     setValue("id", 0, { shouldValidate: true });
-                    setValue("parentId", null);
+                    setValue("parentId", undefined);
                     return;
                   }
 
