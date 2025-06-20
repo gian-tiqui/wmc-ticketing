@@ -66,6 +66,13 @@ type ChangePassword = {
   confirmNewPassword: string;
 };
 
+type Role = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type Department = {
   id: number;
   name: string;
@@ -291,6 +298,7 @@ export type {
   User,
   ChangePassword,
   Department,
+  Role,
   Secrets,
   ForgotPassword,
   ButtonType,
