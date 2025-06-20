@@ -125,7 +125,7 @@ type Ticket = {
   resolution?: string;
   resolutionTime?: string;
   pauseReason?: string;
-
+  isOverdue?: boolean;
   issuerId: number;
   issuer: User;
   assignedUserId: number;

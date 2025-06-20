@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Ticket } from "../types/types";
-import { DataTable } from "primereact/datatable";
+import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { PrimeIcons } from "primereact/api";
+import { PrimeIcons, FilterMatchMode } from "primereact/api";
+import { InputText } from "primereact/inputtext";
 import { useNavigate } from "react-router-dom";
 
 interface Props {
@@ -12,97 +13,154 @@ interface Props {
 
 const TicketsTable: React.FC<Props> = ({ tickets }) => {
   const navigate = useNavigate();
+  const [filters, setFilters] = useState<DataTableFilterMeta>({});
+  const [globalFilterValue, setGlobalFilterValue] = useState("");
+
+  useEffect(() => {
+    initFilters();
+  }, []);
+
+  const initFilters = () => {
+    setFilters({
+      global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      title: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      "category.name": { value: null, matchMode: FilterMatchMode.CONTAINS },
+      "assignedUser.firstName": {
+        value: null,
+        matchMode: FilterMatchMode.CONTAINS,
+      },
+      createdAt: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      isOverdue: { value: null, matchMode: FilterMatchMode.EQUALS },
+    });
+    setGlobalFilterValue("");
+  };
+
+  const onGlobalFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFilters((prev) => ({
+      ...prev,
+      global: { value, matchMode: FilterMatchMode.CONTAINS },
+    }));
+    setGlobalFilterValue(value);
+  };
+
+  const clearFilter = () => {
+    initFilters();
+  };
+
+  const header = (
+    <div className="flex justify-between items-center bg-[#eee] h-14 rounded-t px-2">
+      <div className="flex items-center gap-2">
+        <span className="text-lg font-semibold text-blue-600">Tickets</span>
+        <span className="text-sm text-gray-500">
+          ({tickets?.length || 0} tickets)
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
+        <InputText
+          value={globalFilterValue}
+          onChange={onGlobalFilterChange}
+          placeholder="Search tickets..."
+          className="h-8 px-4 text-sm"
+        />
+        <Button
+          onClick={clearFilter}
+          className="h-8 px-3 text-xs border rounded p-button-outlined p-button-sm hover:bg-gray-50"
+        >
+          Clear
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
-    <div>
-      <div className="w-full bg-[#FFF] h-4 rounded-t-3xl"></div>
+    <div className="pb-8">
+      {header}
+
       <DataTable
         value={tickets}
         paginator
-        rows={4}
+        rows={5}
         size="small"
+        filters={filters}
+        filterDisplay="row"
+        globalFilterFields={[
+          "title",
+          "category.name",
+          "assignedUser.firstName",
+          "createdAt",
+        ]}
+        emptyMessage="No tickets found."
+        className="text-sm"
         pt={{
           bodyRow: { className: "bg-[#EEEEEE]" },
           headerRow: { className: "bg-[#EEEEEE]" },
-          paginator: {
-            root: { className: "bg-[#EEEEEE] rounded-b-3xl" },
-          },
-
+          paginator: { root: { className: "bg-[#EEEEEE] rounded-b-3xl" } },
           root: { className: "text-xs" },
         }}
       >
         <Column
-          pt={{
-            headerCell: { className: "bg-white h-14" },
-            sortIcon: { className: "" },
-          }}
-          className=""
           header="Ticket Number"
           field="id"
-        ></Column>
+          style={{ minWidth: "6rem" }}
+        />
         <Column
-          pt={{
-            headerCell: { className: "bg-white h-14 " },
-            sortIcon: { className: "" },
-          }}
-          className=""
           header="Title"
           field="title"
-        ></Column>
+          filter
+          filterPlaceholder="Search by title"
+          style={{ minWidth: "12rem" }}
+        />
         <Column
-          pt={{
-            headerCell: { className: "bg-white h-14 " },
-            sortIcon: { className: "" },
-          }}
-          className=""
           header="Category"
-          body={(rowData: Ticket) => <p>{rowData.category.name}</p>}
-        ></Column>
-        <Column
-          pt={{
-            headerCell: { className: "bg-white h-14 " },
-            sortIcon: { className: "" },
-          }}
-          className=""
-          header="Requested At"
-          field="createdAt"
-        ></Column>
+          field="category.name"
+          filter
+          filterPlaceholder="Search by category"
+          body={(rowData: Ticket) => rowData.category?.name || "N/A"}
+          style={{ minWidth: "10rem" }}
+        />
 
         <Column
-          pt={{
-            headerCell: { className: "bg-white h-14 " },
-            sortIcon: { className: "" },
-          }}
-          className=""
-          header="Assigned to"
+          header="Overdue"
+          field="isOverdue"
+          filter
+          filterPlaceholder="true / false"
           body={(rowData: Ticket) =>
-            rowData.assignedUser ? (
-              <p>
-                {rowData.assignedUser.firstName} {rowData.assignedUser.lastName}
-              </p>
+            rowData.isOverdue ? (
+              <span className="font-semibold text-red-500">Yes</span>
             ) : (
-              <p>None</p>
+              <span className="text-green-600">No</span>
             )
           }
-        ></Column>
-
+          style={{ minWidth: "8rem" }}
+        />
+        <Column
+          header="Assigned To"
+          field="assignedUser.firstName"
+          filter
+          filterPlaceholder="Search by assignee"
+          body={(rowData: Ticket) =>
+            rowData.assignedUser ? (
+              <>
+                {rowData.assignedUser.firstName} {rowData.assignedUser.lastName}
+              </>
+            ) : (
+              "None"
+            )
+          }
+          style={{ minWidth: "12rem" }}
+        />
         <Column
           header="Action"
-          pt={{
-            headerCell: { className: "bg-white h-14 " },
-            sortIcon: { className: "" },
-          }}
-          className=""
           body={(rowData: Ticket) => (
             <Button
               icon={PrimeIcons.DIRECTIONS}
               className="w-10 h-10 bg-blue-600 rounded-full"
-              onClick={() => {
-                navigate(`/ticket/${rowData.id}`);
-              }}
-            ></Button>
+              onClick={() => navigate(`/ticket/${rowData.id}`)}
+            />
           )}
-        ></Column>
+          style={{ minWidth: "8rem" }}
+        />
       </DataTable>
     </div>
   );

@@ -1,21 +1,23 @@
+"use client";
 import { useQuery } from "@tanstack/react-query";
 import useUserDataStore from "../@utils/store/userDataStore";
 import { getDepartmentCategoriesByDeptId } from "../@utils/services/departmentService";
 import { Column } from "primereact/column";
-import { TreeTable } from "primereact/treetable";
-import { Category } from "../types/types";
-import { TreeNode } from "primereact/treenode";
+import { TreeTable, TreeTableFilterMeta } from "primereact/treetable";
+import { FilterMatchMode, PrimeIcons } from "primereact/api";
 import { useEffect, useState } from "react";
 import CategorySettingsDialog from "./CategorySettingsDialog";
-import { PrimeIcons } from "primereact/api";
+import useRefetchCategoriesStore from "../@utils/store/refetchDepartmentCategories";
+import { Category } from "../types/types";
+import { TreeNode } from "primereact/treenode";
 
 const convertToTreeNodes = (categories: Category[]): TreeNode[] => {
   return categories.map((category) => ({
     key: String(category.id),
     data: {
+      id: category.id,
       name: category.name,
       SLA: category.SLA,
-      id: category.id,
     },
     children: category.subCategories?.length
       ? convertToTreeNodes(category.subCategories)
@@ -27,98 +29,90 @@ const CategoriesTable = () => {
   const { user } = useUserDataStore();
   const [selectedId, setSelectedId] = useState<number | undefined>(undefined);
   const [visible, setVisible] = useState<boolean>(false);
+  const { setRefetch } = useRefetchCategoriesStore();
+
+  const [filters] = useState<TreeTableFilterMeta>({
+    name: { value: null, matchMode: FilterMatchMode.CONTAINS },
+    SLA: { value: null, matchMode: FilterMatchMode.EQUALS },
+  });
+
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: [`department-categories-${user?.deptId}`],
     queryFn: () =>
       getDepartmentCategoriesByDeptId(user?.deptId, { limit: 100 }),
-    enabled: !!user && user != undefined,
+    enabled: !!user,
   });
 
   useEffect(() => {
-    if (selectedId && selectedId > 0) {
-      setVisible(true);
-    } else {
-      setVisible(false);
+    if (data?.data.categories) {
+      setRefetch(refetch);
     }
+  }, [data, refetch, setRefetch]);
+
+  useEffect(() => {
+    if (selectedId && selectedId > 0) setVisible(true);
+    else setVisible(false);
   }, [selectedId]);
 
   useEffect(() => {
-    if (!visible) setSelectedId(0);
+    if (!visible) setSelectedId(undefined);
   }, [visible]);
 
-  if (isLoading) {
-    return <small className="mx-4">Loading categories..</small>;
-  }
-
+  if (isLoading) return <small className="mx-4">Loading categories...</small>;
   if (isError) {
     console.error(error);
-    return (
-      <small className="mx-4">There was a problem in loading categories</small>
-    );
+    return <small className="mx-4">Error loading categories.</small>;
   }
 
   return (
-    <div className="px-4">
+    <div className="px-4 pb-8">
       <CategorySettingsDialog
         refetch={refetch}
         categoryId={selectedId}
         visible={visible}
         setVisible={setVisible}
       />
-      {data?.data.categories && (
-        <>
-          <header className="w-full h-4 bg-white rounded-t-3xl"></header>
-          <TreeTable
-            pt={{
-              headerRow: { className: "bg-[#EEEEEE]" },
-              paginator: {
-                root: { className: "bg-[#EEEEEE] rounded-b-3xl" },
-              },
 
-              root: { className: "text-xs" },
-            }}
-            paginator
-            rows={4}
-            value={convertToTreeNodes(data.data.categories)}
-          >
-            <Column
-              field="name"
-              header="Category Name"
-              expander
-              pt={{
-                headerCell: { className: "bg-white h-14" },
-                sortIcon: { className: "" },
-              }}
-            />
-            <Column
-              field="SLA"
-              header="SLA"
-              pt={{
-                headerCell: { className: "bg-white h-14 " },
-                sortIcon: { className: "" },
-              }}
-            />
-            <Column
-              header="Action"
-              pt={{
-                headerCell: { className: "bg-white h-14 " },
-                sortIcon: { className: "" },
-              }}
-              body={(rowData) => {
-                return (
-                  <span
-                    onClick={() => {
-                      setSelectedId(rowData.data.id);
-                    }}
-                  >
-                    <i className={`${PrimeIcons.COG}`}></i>
-                  </span>
-                );
-              }}
-            />
-          </TreeTable>
-        </>
-      )}
+      <TreeTable
+        value={convertToTreeNodes(data?.data.categories || [])}
+        paginator
+        rows={5}
+        filters={filters}
+        pt={{
+          headerRow: { className: "bg-[#EEEEEE]" },
+          paginator: { root: { className: "bg-[#EEEEEE] rounded-b-3xl" } },
+          root: { className: "text-xs" },
+        }}
+      >
+        <Column
+          field="name"
+          header="Category Name"
+          expander
+          filter
+          filterPlaceholder="Search by name"
+          style={{ minWidth: "14rem" }}
+        />
+        <Column
+          field="SLA"
+          header="SLA"
+          filter
+          filterPlaceholder="Exact SLA"
+          style={{ minWidth: "8rem" }}
+        />
+        <Column
+          header="Action"
+          style={{ minWidth: "6rem" }}
+          body={(rowData) => (
+            <span
+              onClick={() => setSelectedId(rowData.data.id)}
+              className="inline-flex items-center justify-center w-8 h-8 rounded-full cursor-pointer hover:bg-gray-100"
+              title="Edit Category"
+            >
+              <i className={`${PrimeIcons.COG} text-blue-600`}></i>
+            </span>
+          )}
+        />
+      </TreeTable>
     </div>
   );
 };

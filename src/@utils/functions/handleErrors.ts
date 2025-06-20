@@ -5,12 +5,23 @@ const handleErrors = (
   error: unknown,
   refObject: MutableRefObject<Toast | null>
 ) => {
+  const errorObj = error as any;
+
+  if (!errorObj?.response?.data) {
+    refObject.current?.show({
+      severity: "error",
+      summary: "Error",
+      detail: errorObj?.message || "An unexpected error occurred",
+    });
+    return;
+  }
+
   const {
     response: {
       data: { message, error: err },
     },
     status,
-  } = error as {
+  } = errorObj as {
     response: { data: { message: string; error: string } };
     status: number;
   };
@@ -18,8 +29,8 @@ const handleErrors = (
   if (status === 401) {
     refObject.current?.show({
       severity: "error",
-      summary: err,
-      detail: message,
+      summary: err || "Unauthorized",
+      detail: message || "You are not authorized to perform this action",
     });
     return;
   }
@@ -27,8 +38,8 @@ const handleErrors = (
   if (status === 404) {
     refObject.current?.show({
       severity: "error",
-      summary: err,
-      detail: message,
+      summary: err || "Not Found",
+      detail: message || "The requested resource was not found",
     });
     return;
   }
@@ -36,16 +47,16 @@ const handleErrors = (
   if (status === 400) {
     refObject.current?.show({
       severity: "error",
-      summary: err,
-      detail: message,
+      summary: err || "Bad Request",
+      detail: message || "Invalid request data",
     });
     return;
   }
 
   refObject.current?.show({
     severity: "error",
-    summary: err,
-    detail: "There is a problem in the server. Please wait",
+    summary: err || "Server Error",
+    detail: message || "There is a problem in the server. Please wait",
   });
 };
 
