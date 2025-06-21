@@ -17,12 +17,15 @@ import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
 import { Dropdown } from "primereact/dropdown";
+import { MultiSelect } from "primereact/multiselect";
 import { Department, Query, User } from "../types/types";
 import { getDepartments } from "../@utils/services/departmentService";
 import handleErrors from "../@utils/functions/handleErrors";
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
 import { AxiosResponse } from "axios";
+import { getRoles } from "../@utils/services/roleService";
+import { UserFormData } from "./AddUserDialog";
 
 interface Props {
   visible: boolean;
@@ -34,11 +37,11 @@ interface Props {
   ) => Promise<QueryObserverResult<AxiosResponse<User>, Error>>;
 }
 
-interface FormFields {
-  deptId: number;
-  firstName: string;
-  middleName: string;
-  lastName: string;
+export interface Role {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 const UpdateUserDialog: React.FC<Props> = ({
@@ -52,17 +55,25 @@ const UpdateUserDialog: React.FC<Props> = ({
   const [selectedDepartment, setSelectedDepartment] = useState<
     Department | undefined
   >(undefined);
+  const [selectedRoles, setSelectedRoles] = useState<Role[]>([]);
   const [query] = useState<Query>({ offset: 0, limit: 100 });
+
   const { data } = useQuery({
     queryKey: [`update-user-${id}`],
     queryFn: () => getUser(id),
-    enabled: !!id && id !== null,
+    enabled: !!id,
   });
 
   const { data: departmentsData } = useQuery({
     queryKey: [`departments-${query}-update-user`],
     queryFn: () => getDepartments(query),
-    enabled: !!id && id !== null,
+    enabled: !!id,
+  });
+
+  const { data: rolesData } = useQuery({
+    queryKey: [`roles-update-user`],
+    queryFn: () => getRoles(),
+    enabled: !!id,
   });
 
   const {
@@ -71,14 +82,20 @@ const UpdateUserDialog: React.FC<Props> = ({
     reset,
     handleSubmit,
     setValue,
-  } = useForm<FormFields>({});
+  } = useForm<UserFormData>();
 
-  const updateUser = (data: FormFields) => {
-    updateUserById(id, data as User)
+  const updateUser = (formData: UserFormData) => {
+    const payload = {
+      ...formData,
+      roleNames: selectedRoles.map((role) => role.name),
+    };
+
+    updateUserById(id, payload)
       .then((res) => {
         if (res.status === 200) {
           setVisible(false);
           setSelectedDepartment(undefined);
+          setSelectedRoles([]);
           reset();
           if (refetch) refetch();
         }
@@ -96,11 +113,13 @@ const UpdateUserDialog: React.FC<Props> = ({
 
   useEffect(() => {
     if (data?.data.user) {
-      setValue("firstName", data.data.user.firstName);
-      setValue("middleName", data.data.user.middleName);
-      setValue("lastName", data.data.user.lastName);
-      setValue("deptId", parseInt(data.data.user.department.id));
-      setSelectedDepartment(data.data.user.department);
+      const user = data.data.user;
+      setValue("firstName", user.firstName);
+      setValue("middleName", user.middleName);
+      setValue("lastName", user.lastName);
+      setValue("deptId", parseInt(user.department.id));
+      setSelectedDepartment(user.department);
+      setSelectedRoles(user.roles);
     }
   }, [data, setValue]);
 
@@ -108,6 +127,7 @@ const UpdateUserDialog: React.FC<Props> = ({
     if (!visible) {
       reset();
       setId(null);
+      setSelectedRoles([]);
     }
   }, [visible, reset, setId]);
 
@@ -117,13 +137,11 @@ const UpdateUserDialog: React.FC<Props> = ({
       <Dialog
         header={`${data?.data.user.firstName}'s Data`}
         visible={visible}
-        className="w-96 h-96"
+        className="w-96 h-[90vh]"
         onHide={() => {
-          if (visible) {
-            setId(null);
-            reset();
-            setVisible((prev) => !prev);
-          }
+          setVisible(false);
+          setId(null);
+          reset();
         }}
         pt={{
           headerTitle: { className: "text-sm" },
@@ -135,7 +153,7 @@ const UpdateUserDialog: React.FC<Props> = ({
       >
         <form
           onSubmit={handleSubmit(updateUser)}
-          className={`overflow-auto h-72 ${scrollbarTheme}`}
+          className={`overflow-auto h-[75vh] ${scrollbarTheme}`}
         >
           <div className="h-24">
             <label htmlFor="firstNameInput" className="text-xs font-medium">
@@ -152,6 +170,7 @@ const UpdateUserDialog: React.FC<Props> = ({
               </span>
             )}
           </div>
+
           <div className="h-24">
             <label htmlFor="middleNameInput" className="text-xs font-medium">
               Middle Name
@@ -162,6 +181,7 @@ const UpdateUserDialog: React.FC<Props> = ({
               {...register("middleName")}
             />
           </div>
+
           <div className="h-24">
             <label htmlFor="lastNameInput" className="text-xs font-medium">
               Last Name
@@ -177,6 +197,7 @@ const UpdateUserDialog: React.FC<Props> = ({
               </span>
             )}
           </div>
+
           <div className="h-24">
             <label htmlFor="departmentDropdown" className="text-xs font-medium">
               Department
@@ -184,9 +205,7 @@ const UpdateUserDialog: React.FC<Props> = ({
             <Dropdown
               id="departmentDropdown"
               options={departmentsData}
-              onChange={(e) => {
-                setSelectedDepartment(e.value);
-              }}
+              onChange={(e) => setSelectedDepartment(e.value)}
               value={selectedDepartment}
               optionLabel="name"
               placeholder="Select a department"
@@ -199,7 +218,23 @@ const UpdateUserDialog: React.FC<Props> = ({
             )}
           </div>
 
-          <Button className="justify-center w-full h-12 text-sm bg-blue-600">
+          <div className="h-32">
+            <label htmlFor="rolesDropdown" className="text-xs font-medium">
+              Roles
+            </label>
+            <MultiSelect
+              id="rolesDropdown"
+              options={rolesData?.data.roles ?? []}
+              value={selectedRoles}
+              onChange={(e) => setSelectedRoles(e.value)}
+              optionLabel="name"
+              placeholder="Select roles"
+              className="w-full text-sm border-black"
+              display="chip"
+            />
+          </div>
+
+          <Button className="justify-center w-full h-12 mt-2 text-sm bg-blue-600">
             Update User
           </Button>
         </form>

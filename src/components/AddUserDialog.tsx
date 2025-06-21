@@ -49,7 +49,7 @@ export interface UserFormData {
   localNumber: string;
   username: string;
   email: string;
-  roleNames: string[]; // only role names will be submitted
+  roleNames: string[];
 }
 
 const AddUserDialog: React.FC<Props> = ({ refetch, visible, setVisible }) => {
