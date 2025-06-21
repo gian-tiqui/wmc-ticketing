@@ -1,4 +1,5 @@
-import { ChangePassword, Query, User } from "../../types/types";
+import { UserFormData } from "../../components/AddUserDialog";
+import { ChangePassword, Query } from "../../types/types";
 import { URI } from "../enums/enum";
 import apiClient from "../http-common/apiClient";
 
@@ -11,14 +12,14 @@ const getUserSecret = async (id: number) => {
 };
 
 const updateUserById = async (
-  userId: number,
-  { firstName, middleName, lastName, deptId }: User
+  userId: number | null,
+  { firstName, middleName, lastName, deptId }: UserFormData
 ) => {
   return apiClient.patch(`${URI.API_URI}/api/v1/user/${userId}`, {
     firstName,
     middleName,
     lastName,
-    deptId,
+    deptId: Number(deptId),
   });
 };
 
@@ -70,7 +71,12 @@ const getUsers = async (params: Query) => {
   return apiClient.get(`${URI.API_URI}/api/v1/user`, { params });
 };
 
+const createUser = async (data: UserFormData) => {
+  return apiClient.post(`${URI.API_URI}/api/v1/user`, { ...data });
+};
+
 export {
+  createUser,
   getUser,
   updateUserById,
   changePassword,

@@ -1,9 +1,9 @@
 import {
-  QueryObserverResult,
   RefetchOptions,
+  QueryObserverResult,
   useQuery,
 } from "@tanstack/react-query";
-import { Dialog } from "primereact/dialog";
+import { AxiosResponse } from "axios";
 import React, {
   Dispatch,
   SetStateAction,
@@ -11,30 +11,27 @@ import React, {
   useRef,
   useState,
 } from "react";
-import { getUser, updateUserById } from "../@utils/services/userService";
-import { useForm } from "react-hook-form";
-import { Button } from "primereact/button";
+import { User, Department, Query } from "../types/types";
+import { Dialog } from "primereact/dialog";
+import { Toast } from "primereact/toast";
 import { InputText } from "primereact/inputtext";
-import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
 import { Dropdown } from "primereact/dropdown";
 import { MultiSelect } from "primereact/multiselect";
-import { Department, Query, User } from "../types/types";
-import { getDepartments } from "../@utils/services/departmentService";
+import { Button } from "primereact/button";
+import { useForm } from "react-hook-form";
+import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
 import handleErrors from "../@utils/functions/handleErrors";
-import { Toast } from "primereact/toast";
+import { getDepartments } from "../@utils/services/departmentService";
+import { createUser } from "../@utils/services/userService";
 import CustomToast from "./CustomToast";
-import { AxiosResponse } from "axios";
 import { getRoles } from "../@utils/services/roleService";
-import { UserFormData } from "./AddUserDialog";
 
 interface Props {
-  visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>;
-  id: number | null;
-  setId: Dispatch<SetStateAction<number | null>>;
   refetch?: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<AxiosResponse<User>, Error>>;
+  visible: boolean;
+  setVisible: Dispatch<SetStateAction<boolean>>;
 }
 
 export interface Role {
@@ -44,59 +41,60 @@ export interface Role {
   updatedAt: string;
 }
 
-const UpdateUserDialog: React.FC<Props> = ({
-  visible,
-  setVisible,
-  id,
-  setId,
-  refetch,
-}) => {
-  const toastRef = useRef<Toast>(null);
-  const [selectedDepartment, setSelectedDepartment] = useState<
-    Department | undefined
-  >(undefined);
-  const [selectedRoles, setSelectedRoles] = useState<Role[]>([]);
-  const [query] = useState<Query>({ offset: 0, limit: 100 });
+export interface UserFormData {
+  deptId: number;
+  firstName: string;
+  middleName: string;
+  lastName: string;
+  localNumber: string;
+  username: string;
+  email: string;
+  roleNames: string[];
+}
 
-  const { data } = useQuery({
-    queryKey: [`update-user-${id}`],
-    queryFn: () => getUser(id),
-    enabled: !!id,
+const AddUserDialog: React.FC<Props> = ({ refetch, visible, setVisible }) => {
+  const toastRef = useRef<Toast>(null);
+  const [selectedDepartment, setSelectedDepartment] = useState<Department>();
+  const [query] = useState<Query>({ offset: 0, limit: 100 });
+  const [selectedRoles, setSelectedRoles] = useState<Role[]>([]);
+
+  const { data: rolesData } = useQuery({
+    queryKey: ["roles-create-user"],
+    queryFn: () => getRoles(),
   });
 
   const { data: departmentsData } = useQuery({
-    queryKey: [`departments-${query}-update-user`],
+    queryKey: ["departments-create-user"],
     queryFn: () => getDepartments(query),
-    enabled: !!id,
-  });
-
-  const { data: rolesData } = useQuery({
-    queryKey: [`roles-update-user`],
-    queryFn: () => getRoles(),
-    enabled: !!id,
   });
 
   const {
     register,
-    formState: { errors },
-    reset,
     handleSubmit,
     setValue,
+    reset,
+    formState: { errors },
   } = useForm<UserFormData>();
 
-  const updateUser = (formData: UserFormData) => {
+  useEffect(() => {
+    if (selectedRoles.length > 0) {
+      console.log(selectedRoles);
+    }
+  }, [selectedRoles]);
+
+  const handleCreateUser = (formData: UserFormData) => {
     const payload = {
       ...formData,
       roleNames: selectedRoles.map((role) => role.name),
     };
 
-    updateUserById(id, payload)
+    createUser(payload)
       .then((res) => {
-        if (res.status === 200) {
+        if (res.status === 201 || res.status === 200) {
           setVisible(false);
+          reset();
           setSelectedDepartment(undefined);
           setSelectedRoles([]);
-          reset();
           if (refetch) refetch();
         }
       })
@@ -112,37 +110,21 @@ const UpdateUserDialog: React.FC<Props> = ({
   }, [selectedDepartment, setValue]);
 
   useEffect(() => {
-    if (data?.data.user) {
-      const user = data.data.user;
-      setValue("firstName", user.firstName);
-      setValue("middleName", user.middleName);
-      setValue("lastName", user.lastName);
-      setValue("deptId", parseInt(user.department.id));
-      setSelectedDepartment(user.department);
-      setSelectedRoles(user.roles);
-    }
-  }, [data, setValue]);
-
-  useEffect(() => {
     if (!visible) {
       reset();
-      setId(null);
+      setSelectedDepartment(undefined);
       setSelectedRoles([]);
     }
-  }, [visible, reset, setId]);
+  }, [visible, reset]);
 
   return (
     <>
       <CustomToast ref={toastRef} />
       <Dialog
-        header={`${data?.data.user.firstName}'s Data`}
+        header="Create New User"
         visible={visible}
         className="w-96 h-[90vh]"
-        onHide={() => {
-          setVisible(false);
-          setId(null);
-          reset();
-        }}
+        onHide={() => setVisible(false)}
         pt={{
           headerTitle: { className: "text-sm" },
           header: { className: "rounded-t-3xl bg-[#EEEEEE]" },
@@ -152,9 +134,10 @@ const UpdateUserDialog: React.FC<Props> = ({
         }}
       >
         <form
-          onSubmit={handleSubmit(updateUser)}
+          onSubmit={handleSubmit(handleCreateUser)}
           className={`overflow-auto h-[75vh] ${scrollbarTheme}`}
         >
+          {/* First Name */}
           <div className="h-24">
             <label htmlFor="firstNameInput" className="text-xs font-medium">
               First Name
@@ -165,12 +148,13 @@ const UpdateUserDialog: React.FC<Props> = ({
               {...register("firstName", { required: "First name is required" })}
             />
             {errors.firstName && (
-              <span className="text-xs font-medium text-red-600">
+              <span className="text-xs text-red-600">
                 {errors.firstName.message}
               </span>
             )}
           </div>
 
+          {/* Middle Name */}
           <div className="h-24">
             <label htmlFor="middleNameInput" className="text-xs font-medium">
               Middle Name
@@ -182,6 +166,7 @@ const UpdateUserDialog: React.FC<Props> = ({
             />
           </div>
 
+          {/* Last Name */}
           <div className="h-24">
             <label htmlFor="lastNameInput" className="text-xs font-medium">
               Last Name
@@ -192,12 +177,72 @@ const UpdateUserDialog: React.FC<Props> = ({
               {...register("lastName", { required: "Last name is required" })}
             />
             {errors.lastName && (
-              <span className="text-xs font-medium text-red-600">
+              <span className="text-xs text-red-600">
                 {errors.lastName.message}
               </span>
             )}
           </div>
 
+          {/* Email */}
+          <div className="h-24">
+            <label htmlFor="emailInput" className="text-xs font-medium">
+              Email
+            </label>
+            <InputText
+              id="emailInput"
+              className="w-full h-12 px-3 text-sm border-black"
+              {...register("email", {
+                required: "Email is required",
+                pattern: {
+                  value: /^\S+@\S+$/i,
+                  message: "Invalid email format",
+                },
+              })}
+            />
+            {errors.email && (
+              <span className="text-xs text-red-600">
+                {errors.email.message}
+              </span>
+            )}
+          </div>
+
+          {/* Username */}
+          <div className="h-24">
+            <label htmlFor="usernameInput" className="text-xs font-medium">
+              Username
+            </label>
+            <InputText
+              id="usernameInput"
+              className="w-full h-12 px-3 text-sm border-black"
+              {...register("username", { required: "Username is required" })}
+            />
+            {errors.username && (
+              <span className="text-xs text-red-600">
+                {errors.username.message}
+              </span>
+            )}
+          </div>
+
+          {/* Local Number */}
+          <div className="h-24">
+            <label htmlFor="localNumberInput" className="text-xs font-medium">
+              Local Number
+            </label>
+            <InputText
+              id="localNumberInput"
+              className="w-full h-12 px-3 text-sm border-black"
+              {...register("localNumber", {
+                required: "Local number is required",
+              })}
+            />
+            {errors.localNumber && (
+              <span className="text-xs text-red-600">
+                {errors.localNumber.message}
+              </span>
+            )}
+          </div>
+
+          {/* Department */}
           <div className="h-24">
             <label htmlFor="departmentDropdown" className="text-xs font-medium">
               Department
@@ -208,16 +253,17 @@ const UpdateUserDialog: React.FC<Props> = ({
               onChange={(e) => setSelectedDepartment(e.value)}
               value={selectedDepartment}
               optionLabel="name"
-              placeholder="Select a department"
+              placeholder="Select Department"
               className="w-full h-12 px-3 text-sm border-black"
             />
             {errors.deptId && (
-              <span className="text-xs font-medium text-red-600">
+              <span className="text-xs text-red-600">
                 {errors.deptId.message}
               </span>
             )}
           </div>
 
+          {/* Roles */}
           <div className="h-32">
             <label htmlFor="rolesDropdown" className="text-xs font-medium">
               Roles
@@ -234,8 +280,9 @@ const UpdateUserDialog: React.FC<Props> = ({
             />
           </div>
 
+          {/* Submit Button */}
           <Button className="justify-center w-full h-12 mt-2 text-sm bg-blue-600">
-            Update User
+            Create User
           </Button>
         </form>
       </Dialog>
@@ -243,4 +290,4 @@ const UpdateUserDialog: React.FC<Props> = ({
   );
 };
 
-export default UpdateUserDialog;
+export default AddUserDialog;

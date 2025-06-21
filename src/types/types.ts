@@ -66,10 +66,19 @@ type ChangePassword = {
   confirmNewPassword: string;
 };
 
+type Role = {
+  id: number;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type Department = {
   id: number;
   name: string;
   code: string;
+  createdAt: string;
+  updatedAt: string;
 };
 
 type Question = {
@@ -102,6 +111,11 @@ type CreateTicket = {
   title: string;
   description: string;
   reportRequired: number;
+};
+
+type DepartmentFormField = {
+  name: string;
+  code: string;
 };
 
 type Status = {
@@ -285,12 +299,14 @@ export type {
   Ticket,
   Panel,
   Route,
+  DepartmentFormField,
   UserData,
   Query,
   Question,
   User,
   ChangePassword,
   Department,
+  Role,
   Secrets,
   ForgotPassword,
   ButtonType,

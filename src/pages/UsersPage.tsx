@@ -4,6 +4,9 @@ import { useState } from "react";
 import { Query } from "../types/types";
 import { getUsers } from "../@utils/services/userService";
 import UsersTable from "../components/UsersTable";
+import { Button } from "primereact/button";
+import { PrimeIcons } from "primereact/api";
+import AddUserDialog from "../components/AddUserDialog";
 
 const UsersPage = () => {
   const [query] = useState<Query>({
@@ -12,11 +15,14 @@ const UsersPage = () => {
     search: "",
   });
 
+  const [visible, setVisible] = useState<boolean>(false);
+
   const {
     data: userResponse,
     isLoading,
     isError,
     error,
+    refetch,
   } = useQuery({
     queryKey: [`users-${query}`],
     queryFn: () => getUsers(query),
@@ -36,9 +42,17 @@ const UsersPage = () => {
 
   return (
     <PageTemplate>
+      <AddUserDialog visible={visible} setVisible={setVisible} />
       <div className="grid w-full h-screen p-5 overflow-auto">
-        <h3>Users</h3>
-        <UsersTable users={userResponse?.data.users} />
+        <div className="flex justify-between w-full">
+          <h3>Users</h3>
+          <Button
+            onClick={() => setVisible(true)}
+            icon={`${PrimeIcons.PLUS}`}
+            className="w-7 h-7"
+          />
+        </div>
+        <UsersTable users={userResponse?.data.users} refetch={refetch} />
       </div>
     </PageTemplate>
   );

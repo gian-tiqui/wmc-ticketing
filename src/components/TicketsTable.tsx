@@ -102,12 +102,14 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         <Column
           header="Ticket Number"
           field="id"
+          pt={{ filterInput: { className: "text-xs" } }}
           style={{ minWidth: "6rem" }}
         />
         <Column
           header="Title"
           field="title"
           filter
+          pt={{}}
           filterPlaceholder="Search by title"
           style={{ minWidth: "12rem" }}
         />
