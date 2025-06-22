@@ -42,14 +42,18 @@ const UsersPage = () => {
 
   return (
     <PageTemplate>
-      <AddUserDialog visible={visible} setVisible={setVisible} />
+      <AddUserDialog
+        visible={visible}
+        setVisible={setVisible}
+        refetch={refetch}
+      />
       <div className="grid w-full h-screen p-5 overflow-auto">
         <div className="flex justify-between w-full">
           <h3>Users</h3>
           <Button
             onClick={() => setVisible(true)}
             icon={`${PrimeIcons.PLUS}`}
-            className="w-7 h-7"
+            className="bg-blue-600 w-7 h-7"
           />
         </div>
         <UsersTable users={userResponse?.data.users} refetch={refetch} />

@@ -72,6 +72,7 @@ const NewTicketDialog: React.FC<Props> = ({
   const [selectedCategory, setSelectedCategory] = useState<
     Category | undefined
   >(undefined);
+  const [timeToFinish, setTimeToFinish] = useState<string>("");
 
   const { data: departmentsData } = useQuery({
     queryKey: [`departments-${JSON.stringify(query)}`],
@@ -101,6 +102,14 @@ const NewTicketDialog: React.FC<Props> = ({
         : undefined,
     }));
   };
+
+  useEffect(() => {
+    if (selectedCategory) {
+      setTimeToFinish(`${selectedCategory.SLA} hours`);
+    } else {
+      setTimeToFinish("");
+    }
+  }, [selectedCategory]);
 
   const handleCreateTicket = (data: CreateTicket) => {
     createTicket(data)
@@ -271,6 +280,26 @@ const NewTicketDialog: React.FC<Props> = ({
                 <small className="text-red-400">
                   {errors.categoryId.message}
                 </small>
+              </div>
+            )}
+          </div>
+
+          {/* Category Time Display */}
+          <div className="h-24">
+            <label htmlFor="titleInput" className="text-sm text-black">
+              Time to Finish
+            </label>
+
+            <InputText
+              value={timeToFinish}
+              placeholder="Time to Finish"
+              readOnly
+              className={`bg-inherit w-full text-sm border-black bg-white`}
+            />
+            {errors.title && (
+              <div className="flex items-center gap-2 text-red-500">
+                <i className={`${PrimeIcons.EXCLAMATION_CIRCLE}`}></i>
+                <small className="text-red-400">{errors.title.message}</small>
               </div>
             )}
           </div>

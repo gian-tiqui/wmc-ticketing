@@ -62,6 +62,13 @@ const CrmUserSidebarSection = () => {
       path: "/reports",
       allowedRoles: ["admin", "user"],
     },
+    {
+      id: "knowledgebase",
+      name: "Knowledgebase",
+      icon: PrimeIcons.CHEVRON_CIRCLE_LEFT,
+      path: "/knowledgebase",
+      allowedRoles: ["admin", "user"],
+    },
   ];
 
   const buttons: ButtonType[] = allButtons.filter((button) =>

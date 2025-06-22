@@ -13,7 +13,7 @@ interface Props {
   departments: Department[];
   isLoading: boolean;
   isError: boolean;
-  error: any;
+  error: Error | null;
   refetch?: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<AxiosResponse<Department>, Error>>;
@@ -64,8 +64,20 @@ const DepartmentsTable: React.FC<Props> = ({
     initFilters();
   };
 
+  if (isLoading) return <small>Loading Departments.</small>;
+
+  if (isError) {
+    console.error(error);
+
+    return (
+      <small>
+        There was a problem in loading departments. Try again later.
+      </small>
+    );
+  }
+
   const header = (
-    <div className="flex justify-between items-center bg-[#eee] h-14 rounded-t px-2">
+    <div className="flex justify-between items-center bg-[#fff] pb-5 rounded-t-lg pt-2 px-2">
       <div className="flex items-center gap-2">
         <span className="text-lg font-semibold text-blue-600">Departments</span>
         <span className="text-sm text-gray-500">
@@ -90,7 +102,7 @@ const DepartmentsTable: React.FC<Props> = ({
   );
 
   return (
-    <div className="pb-8">
+    <div className="px-4 pb-8">
       {header}
 
       <UpdateDepartmentDialog
@@ -103,7 +115,7 @@ const DepartmentsTable: React.FC<Props> = ({
       <DataTable
         value={departments}
         paginator
-        rows={5}
+        rows={8}
         size="small"
         filters={filters}
         filterDisplay="row"
@@ -114,8 +126,8 @@ const DepartmentsTable: React.FC<Props> = ({
         pt={{
           bodyRow: { className: "bg-[#EEEEEE]" },
           headerRow: { className: "bg-[#EEEEEE]" },
-          paginator: { root: { className: "bg-[#EEEEEE] rounded-b-3xl" } },
-          root: { className: "text-xs" },
+          paginator: { root: { className: "bg-[#EEEEEE] rounded-b-lg" } },
+          root: { className: "text-xs shadow" },
         }}
       >
         <Column
