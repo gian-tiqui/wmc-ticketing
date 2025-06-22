@@ -105,6 +105,16 @@ const RouteProvider = () => {
       ),
     },
     {
+      name: "Knowledgebase Page",
+      hidden: true,
+      path: "knowledgebase",
+      element: (
+        <ProtectedRoute allowedRoles={["admin", "user"]}>
+          <ReportsPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
       name: "Unauthorized Page",
       hidden: true,
       path: "unauthorized",

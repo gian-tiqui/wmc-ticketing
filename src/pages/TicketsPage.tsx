@@ -156,7 +156,7 @@ const TicketsPage = () => {
         newTicketsData?.data.count > 0 ? (
           <TicketsTable tickets={newTicketsData?.data.tickets} />
         ) : (
-          <p className="text-sm font-medium">No Tickets yet</p>
+          <small className="text-xs font-medium">No Tickets yet</small>
         ),
     },
     {
@@ -174,7 +174,7 @@ const TicketsPage = () => {
         acknowledgeTicketsData?.data.count > 0 ? (
           <TicketsTable tickets={acknowledgeTicketsData?.data.tickets} />
         ) : (
-          <p className="text-sm font-medium">No Tickets yet</p>
+          <small className="text-xs font-medium">No Tickets yet</small>
         ),
     },
     {
@@ -194,7 +194,7 @@ const TicketsPage = () => {
         assignedTickets?.data.count > 0 ? (
           <TicketsTable tickets={assignedTickets?.data.tickets} />
         ) : (
-          <p className="text-sm font-medium">No Tickets yet</p>
+          <small className="text-xs font-medium">No Tickets yet</small>
         ),
     },
     {
@@ -214,7 +214,7 @@ const TicketsPage = () => {
         escalatedTickets?.data.count > 0 ? (
           <TicketsTable tickets={escalatedTickets?.data.tickets} />
         ) : (
-          <p className="text-sm font-medium">No Tickets yet</p>
+          <small className="text-xs font-medium">No Tickets yet</small>
         ),
     },
     {
@@ -234,7 +234,7 @@ const TicketsPage = () => {
         onHoldTickets?.data.count > 0 ? (
           <TicketsTable tickets={onHoldTickets?.data.tickets} />
         ) : (
-          <p className="text-sm font-medium">No Tickets yet</p>
+          <small className="text-xs font-medium">No Tickets yet</small>
         ),
     },
     {
@@ -254,7 +254,7 @@ const TicketsPage = () => {
         resolvedTickets?.data.count > 0 ? (
           <TicketsTable tickets={resolvedTickets?.data.tickets} />
         ) : (
-          <p className="text-sm font-medium">No Tickets yet</p>
+          <small className="text-xs font-medium">No Tickets yet</small>
         ),
     },
     {
@@ -274,7 +274,7 @@ const TicketsPage = () => {
         closedTickets?.data.count > 0 ? (
           <TicketsTable tickets={closedTickets?.data.tickets} />
         ) : (
-          <p className="text-sm font-medium">No Tickets yet</p>
+          <small className="text-xs font-medium">No Tickets yet</small>
         ),
     },
   ];
