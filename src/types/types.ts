@@ -39,6 +39,8 @@ type Query = {
   isDeleted?: boolean;
   statusId?: number;
   deptId?: number;
+  startDate?: Date;
+  endDate?: Date;
 };
 
 type Category = {
