@@ -70,7 +70,10 @@ const CategorySettingsDialog: React.FC<Props> = ({
     Category | undefined
   >(undefined);
 
-  const { data: departmentCategoriesData } = useQuery({
+  const {
+    data: departmentCategoriesData,
+    refetch: refetchDepartmentCategoriesData,
+  } = useQuery({
     queryKey: [`department-${user?.deptId}-categories`],
     queryFn: () =>
       getDepartmentCategoriesByDeptId(user?.deptId, { limit: 100 }),
@@ -95,6 +98,7 @@ const CategorySettingsDialog: React.FC<Props> = ({
           refetch();
           setVisible(false);
           reset();
+          refetchDepartmentCategoriesData();
           setSelectedCategory(undefined);
         }
       })
@@ -109,6 +113,7 @@ const CategorySettingsDialog: React.FC<Props> = ({
       .then((response) => {
         if (response.status === 200) {
           refetch();
+          refetchDepartmentCategoriesData();
           setVisible(false);
         }
       })
