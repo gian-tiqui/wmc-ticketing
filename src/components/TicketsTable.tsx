@@ -95,7 +95,7 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         pt={{
           bodyRow: { className: "bg-[#EEEEEE]" },
           headerRow: { className: "bg-[#EEEEEE]" },
-          paginator: { root: { className: "bg-[#EEEEEE] rounded-b-3xl" } },
+          paginator: { root: { className: "bg-[#EEEEEE] rounded-b" } },
           root: { className: "text-xs" },
         }}
       >
