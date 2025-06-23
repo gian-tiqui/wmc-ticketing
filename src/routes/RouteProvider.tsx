@@ -13,6 +13,8 @@ import CategoriesPage from "../pages/CategoriesPage";
 import ReportsPage from "../pages/ReportsPage";
 import UnauthorizedPage from "../pages/UnauthorizedPage";
 import DepartmentsPage from "../pages/DepartmentsPage";
+import KnowledgebasePage from "../pages/KnowledgebasePage";
+import TicketKnowledgebasePage from "../pages/TicketKnowledgebasePage";
 
 const RouteProvider = () => {
   const routes: RouteType[] = [
@@ -46,11 +48,21 @@ const RouteProvider = () => {
     },
     {
       name: "Ticket Page",
-      hidden: false,
+      hidden: true,
       path: "ticket/:ticketId",
       element: (
         <ProtectedRoute allowedRoles={["user", "admin"]}>
           <TicketPage />
+        </ProtectedRoute>
+      ),
+    },
+    {
+      name: "Ticket Knowledgebase Page",
+      hidden: true,
+      path: "ticket/:ticketId/knowledgebase",
+      element: (
+        <ProtectedRoute allowedRoles={["user", "admin"]}>
+          <TicketKnowledgebasePage />
         </ProtectedRoute>
       ),
     },
@@ -110,7 +122,7 @@ const RouteProvider = () => {
       path: "knowledgebase",
       element: (
         <ProtectedRoute allowedRoles={["admin", "user"]}>
-          <ReportsPage />
+          <KnowledgebasePage />
         </ProtectedRoute>
       ),
     },
