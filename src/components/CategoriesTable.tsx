@@ -79,9 +79,16 @@ const CategoriesTable = () => {
         rows={5}
         filters={filters}
         pt={{
-          headerRow: { className: "bg-[#EEEEEE]" },
-          paginator: { root: { className: "bg-[#EEEEEE] rounded-b-3xl" } },
-          root: { className: "text-xs" },
+          root: { className: "text-sm" },
+          headerRow: { className: "bg-[#EEEEEE] text-sm" },
+          column: {
+            headerCell: { className: "py-2 px-3" },
+            bodyCell: { className: "py-2 px-3" },
+            filterInput: { className: "text-xs h-7 px-2" },
+          },
+          paginator: {
+            root: { className: "bg-[#EEEEEE] rounded-b text-sm" },
+          },
         }}
       >
         <Column
