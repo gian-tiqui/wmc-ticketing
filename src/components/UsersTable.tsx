@@ -6,8 +6,6 @@ import {
 } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { InputText } from "primereact/inputtext";
-import { IconField } from "primereact/iconfield";
-import { InputIcon } from "primereact/inputicon";
 import { FilterMatchMode, PrimeIcons } from "primereact/api";
 import { User } from "../types/types";
 import UpdateUserDialog from "./UpdateUserDialog";
@@ -55,28 +53,35 @@ const UsersTable: React.FC<Props> = ({ users, refetch }) => {
     setGlobalFilterValue(value);
   };
 
-  const renderHeader = () => (
-    <div className="flex items-center justify-between mb-2">
-      <IconField iconPosition="left">
-        <InputIcon className="pi pi-search" />
+  const header = (
+    <div className="flex justify-between items-center bg-[#fff] pb-5 rounded-t-lg pt-2 px-2">
+      <div className="flex items-center gap-2">
+        <span className="text-lg font-semibold text-blue-600">Users</span>
+        <span className="text-sm text-gray-500">
+          ({users?.length || 0} users)
+        </span>
+      </div>
+      <div className="flex items-center gap-2">
         <InputText
           value={globalFilterValue}
           onChange={onGlobalFilterChange}
-          placeholder="Keyword Search"
-          className="h-10 text-xs border-black rounded-full"
+          placeholder="Search users..."
+          className="h-8 px-4 text-sm"
         />
-      </IconField>
-      <Button
-        onClick={initFilters}
-        className="h-10 px-5 text-xs border p-button-outlined hover:bg-gray-50 rounded-3xl"
-      >
-        Clear
-      </Button>
+        <Button
+          onClick={initFilters}
+          className="h-8 px-3 text-xs border rounded p-button-outlined p-button-sm hover:bg-gray-50"
+        >
+          Clear
+        </Button>
+      </div>
     </div>
   );
 
   return (
-    <div>
+    <div className="b-8 ">
+      {header}
+
       <UpdateUserDialog
         refetch={refetch}
         visible={visible}
@@ -84,25 +89,22 @@ const UsersTable: React.FC<Props> = ({ users, refetch }) => {
         id={selectedId}
         setId={setSelectedId}
       />
+
       <DataTable
         value={users}
         size="small"
-        className="text-sm"
         paginator
         rows={6}
         filters={filters}
         filterDisplay="row"
         globalFilterFields={["firstName", "lastName", "department.code"]}
-        header={renderHeader()}
         emptyMessage="No users found."
+        className="text-sm"
         pt={{
           bodyRow: { className: "bg-[#EEEEEE]" },
-          headerRow: { className: "bg-white" },
-          paginator: {
-            root: { className: "bg-[#EEEEEE] rounded-b-3xl" },
-          },
-          root: { className: "text-xs" },
-          header: { className: "bg-white border-none rounded-t-3xl" },
+          headerRow: { className: "bg-[#EEEEEE]" },
+          paginator: { root: { className: "bg-[#EEEEEE] rounded-b-lg" } },
+          root: { className: "text-xs shadow" },
         }}
       >
         <Column
@@ -110,22 +112,22 @@ const UsersTable: React.FC<Props> = ({ users, refetch }) => {
           field="firstName"
           filter
           filterPlaceholder="Search by first name"
-          pt={{ headerCell: { className: "bg-white" } }}
+          pt={{ filterInput: { className: "text-xs" } }}
         />
         <Column
           header="Last Name"
           field="lastName"
           filter
           filterPlaceholder="Search by last name"
-          pt={{ headerCell: { className: "bg-white" } }}
+          pt={{ filterInput: { className: "text-xs" } }}
         />
         <Column
           header="Department"
           field="department.code"
           filter
           filterPlaceholder="Search by department"
-          body={(rowData) => <p>{rowData.department?.code || "None"}</p>}
-          pt={{ headerCell: { className: "bg-white" } }}
+          pt={{ filterInput: { className: "text-xs" } }}
+          body={(rowData: User) => <p>{rowData.department?.code || "None"}</p>}
         />
         <Column
           header="Actions"

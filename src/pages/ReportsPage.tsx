@@ -123,77 +123,79 @@ const ReportsPage = () => {
       )}
 
       {/* Filter Form */}
-      <div className="max-w-3xl p-6 mx-auto mt-10 space-y-6 bg-white border rounded shadow-md">
-        <h2 className="text-xl font-semibold">Generate Reports</h2>
+      <div className="flex items-center justify-center w-full h-screen">
+        <div className="max-w-4xl p-6 space-y-6 bg-white border rounded shadow-md">
+          <h2 className="text-xl font-semibold">Generate Reports</h2>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {/* Department Dropdown */}
-          <div>
-            <label className="text-sm font-medium">Department</label>
-            <Dropdown
-              value={query.deptId}
-              onChange={(e) =>
-                setQuery((prev) => ({ ...prev, deptId: e.value }))
-              }
-              options={departments}
-              optionLabel="name"
-              optionValue="id"
-              placeholder="Select a department"
-              className="w-full"
-            />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {/* Department Dropdown */}
+            <div>
+              <label className="text-sm font-medium">Department</label>
+              <Dropdown
+                value={query.deptId}
+                onChange={(e) =>
+                  setQuery((prev) => ({ ...prev, deptId: e.value }))
+                }
+                options={departments}
+                optionLabel="name"
+                optionValue="id"
+                placeholder="Select a department"
+                className="w-full"
+              />
+            </div>
+
+            {/* Status Dropdown */}
+            <div>
+              <label className="text-sm font-medium">Status</label>
+              <Dropdown
+                value={query.statusId}
+                onChange={(e) =>
+                  setQuery((prev) => ({ ...prev, statusId: e.value }))
+                }
+                options={statuses?.data.statuses}
+                optionLabel="type"
+                optionValue="id"
+                placeholder="Select a status"
+                className="w-full"
+              />
+            </div>
+
+            {/* Start Date */}
+            <div>
+              <label className="text-sm font-medium">Start Date</label>
+              <Calendar
+                value={query.startDate}
+                onChange={(e) =>
+                  setQuery((prev) => ({ ...prev, startDate: e.value as Date }))
+                }
+                showIcon
+                dateFormat="yy-mm-dd"
+                className="w-full"
+              />
+            </div>
+
+            {/* End Date */}
+            <div>
+              <label className="text-sm font-medium">End Date</label>
+              <Calendar
+                value={query.endDate}
+                onChange={(e) =>
+                  setQuery((prev) => ({ ...prev, endDate: e.value as Date }))
+                }
+                showIcon
+                dateFormat="yy-mm-dd"
+                className="w-full"
+              />
+            </div>
           </div>
 
-          {/* Status Dropdown */}
-          <div>
-            <label className="text-sm font-medium">Status</label>
-            <Dropdown
-              value={query.statusId}
-              onChange={(e) =>
-                setQuery((prev) => ({ ...prev, statusId: e.value }))
-              }
-              options={statuses?.data.statuses}
-              optionLabel="type"
-              optionValue="id"
-              placeholder="Select a status"
-              className="w-full"
-            />
-          </div>
-
-          {/* Start Date */}
-          <div>
-            <label className="text-sm font-medium">Start Date</label>
-            <Calendar
-              value={query.startDate}
-              onChange={(e) =>
-                setQuery((prev) => ({ ...prev, startDate: e.value as Date }))
-              }
-              showIcon
-              dateFormat="yy-mm-dd"
-              className="w-full"
-            />
-          </div>
-
-          {/* End Date */}
-          <div>
-            <label className="text-sm font-medium">End Date</label>
-            <Calendar
-              value={query.endDate}
-              onChange={(e) =>
-                setQuery((prev) => ({ ...prev, endDate: e.value as Date }))
-              }
-              showIcon
-              dateFormat="yy-mm-dd"
-              className="w-full"
-            />
-          </div>
+          <Button
+            label="Generate Report"
+            icon="pi pi-search"
+            onClick={() => setGenerate(true)}
+            className="mt-4 bg-blue-600 border-blue-600 hover:bg-blue-700"
+          />
         </div>
-
-        <Button
-          label="Generate Report"
-          icon="pi pi-search"
-          onClick={() => setGenerate(true)}
-          className="mt-4 bg-blue-600 border-blue-600 hover:bg-blue-700"
-        />
       </div>
     </PageTemplate>
   );
