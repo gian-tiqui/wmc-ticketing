@@ -14,54 +14,46 @@ const RequestDetails: React.FC<Props> = ({ ticket }) => {
   const [header, setHeader] = useState<string | undefined>("");
 
   useEffect(() => {
-    const setHeaderAndContent = () => {
-      switch (ticket.statusId) {
-        case TicketStatus.RESOLVED:
-          setHeader(`Resolution - ${ticket.resolutionTime}`);
-          setContent(ticket.resolution);
-          break;
-        case TicketStatus.CLOSED:
-          setHeader("Closing Reason");
-          setContent(ticket.closingReason);
-          break;
-        case TicketStatus.ON_HOLD:
-          setHeader("On-hold");
-          setContent(ticket.pauseReason);
-          break;
-        default:
-          setHeader("Description");
-          setContent(ticket.description);
-          break;
-      }
-    };
-
-    setHeaderAndContent();
+    switch (ticket.statusId) {
+      case TicketStatus.RESOLVED:
+        setHeader(`Resolution - ${ticket.resolutionTime}`);
+        setContent(ticket.resolution);
+        break;
+      case TicketStatus.CLOSED:
+        setHeader("Closing Reason");
+        setContent(ticket.closingReason);
+        break;
+      case TicketStatus.ON_HOLD:
+        setHeader("On Hold");
+        setContent(ticket.pauseReason);
+        break;
+      default:
+        setHeader("Description");
+        setContent(ticket.description);
+        break;
+    }
   }, [ticket]);
 
   return (
-    <div className="w-full rounded-lg shadow h-[109%] md:h-96 hover:shadow-blue-900 bg-[#EEEEEE]">
-      <div className="h-[5%] bg-blue-500 rounded-t-lg"></div>
-
-      <div className="flex flex-col gap-2 mx-4">
-        <h4 className="flex items-center gap-2 mt-4 mb-4 first:font-medium">
-          <i className={`${PrimeIcons.INFO_CIRCLE}`}></i>Request Details
-        </h4>
-        <div className="flex items-center justify-between">
-          <UserDetails user={ticket.issuer} mode="normal" />
-
-          <i className={`${PrimeIcons.ARROW_CIRCLE_RIGHT} text-xl`}></i>
-          <UserDetails user={ticket.assignedUser} mode="normal" />
-        </div>
+    <div className="border border-gray-200 bg-[#F5F7FA] rounded-xl shadow-sm p-5 hover:shadow-md transition">
+      {/* User Section */}
+      <div className="flex items-center justify-between mb-4">
+        <UserDetails user={ticket.issuer} mode="normal" />
+        <i className={`${PrimeIcons.ARROW_RIGHT} text-gray-500 text-lg`} />
+        <UserDetails user={ticket.assignedUser} mode="normal" />
       </div>
 
-      <h4 className="flex items-center gap-2 mx-4 mt-5 mb-4 font-medium">
-        <i className={`${PrimeIcons.INFO_CIRCLE}`}></i>
-        {header}
+      {/* Header */}
+      <h4 className="flex items-center gap-2 mb-2 text-sm font-semibold text-gray-700">
+        <i className={PrimeIcons.INFO_CIRCLE}></i> {header}
       </h4>
+
+      {/* Text Content */}
       <InputTextarea
         value={content}
-        className="w-[91%] md:w-[93%] mx-4 md:h-44 bg-white text-slate-100 disabled:opacity-100 disabled:text-slate-100"
         disabled
+        autoResize
+        className="w-full h-40 text-sm text-gray-800 bg-white rounded-lg disabled:opacity-100"
       />
     </div>
   );

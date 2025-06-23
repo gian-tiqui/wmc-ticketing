@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactElement, ReactNode } from "react";
 
 type Route = {
   name: string;
@@ -221,7 +221,7 @@ type TicketTabs = {
 };
 
 type SummaryCardType = {
-  icon: string;
+  icon: ReactElement;
   summary: string;
   details: string;
 };
