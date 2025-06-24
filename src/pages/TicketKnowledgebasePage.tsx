@@ -5,6 +5,7 @@ import { getTicketById } from "../@utils/services/ticketService";
 import {
   Activity as ActivityType,
   Comment,
+  ImageLocation,
   ServiceReport,
 } from "../types/types";
 import {
@@ -21,6 +22,7 @@ import {
   XCircle,
   Play,
 } from "lucide-react";
+import ServiceReportItem from "../components/ServiceReportItem";
 
 const TicketKnowledgebasePage = () => {
   const { ticketId } = useParams<{ ticketId: string }>();
@@ -191,16 +193,29 @@ const TicketKnowledgebasePage = () => {
                     Service Reports
                   </h2>
                 </div>
-                <div className="space-y-3">
-                  {ticket.serviceReports.map(
-                    (report: ServiceReport, index: number) => (
-                      <div key={index} className="p-4 rounded-lg bg-gray-50">
-                        <p className="text-gray-700">
-                          {JSON.stringify(report) || "Service report content"}
-                        </p>
+                <div className="space-y-6 max-h-[500px] overflow-auto pr-2">
+                  {ticket.serviceReports.map((serviceReport: ServiceReport) => (
+                    <div key={serviceReport.id} className="mb-6">
+                      <p className="text-base font-medium text-gray-800">
+                        {serviceReport.serviceReporter.firstName}{" "}
+                        {serviceReport.serviceReporter.lastName}'s Service
+                        Report
+                      </p>
+                      <p className="mb-2 text-sm text-gray-400">
+                        {serviceReport.createdAt}
+                      </p>
+                      <div className="grid gap-3 p-3 overflow-x-auto bg-white border rounded shadow-inner">
+                        {serviceReport.imageLocations.map(
+                          (imageLocation: ImageLocation) => (
+                            <ServiceReportItem
+                              key={imageLocation.id}
+                              imageLocation={imageLocation}
+                            />
+                          )
+                        )}
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

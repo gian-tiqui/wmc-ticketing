@@ -99,7 +99,43 @@ const getUsersTicketsPerDateRange = async (
   });
 };
 
+const getCategoryTicketsByDateRange = async (
+  categoryId: number | undefined,
+  params: {
+    statusId?: number;
+    dateFrom?: string;
+    dateTo?: string;
+    groupBy: "day" | "month" | "year";
+  }
+) => {
+  return apiClient.get(
+    `${URI.API_URI}/api/v1/dashboard/category/${categoryId}/range`,
+    {
+      params,
+    }
+  );
+};
+
+const getDepartmentTicketsByDateRange = async (
+  deptId: number | undefined,
+  params: {
+    statusId?: number;
+    dateFrom?: string;
+    dateTo?: string;
+    groupBy: "day" | "month" | "year";
+  }
+) => {
+  return apiClient.get(
+    `${URI.API_URI}/api/v1/dashboard/department/${deptId}/range`,
+    {
+      params,
+    }
+  );
+};
+
 export {
+  getDepartmentTicketsByDateRange,
+  getCategoryTicketsByDateRange,
   getUsersTicketsPerDateRange,
   getDepartmentTicketsPerYear,
   getDepartmentTicketsPerMonth,
