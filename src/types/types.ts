@@ -284,6 +284,31 @@ type UpdateNotificationDto = {
   viewed?: number;
 };
 
+export interface StatusCount {
+  status: string;
+  count: number;
+}
+
+export interface SLACompliance {
+  met: number;
+  breached: number;
+}
+
+export interface MostActiveUser {
+  name: string;
+  activities: number;
+}
+
+export interface EngagementStats {
+  comments: number;
+  reports: number;
+}
+
+export interface OnHoldTicket {
+  title: string;
+  pauseReason: string;
+}
+
 export type {
   UpdateNotificationDto,
   Notification,
