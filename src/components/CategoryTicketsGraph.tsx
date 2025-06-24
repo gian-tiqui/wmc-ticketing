@@ -1,22 +1,21 @@
+// components/CategoryTicketsGraph.tsx
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Chart } from "primereact/chart";
 import { Dropdown } from "primereact/dropdown";
-import useUserDataStore from "../@utils/store/userDataStore";
-import { getUsersTicketsPerDateRange } from "../@utils/services/dashboardService";
-import { getAllStatus } from "../@utils/services/statusService";
 import { DateRange } from "react-date-range";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
 import { Popover } from "@headlessui/react";
 import { addDays } from "date-fns";
+import { getCategoryTicketsByDateRange } from "../@utils/services/dashboardService";
+import { getAllStatus } from "../@utils/services/statusService";
+import useUserDataStore from "../@utils/store/userDataStore";
+import { getDepartmentCategoriesByDeptId } from "../@utils/services/departmentService";
 
-const UserTicketsGraph = () => {
+const CategoryTicketsGraph = () => {
   const { user } = useUserDataStore();
   const [status, setStatus] = useState();
-  const [chartData, setChartData] = useState({});
-  const [chartOptions, setChartOptions] = useState({});
-  const [noData, setNoData] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState();
+  const [query, setQuery] = useState({ groupBy: "day", statusId: 1 });
   const [range, setRange] = useState([
     {
       startDate: new Date(),
@@ -24,56 +23,61 @@ const UserTicketsGraph = () => {
       key: "selection",
     },
   ]);
+  const [chartData, setChartData] = useState({});
+  const [chartOptions, setChartOptions] = useState({});
+  const [noData, setNoData] = useState(false);
 
   const { data: statuses } = useQuery({
     queryKey: ["statuses-dashboard"],
     queryFn: () => getAllStatus({ limit: 20 }),
   });
 
-  const { data: userTicketsData } = useQuery({
-    queryKey: [
-      "user-tickets-flat",
-      user?.deptId,
-      range[0].startDate,
-      range[0].endDate,
-      status?.id,
-    ],
+  const { data: departmentCategoriesData } = useQuery({
+    queryKey: ["department-categories", user?.deptId],
+    queryFn: () => getDepartmentCategoriesByDeptId(user?.deptId, { limit: 50 }),
+    enabled: !!user?.deptId,
+  });
+
+  const { data: ticketsData } = useQuery({
+    queryKey: ["category-tickets", selectedCategory?.id, range[0], query],
     queryFn: () =>
-      getUsersTicketsPerDateRange(user?.deptId, {
-        statusId: status?.id,
+      getCategoryTicketsByDateRange(selectedCategory?.id, {
+        ...query,
         dateFrom: range[0].startDate.toISOString().split("T")[0],
         dateTo: range[0].endDate.toISOString().split("T")[0],
       }),
-    enabled: !!user?.deptId && !!range[0].startDate && !!range[0].endDate,
+    enabled:
+      !!selectedCategory?.id && !!range[0].startDate && !!range[0].endDate,
   });
 
   useEffect(() => {
-    if (!userTicketsData?.data?.ticketsData) return;
-    const { labels, dataSets } = userTicketsData.data.ticketsData;
+    if (!ticketsData?.data?.ticketsData) return;
+    const { labels, dataSets } = ticketsData.data.ticketsData;
     if (!labels || labels.length < 1) return setNoData(true);
     setNoData(false);
 
-    const style = getComputedStyle(document.documentElement);
-    const textColor = style.getPropertyValue("--text-color-secondary");
-    const borderColor = style.getPropertyValue("--surface-border");
+    const docStyle = getComputedStyle(document.documentElement);
+    const textColor = docStyle.getPropertyValue("--text-color-secondary");
+    const borderColor = docStyle.getPropertyValue("--surface-border");
 
     setChartData({ labels, datasets: dataSets });
     setChartOptions({
-      indexAxis: "y",
       maintainAspectRatio: false,
       aspectRatio: 0.6,
-      plugins: { legend: { display: false } },
+      plugins: { legend: { position: "bottom" } },
       scales: {
         x: { ticks: { color: textColor }, grid: { color: borderColor } },
         y: { ticks: { color: textColor }, grid: { color: borderColor } },
       },
     });
-  }, [userTicketsData]);
+  }, [ticketsData]);
 
   return (
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">User ticket counts</p>
+        <p className="font-medium">
+          Category tickets grouped by {query.groupBy}
+        </p>
         <div className="flex items-center gap-2">
           <Popover className="relative">
             <Popover.Button className="px-4 py-2 bg-white border rounded shadow">
@@ -91,11 +95,31 @@ const UserTicketsGraph = () => {
           </Popover>
 
           <Dropdown
+            options={departmentCategoriesData?.data?.categories || []}
+            value={selectedCategory}
+            optionLabel="name"
+            onChange={(e) => setSelectedCategory(e.value)}
+            className="h-10"
+            placeholder="Select category"
+          />
+
+          <Dropdown
+            options={["day", "month", "year"]}
+            value={query.groupBy}
+            onChange={(e) =>
+              setQuery((prev) => ({ ...prev, groupBy: e.value }))
+            }
+            className="h-10"
+            placeholder="Group by"
+          />
+
+          <Dropdown
             options={statuses?.data?.statuses}
             optionLabel="type"
             value={status}
             onChange={(e) => {
               setStatus(e.value);
+              setQuery((prev) => ({ ...prev, statusId: e.value.id }));
             }}
             className="h-10"
             placeholder="Status"
@@ -108,7 +132,7 @@ const UserTicketsGraph = () => {
         </div>
       ) : (
         <Chart
-          type="bar"
+          type="line"
           data={chartData}
           options={chartOptions}
           className="h-80"
@@ -118,4 +142,4 @@ const UserTicketsGraph = () => {
   );
 };
 
-export default UserTicketsGraph;
+export default CategoryTicketsGraph;
