@@ -148,7 +148,7 @@ const TicketsPage = () => {
         <div className="flex items-center">
           <p>
             {newTicketsData?.data.count > 0 && `${newTicketsData?.data.count}`}{" "}
-            - New
+            New
           </p>
         </div>
       ),
