@@ -85,7 +85,22 @@ const getUsersTcketsPerYear = async (
   );
 };
 
+const getUsersTicketsPerDateRange = async (
+  deptId: number | undefined,
+  params: {
+    statusId?: number;
+    dateFrom?: string;
+    dateTo?: string;
+    groupBy: "day" | "month" | "year";
+  }
+) => {
+  return apiClient.get(`${URI.API_URI}/api/v1/dashboard/user/${deptId}/range`, {
+    params,
+  });
+};
+
 export {
+  getUsersTicketsPerDateRange,
   getDepartmentTicketsPerYear,
   getDepartmentTicketsPerMonth,
   getDepartmentTicketsPerDay,
