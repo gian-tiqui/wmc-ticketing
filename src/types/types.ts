@@ -274,6 +274,8 @@ type Notification = {
   viewed: boolean;
 
   ticket: Ticket;
+  createdAt: Date;
+  updatedAt: Date;
 };
 
 type UpdateNotificationDto = {

@@ -24,63 +24,57 @@ const SearchDialog: React.FC<Props> = ({ setVisible, visible }) => {
 
   useEffect(() => {
     if (!user) return;
-
     setQuery((prev) => ({ ...prev, deptId: user?.deptId }));
   }, [user]);
 
   useEffect(() => {
-    const interval = setTimeout(() => {
+    const delay = setTimeout(() => {
       setQuery((prev) => ({ ...prev, search: searchTerm }));
-    }, 700);
-
-    return () => clearTimeout(interval);
+    }, 500);
+    return () => clearTimeout(delay);
   }, [searchTerm]);
 
   const { data: ticketResults } = useQuery({
-    queryKey: [
-      `search-tickets-${JSON.stringify({
-        ...query,
-      })}`,
-    ],
+    queryKey: [`search-tickets-${JSON.stringify(query)}`],
     queryFn: () =>
       roleIncludes(user, "admin")
         ? getTickets({ ...query })
-        : getUserTicketsById(user?.sub, {
-            ...query,
-          }),
+        : getUserTicketsById(user?.sub, { ...query }),
   });
 
   return (
     <Dialog
-      onHide={() => {
-        if (visible) setVisible(false);
-      }}
-      contentClassName="bg-[#EEEEEE]"
-      headerClassName="bg-[#EEEEEE]"
+      onHide={() => setVisible(false)}
       visible={visible}
-      pt={{
-        mask: { className: "backdrop-blur" },
-      }}
+      pt={{ mask: { className: "backdrop-blur" } }}
+      className="w-full max-w-lg rounded-xl"
+      contentClassName="bg-white rounded-b-xl"
+      headerClassName="bg-white border-b"
       header={
-        <IconField iconPosition="left">
-          <InputIcon className="pi pi-search"> </InputIcon>
-          <InputText
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Search"
-            className="items-center w-full h-12 text-sm bg-white border-black"
-          />
-        </IconField>
+        <div className="px-3 py-2">
+          <IconField iconPosition="left" className="w-full">
+            <InputIcon className="pi pi-search" />
+            <InputText
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search tickets..."
+              className="w-full h-10 text-sm bg-white border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
+            />
+          </IconField>
+        </div>
       }
-      className="w-92 md:w-[40%]  h-96 md:h-[70%]"
     >
-      <div className={`w-full h-72 gap-2 ${scrollbarTheme} overflow-auto`}>
-        {ticketResults?.data.tickets && ticketResults?.data.count > 0 ? (
+      <div
+        className={`max-h-[350px] overflow-y-auto px-2 py-1 ${scrollbarTheme}`}
+      >
+        {ticketResults?.data.tickets?.length ? (
           ticketResults.data.tickets.map((ticket: Ticket) => (
             <SearchItem ticket={ticket} key={ticket.id} />
           ))
         ) : (
-          <p>No tickets found</p>
+          <p className="px-3 py-6 text-sm text-center text-gray-500">
+            No tickets found.
+          </p>
         )}
       </div>
     </Dialog>
