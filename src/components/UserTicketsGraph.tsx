@@ -5,19 +5,32 @@ import { Dropdown } from "primereact/dropdown";
 import useUserDataStore from "../@utils/store/userDataStore";
 import { getUsersTicketsPerDateRange } from "../@utils/services/dashboardService";
 import { getAllStatus } from "../@utils/services/statusService";
-import { DateRange } from "react-date-range";
+import { DateRange, Range, RangeKeyDict } from "react-date-range";
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 import { Popover } from "@headlessui/react";
 import { addDays } from "date-fns";
 
+// Define status type (adjust this based on your actual status object structure)
+type StatusType = {
+  id: number;
+  type: string;
+  // Add other properties as needed
+};
+
+// Define the groupBy type
+type GroupByType = "day" | "month" | "year";
+
 const UserTicketsGraph = () => {
   const { user } = useUserDataStore();
-  const [status, setStatus] = useState();
+  const [status, setStatus] = useState<StatusType | undefined>();
+  const [query, setQuery] = useState<{ groupBy: GroupByType }>({
+    groupBy: "day",
+  });
   const [chartData, setChartData] = useState({});
   const [chartOptions, setChartOptions] = useState({});
   const [noData, setNoData] = useState(false);
-  const [range, setRange] = useState([
+  const [range, setRange] = useState<Range[]>([
     {
       startDate: new Date(),
       endDate: addDays(new Date(), 7),
@@ -37,12 +50,14 @@ const UserTicketsGraph = () => {
       range[0].startDate,
       range[0].endDate,
       status?.id,
+      query.groupBy,
     ],
     queryFn: () =>
       getUsersTicketsPerDateRange(user?.deptId, {
         statusId: status?.id,
-        dateFrom: range[0].startDate.toISOString().split("T")[0],
-        dateTo: range[0].endDate.toISOString().split("T")[0],
+        dateFrom: range[0].startDate?.toISOString().split("T")[0] || "",
+        dateTo: range[0].endDate?.toISOString().split("T")[0] || "",
+        groupBy: query.groupBy,
       }),
     enabled: !!user?.deptId && !!range[0].startDate && !!range[0].endDate,
   });
@@ -70,25 +85,51 @@ const UserTicketsGraph = () => {
     });
   }, [userTicketsData]);
 
+  // Helper function to handle date range changes safely
+  const handleDateRangeChange = (item: RangeKeyDict) => {
+    const selection = item.selection;
+    if (selection.startDate && selection.endDate) {
+      setRange([selection]);
+    }
+  };
+
   return (
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">User ticket counts</p>
+        <p className="font-medium">
+          User ticket counts grouped by {query.groupBy}
+        </p>
         <div className="flex items-center gap-2">
           <Popover className="relative">
             <Popover.Button className="px-4 py-2 bg-white border rounded shadow">
-              {range[0].startDate.toLocaleDateString()} -{" "}
-              {range[0].endDate.toLocaleDateString()}
+              {range[0].startDate?.toLocaleDateString() || "Start Date"} -{" "}
+              {range[0].endDate?.toLocaleDateString() || "End Date"}
             </Popover.Button>
             <Popover.Panel className="absolute z-50 mt-2">
               <DateRange
                 editableDateInputs={true}
-                onChange={(item) => setRange([item.selection])}
+                onChange={handleDateRangeChange}
                 moveRangeOnFirstSelection={false}
                 ranges={range}
               />
             </Popover.Panel>
           </Popover>
+
+          <Dropdown
+            options={[
+              { label: "Day", value: "day" as GroupByType },
+              { label: "Month", value: "month" as GroupByType },
+              { label: "Year", value: "year" as GroupByType },
+            ]}
+            value={query.groupBy}
+            optionLabel="label"
+            optionValue="value"
+            onChange={(e) =>
+              setQuery((prev) => ({ ...prev, groupBy: e.value }))
+            }
+            className="h-10"
+            placeholder="Group by"
+          />
 
           <Dropdown
             options={statuses?.data?.statuses}

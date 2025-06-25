@@ -1,4 +1,4 @@
-import { ReactElement, ReactNode } from "react";
+import { ReactNode } from "react";
 
 type Route = {
   name: string;
@@ -221,7 +221,7 @@ type TicketTabs = {
 };
 
 type SummaryCardType = {
-  icon: ReactElement;
+  icon: string;
   summary: string;
   details: string;
 };
@@ -309,11 +309,14 @@ export interface OnHoldTicket {
   pauseReason: string;
 }
 
+type GroupByType = "day" | "month" | "year";
+
 export type {
   UpdateNotificationDto,
   Notification,
   FileType,
   CustomFile,
+  GroupByType,
   StatusMarker,
   UpdateTicket,
   UpdateComment,
