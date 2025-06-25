@@ -24,7 +24,6 @@ import { createTicket } from "../@utils/services/ticketService";
 import handleErrors from "../@utils/functions/handleErrors";
 import { Toast } from "primereact/toast";
 import CustomToast from "./CustomToast";
-import { Checkbox } from "primereact/checkbox";
 
 interface Props {
   visible: boolean;
@@ -209,18 +208,27 @@ const NewTicketDialog: React.FC<Props> = ({
                 root: {
                   className: "bg-white border-black",
                 },
-                tree: {
-                  root: { className: "bg-[#EEEEEE]" },
-                  content: {
-                    className: "bg-[#EEEEEE]",
-                  },
-                },
                 wrapper: { className: "bg-[#EEEEEE]" },
                 header: {
                   className: "bg-[#EEEEEE]",
                 },
                 filter: {
                   className: "bg-inherit",
+                },
+                panel: {
+                  className: "text-sm",
+                },
+                tree: {
+                  root: { className: "bg-[#EEEEEE] text-sm" },
+                  content: {
+                    className: "bg-[#EEEEEE] text-sm",
+                  },
+                  node: {
+                    className: "text-sm",
+                  },
+                  nodeIcon: {
+                    className: "w-4 h-4 mr-1",
+                  },
                 },
               }}
               className={`w-full h-12 border border-black items-center bg-inherit ${
@@ -334,17 +342,6 @@ const NewTicketDialog: React.FC<Props> = ({
             className="w-full mb-3 text-sm bg-white border-black bg-inherit h-52"
             placeholder="Enter your description"
           />
-
-          <div
-            onClick={() => setIsChecked(!isChecked)}
-            className="flex items-center gap-2 mb-4 hover:cursor-pointer"
-          >
-            <Checkbox
-              checked={isChecked}
-              pt={{ box: { className: `${!isChecked && "bg-inherit"}` } }}
-            />
-            <p className="text-xs hover:underline">Require service report</p>
-          </div>
 
           <Button
             className="justify-center w-full h-12 gap-2 text-sm font-bold bg-blue-600"

@@ -1,5 +1,8 @@
-import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import React, { useEffect, useRef, useState } from "react";
+import {
+  updateTicketById,
+  uploadServiceReport,
+} from "../@utils/services/ticketService";
 import {
   Category,
   CustomFile,
@@ -8,26 +11,21 @@ import {
   Ticket,
   User,
 } from "../types/types";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { Toast } from "primereact/toast";
-import CustomToast from "./CustomToast";
-import { Divider } from "primereact/divider";
 import { Button } from "primereact/button";
-import {
-  updateTicketById,
-  uploadServiceReport,
-} from "../@utils/services/ticketService";
-import { TicketStatus } from "../@utils/enums/enum";
+import { Chip } from "primereact/chip";
+import { Timeline } from "primereact/timeline";
+import { PrimeIcons } from "primereact/api";
+
 import AssignUserDialog from "./AssignUserDialog";
 import EscalateTicketDialog from "./EscalateTicketDialog";
 import CloseTicketDialog from "./CloseTicketDialog";
-import { Timeline } from "primereact/timeline";
-import { Chip } from "primereact/chip";
 import ResolutionDialog from "./ResolutionDialog";
-// import useUserDataStore from "../@utils/store/userDataStore";
-// import isUserInResolverDepartments from "../@utils/functions/isUserInResolverDepartments";
-import { Nullable } from "primereact/ts-helpers";
-import { PrimeIcons } from "primereact/api";
 import PauseReason from "./PauseReason";
+import CustomToast from "./CustomToast";
+import { TicketStatus } from "../@utils/enums/enum";
+import { Nullable } from "primereact/ts-helpers";
 
 interface Props {
   ticket: Ticket;
@@ -38,31 +36,25 @@ interface Props {
 
 const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   const toastRef = useRef<Toast>(null);
+
   const [statusId, setStatusId] = useState<number>(ticket.status.id);
-  const [closingReason, setClosingReason] = useState<string | undefined>(
-    ticket.closingReason
-  );
-  const [selectedUser, setSelectedUser] = useState<User | undefined>(undefined);
-  const [escalateUserVisible, setEscalateUserVisible] =
-    useState<boolean>(false);
-  const [serviceReportDialogVisible, setServiceReportDialogVisible] =
-    useState<boolean>(false);
-  const [selectedCategory, setSelectedCategory] = useState<
-    Category | undefined
-  >(undefined);
-  const [selectedDepartment, setSelectedDepartment] = useState<
-    Department | undefined
-  >(undefined);
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [assignUserVisible, setAssignUserVisible] = useState<boolean>(false);
-  const [resolutionTime, setResolutionTime] = useState<Nullable<Date>>();
-  const [closeDialogVisible, setCloseDialogVisible] = useState<boolean>(false);
-  const [files, setFiles] = useState<CustomFile[]>([]);
+  const [selectedUser, setSelectedUser] = useState<User>();
+  const [selectedCategory, setSelectedCategory] = useState<Category>();
+  const [selectedDepartment, setSelectedDepartment] = useState<Department>();
+  const [closingReason, setClosingReason] = useState<string>();
   const [resolution, setResolution] = useState<string>("");
   const [pauseReason, setPauseReason] = useState<string>("");
-  // const { user } = useUserDataStore();
+  const [resolutionTime, setResolutionTime] = useState<Nullable<Date>>();
+  const [files, setFiles] = useState<CustomFile[]>([]);
+  const [isUpdating, setIsUpdating] = useState(false);
+
+  const [assignUserVisible, setAssignUserVisible] = useState(false);
+  const [escalateUserVisible, setEscalateUserVisible] = useState(false);
+  const [closeDialogVisible, setCloseDialogVisible] = useState(false);
+  const [serviceReportDialogVisible, setServiceReportDialogVisible] =
+    useState(false);
   const [pauseReasonDialogVisible, setPauseReasonDialogVisible] =
-    useState<boolean>(false);
+    useState(false);
 
   useEffect(() => {
     if (statusId > 0 && statusId <= 9 && statusId !== ticket.status.id) {
@@ -81,232 +73,225 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
       })
         .then((response) => {
           if (response.status === 200) {
-            if (files && files.length > 0) {
+            if (files?.length > 0) {
               const formData = new FormData();
-              files.forEach((file) => formData.append("files", file.file));
-
-              uploadServiceReport(ticket.id, formData)
-                .then((response) => {
-                  if (response.status === 201) refetch();
-                })
-                .catch((error) => console.error(error));
+              files.forEach((f) => formData.append("files", f.file));
+              uploadServiceReport(ticket.id, formData).then((res) => {
+                if (res.status === 201) refetch();
+              });
             }
+
+            refetch();
             setClosingReason("");
             setResolution("");
             setFiles([]);
-            refetch();
-            if (assignUserVisible) setAssignUserVisible(!assignUserVisible);
-            if (escalateUserVisible)
-              setEscalateUserVisible(!escalateUserVisible);
-            if (closeDialogVisible) setCloseDialogVisible(false);
-            if (serviceReportDialogVisible)
-              setServiceReportDialogVisible(false);
+            setAssignUserVisible(false);
+            setEscalateUserVisible(false);
+            setCloseDialogVisible(false);
+            setServiceReportDialogVisible(false);
           }
         })
-        .catch((error) => {
-          console.error("Update error:", error);
+        .catch(() => {
           toastRef.current?.show({
             severity: "error",
-            summary: "Error",
+            summary: "Update Failed",
             detail: "Failed to update ticket status",
             life: 3000,
           });
           setStatusId(ticket.status.id);
         })
-        .finally(() => {
-          setIsUpdating(false);
-        });
+        .finally(() => setIsUpdating(false));
     }
   }, [statusId]);
+
+  const handleStatusChange = (newStatusId: number) => setStatusId(newStatusId);
 
   const markers: StatusMarker[] = [
     {
       name: "Acknowledge",
       disabled: statusId !== TicketStatus.NEW || isUpdating,
       onClick: () => handleStatusChange(TicketStatus.ACKNOWLEDGED),
-      type: "button",
-      loading: isUpdating && statusId === TicketStatus.ASSIGNED,
+      type: "",
+      loading: false,
     },
     {
-      name:
-        ticket.statusId === TicketStatus.ESCALATED
-          ? "Assign"
-          : ticket.statusId === TicketStatus.ASSIGNED
-          ? "Escalate"
-          : "Assign",
-
+      name: ticket.statusId === TicketStatus.ESCALATED ? "Assign" : "Escalate",
       disabled:
-        (statusId !== TicketStatus.ACKNOWLEDGED &&
-          statusId !== TicketStatus.ASSIGNED &&
-          statusId !== TicketStatus.ESCALATED) ||
-        isUpdating,
-
+        ![
+          TicketStatus.ACKNOWLEDGED,
+          TicketStatus.ASSIGNED,
+          TicketStatus.ESCALATED,
+        ].includes(statusId) || isUpdating,
       onClick:
         ticket.statusId === TicketStatus.ESCALATED
           ? () => setAssignUserVisible(true)
-          : ticket.statusId === TicketStatus.ASSIGNED
-          ? () => setEscalateUserVisible(true)
-          : () => setAssignUserVisible(true),
-
-      type: "button",
-      loading: isUpdating && statusId === TicketStatus.ASSIGNED,
+          : () => setEscalateUserVisible(true),
+      type: "",
+      loading: false,
     },
     {
       name: "Resolve",
       disabled:
-        (statusId !== TicketStatus.ASSIGNED &&
-          statusId !== TicketStatus.ON_HOLD &&
-          statusId !== TicketStatus.ESCALATED) ||
-        isUpdating,
-      onClick: () => {
-        setServiceReportDialogVisible(true);
-      },
-      type: "button",
-      loading: isUpdating && statusId === TicketStatus.ESCALATED,
+        ![
+          TicketStatus.ASSIGNED,
+          TicketStatus.ESCALATED,
+          TicketStatus.ON_HOLD,
+        ].includes(statusId) || isUpdating,
+      onClick: () => setServiceReportDialogVisible(true),
+      type: "",
+      loading: false,
     },
     {
       name: "Close",
       disabled: isUpdating || statusId === TicketStatus.CLOSED,
-      type: "button",
-      loading: isUpdating && statusId === TicketStatus.RESOLVED,
-      onClick: () => {
-        setCloseDialogVisible(true);
-      },
+      onClick: () => setCloseDialogVisible(true),
+      type: "",
+      loading: false,
     },
     {
       name: "Re-open",
       disabled:
-        (statusId !== TicketStatus.CLOSED &&
-          statusId !== TicketStatus.RESOLVED) ||
+        ![TicketStatus.CLOSED, TicketStatus.RESOLVED].includes(statusId) ||
         isUpdating,
       onClick: () => handleStatusChange(TicketStatus.NEW),
-      type: "button",
-      loading: isUpdating && statusId === TicketStatus.NEW,
-    },
-    {
-      name: "Finalize",
-      disabled: statusId !== TicketStatus.RESOLVED || isUpdating,
-      onClick: () => handleStatusChange(TicketStatus.CLOSED_RESOLVED),
-      type: "button",
-      loading: isUpdating && statusId === TicketStatus.CLOSED_RESOLVED,
+      type: "",
+      loading: false,
     },
   ];
 
-  const handleStatusChange = (newStatusId: number) => {
-    setStatusId(newStatusId);
-  };
-
-  const customizedMarker = (marker: StatusMarker) => {
+  const customizedMarker = (item: StatusMarker) => {
+    const isActive = item.name === ticket.status.type;
     return (
-      <Button
-        type={"button"}
-        className="bg-blue-600 rounded-full"
-        loading={marker.loading}
-        disabled={marker.disabled}
-        onClick={marker.onClick}
+      <button
+        type="button"
+        className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all duration-200 ${
+          item.disabled
+            ? "bg-gray-300 text-white cursor-not-allowed"
+            : isActive
+            ? "bg-amber-500 text-white shadow-md"
+            : "bg-blue-600 text-white hover:bg-blue-700"
+        }`}
+        disabled={item.disabled}
+        onClick={item.onClick}
+        title={item.name}
       >
-        {marker.name[0]}
-      </Button>
+        {item.name[0]}
+      </button>
     );
   };
 
-  const customizedContent = (marker: StatusMarker) => {
-    return <div className="text-xs">{marker.name}</div>;
-  };
+  const customizedContent = (item: StatusMarker) => (
+    <div className="text-xs font-medium text-center">{item.name}</div>
+  );
 
   return (
-    <>
-      <form className="relative mb-16">
-        {/* {!isUserInResolverDepartments(user?.deptId) && (
-          <div className="absolute z-10 w-full h-full"></div>
-        )} */}
-        <CloseTicketDialog
-          setStatusId={setStatusId}
-          setClosingReason={setClosingReason}
-          refetch={refetch}
-          setVisible={setCloseDialogVisible}
-          visible={closeDialogVisible}
-          ticket={ticket}
-        />
-        <AssignUserDialog
-          selectedUser={selectedUser}
-          setSelectedUser={setSelectedUser}
-          ticket={ticket}
-          setStatusId={setStatusId}
-          visible={assignUserVisible}
-          setVisible={setAssignUserVisible}
-        />
-        <EscalateTicketDialog
-          selectedDepartment={selectedDepartment}
-          setSelectedDepartment={setSelectedDepartment}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
-          ticket={ticket}
-          selectedUser={selectedUser}
-          setSelectedUser={setSelectedUser}
-          setStatusId={setStatusId}
-          visible={escalateUserVisible}
-          setVisible={setEscalateUserVisible}
-        />
-        <ResolutionDialog
-          setStatusId={setStatusId}
-          files={files}
-          setFiles={setFiles}
-          setResolution={setResolution}
-          refetch={refetch}
-          visible={serviceReportDialogVisible}
-          setVisible={setServiceReportDialogVisible}
-          setResolutionTime={setResolutionTime}
-          resolutionTime={resolutionTime}
-        />
-        <PauseReason
-          setPauseReason={setPauseReason}
-          setStatusId={setStatusId}
-          setVisible={setPauseReasonDialogVisible}
-          visible={pauseReasonDialogVisible}
-        />
+    <div className="max-w-4xl p-6 mx-auto">
+      <CustomToast ref={toastRef} />
 
-        <CustomToast ref={toastRef} />
-        <h4 className="text-lg font-medium">Status</h4>
-        <Divider />
-        <div className="">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <span className="mb-2 text-md">Current:</span>{" "}
-              <Chip
-                className="font-medium text-white bg-blue-600"
-                label={ticket.status.type}
-              />
-            </div>
+      {/* Header */}
+      <div className="mb-8">
+        <div className="flex items-center gap-3 mb-2">
+          <div className="p-2 rounded-lg bg-blue-50">
+            <i className={`${PrimeIcons.FILTER} text-blue-600 text-lg`}></i>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900">Ticket Status</h2>
+        </div>
+        <p className="text-sm text-gray-600">
+          Manage the lifecycle of the current ticket.
+        </p>
+      </div>
 
+      {/* Status Card */}
+      <div className="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+          <div className="flex items-center gap-2">
+            <i className={`${PrimeIcons.TICKET} text-gray-600`}></i>
+            <h3 className="text-lg font-semibold text-gray-900">
+              Status Tracker
+            </h3>
+          </div>
+          <Chip
+            className="font-medium text-white bg-blue-600"
+            label={`Current: ${ticket.status.type}`}
+          />
+        </div>
+
+        <div className="p-6 space-y-4">
+          <Timeline
+            value={markers}
+            layout="horizontal"
+            marker={customizedMarker}
+            content={customizedContent}
+            className="w-full"
+          />
+
+          <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
             <Button
               onClick={() => setPauseReasonDialogVisible(true)}
-              icon={`${PrimeIcons.PAUSE}`}
-              className="gap-2 bg-blue-600"
-              type="button"
-              loading={isUpdating && statusId === TicketStatus.ON_HOLD}
+              icon={PrimeIcons.PAUSE}
               disabled={
-                (statusId !== TicketStatus.ASSIGNED &&
-                  statusId !== TicketStatus.CLOSED &&
-                  statusId !== TicketStatus.ESCALATED &&
-                  statusId !== TicketStatus.CLOSED_RESOLVED) ||
-                isUpdating
+                ![
+                  TicketStatus.ASSIGNED,
+                  TicketStatus.ESCALATED,
+                  TicketStatus.CLOSED,
+                  TicketStatus.CLOSED_RESOLVED,
+                ].includes(statusId) || isUpdating
               }
+              className="px-4 py-2 text-white transition-all bg-blue-600 rounded-lg hover:bg-blue-700"
             >
               Pause Ticket
             </Button>
           </div>
-          <div className="flex items-center justify-center w-full gap-2">
-            <Timeline
-              layout="horizontal"
-              value={markers}
-              marker={customizedMarker}
-              content={customizedContent}
-            />
-          </div>
         </div>
-      </form>
-    </>
+      </div>
+
+      {/* Modals */}
+      <AssignUserDialog
+        visible={assignUserVisible}
+        setVisible={setAssignUserVisible}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+        ticket={ticket}
+        setStatusId={setStatusId}
+      />
+      <EscalateTicketDialog
+        visible={escalateUserVisible}
+        setVisible={setEscalateUserVisible}
+        selectedDepartment={selectedDepartment}
+        setSelectedDepartment={setSelectedDepartment}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        ticket={ticket}
+        selectedUser={selectedUser}
+        setSelectedUser={setSelectedUser}
+        setStatusId={setStatusId}
+      />
+      <CloseTicketDialog
+        ticket={ticket}
+        refetch={refetch}
+        visible={closeDialogVisible}
+        setVisible={setCloseDialogVisible}
+        setStatusId={setStatusId}
+        setClosingReason={setClosingReason}
+      />
+      <ResolutionDialog
+        visible={serviceReportDialogVisible}
+        setVisible={setServiceReportDialogVisible}
+        refetch={refetch}
+        setStatusId={setStatusId}
+        files={files}
+        setFiles={setFiles}
+        resolutionTime={resolutionTime}
+        setResolutionTime={setResolutionTime}
+        setResolution={setResolution}
+      />
+      <PauseReason
+        visible={pauseReasonDialogVisible}
+        setVisible={setPauseReasonDialogVisible}
+        setPauseReason={setPauseReason}
+        setStatusId={setStatusId}
+      />
+    </div>
   );
 };
 

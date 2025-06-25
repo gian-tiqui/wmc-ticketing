@@ -101,7 +101,7 @@ const RouteProvider = () => {
       hidden: true,
       path: "categories",
       element: (
-        <ProtectedRoute allowedRoles={["admin", "user"]}>
+        <ProtectedRoute allowedRoles={["admin"]}>
           <CategoriesPage />
         </ProtectedRoute>
       ),
@@ -111,7 +111,7 @@ const RouteProvider = () => {
       hidden: true,
       path: "reports",
       element: (
-        <ProtectedRoute allowedRoles={["admin", "user"]}>
+        <ProtectedRoute allowedRoles={["admin"]}>
           <ReportsPage />
         </ProtectedRoute>
       ),
