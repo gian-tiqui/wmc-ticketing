@@ -53,14 +53,14 @@ const CrmUserSidebarSection = () => {
       name: "Categories",
       icon: PrimeIcons.ALIGN_CENTER,
       path: "/categories",
-      allowedRoles: ["admin", "user"],
+      allowedRoles: ["admin"],
     },
     {
       id: "reports",
       name: "Reports",
       icon: "pi pi-wave-pulse",
       path: "/reports",
-      allowedRoles: ["admin", "user"],
+      allowedRoles: ["admin"],
     },
     {
       id: "knowledgebase",
