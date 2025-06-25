@@ -24,7 +24,7 @@ const DailyDepartmentGraph = () => {
   const [status, setStatus] = useState(undefined);
   const [chartOptions, setChartOptions] = useState({});
   const [noData, setNoData] = useState<boolean>(false);
-  const [monthName, setMonthName] = useState<string>("");
+  const [, setMonthName] = useState<string>("");
 
   const { data: dailyTicketsData } = useQuery({
     queryKey: [`daily-tickets-${JSON.stringify(query)}-${year}-${month}`],

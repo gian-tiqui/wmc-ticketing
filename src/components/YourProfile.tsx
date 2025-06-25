@@ -14,12 +14,13 @@ import { useQuery } from "@tanstack/react-query";
 import { getDepartments } from "../@utils/services/departmentService";
 import useUserDataStore from "../@utils/store/userDataStore";
 import { updateUserById } from "../@utils/services/userService";
-import { Department, User } from "../types/types";
+import { Department } from "../types/types";
 import { refresh } from "../@utils/services/authService";
 import { Namespace } from "../@utils/enums/enum";
 import extractUserData from "../@utils/functions/extractUserData";
 import handleErrors from "../@utils/functions/handleErrors";
 import CustomToast from "./CustomToast";
+import { UserFormData } from "./AddUserDialog";
 
 const SettingsDetail = () => {
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
@@ -32,7 +33,7 @@ const SettingsDetail = () => {
     setValue,
     getValues,
     formState: { errors },
-  } = useForm<User>();
+  } = useForm<UserFormData>();
   const toastRef = useRef<Toast>(null);
 
   useEffect(() => {
