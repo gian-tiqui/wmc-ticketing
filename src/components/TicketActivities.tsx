@@ -27,7 +27,7 @@ const TicketActivities: React.FC<Props> = ({ ticket }) => {
   const customizedMarker = (item: Activity) => (
     <div
       className={`flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 text-white ${
-        item.type === "resolved"
+        item.activity === "resolved"
           ? "bg-green-600 hover:bg-green-700"
           : item.activity === "closed"
           ? "bg-gray-500 hover:bg-gray-600"
