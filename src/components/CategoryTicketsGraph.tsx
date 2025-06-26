@@ -1,4 +1,3 @@
-// components/CategoryTicketsGraph.tsx
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Chart } from "primereact/chart";
@@ -91,75 +90,74 @@ const CategoryTicketsGraph = () => {
 
   return (
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
-      <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">
-          Category tickets grouped by {query.groupBy}
-        </p>
-        <div className="flex items-center gap-2">
-          <Popover className="relative">
-            <Popover.Button className="px-4 py-2 bg-white border rounded shadow">
-              {range[0].startDate?.toLocaleDateString() || "Start Date"} -{" "}
-              {range[0].endDate?.toLocaleDateString() || "End Date"}
-            </Popover.Button>
-            <Popover.Panel className="absolute z-50 mt-2">
-              <DateRange
-                editableDateInputs={true}
-                onChange={handleDateRangeChange}
-                moveRangeOnFirstSelection={false}
-                ranges={range}
-              />
-            </Popover.Panel>
-          </Popover>
+      <div className="flex flex-wrap gap-x-2 gap-y-2">
+        <Popover className="relative w-full sm:w-40">
+          <Popover.Button className="flex items-center w-full h-10 px-3 text-sm text-left bg-white border rounded shadow">
+            {range[0].startDate?.toLocaleDateString() || "Start Date"} -{" "}
+            {range[0].endDate?.toLocaleDateString() || "End Date"}
+          </Popover.Button>
+          <Popover.Panel className="absolute z-50 mt-2">
+            <DateRange
+              editableDateInputs
+              onChange={handleDateRangeChange}
+              moveRangeOnFirstSelection={false}
+              ranges={range}
+            />
+          </Popover.Panel>
+        </Popover>
 
-          <Dropdown
-            options={departmentCategoriesData?.data?.categories || []}
-            value={selectedCategory}
-            optionLabel="name"
-            onChange={(e) => setSelectedCategory(e.value)}
-            className="h-10"
-            placeholder="Select category"
-          />
+        <Dropdown
+          options={departmentCategoriesData?.data?.categories || []}
+          value={selectedCategory}
+          optionLabel="name"
+          onChange={(e) => setSelectedCategory(e.value)}
+          className="w-full h-10 sm:w-40"
+          panelClassName="text-sm"
+          placeholder="Select category"
+        />
 
-          <Dropdown
-            options={[
-              { label: "Day", value: "day" as GroupByType },
-              { label: "Month", value: "month" as GroupByType },
-              { label: "Year", value: "year" as GroupByType },
-            ]}
-            value={query.groupBy}
-            optionLabel="label"
-            optionValue="value"
-            onChange={(e) =>
-              setQuery((prev) => ({ ...prev, groupBy: e.value }))
-            }
-            className="h-10"
-            placeholder="Group by"
-          />
+        <Dropdown
+          options={[
+            { label: "Day", value: "day" as GroupByType },
+            { label: "Month", value: "month" as GroupByType },
+            { label: "Year", value: "year" as GroupByType },
+          ]}
+          value={query.groupBy}
+          optionLabel="label"
+          optionValue="value"
+          onChange={(e) => setQuery((prev) => ({ ...prev, groupBy: e.value }))}
+          className="w-full h-10 sm:w-40"
+          panelClassName="text-sm"
+          placeholder="Group by"
+        />
 
-          <Dropdown
-            options={statuses?.data?.statuses}
-            optionLabel="type"
-            value={status}
-            onChange={(e) => {
-              setStatus(e.value);
-              setQuery((prev) => ({ ...prev, statusId: e.value.id }));
-            }}
-            className="h-10"
-            placeholder="Status"
-          />
-        </div>
+        <Dropdown
+          options={statuses?.data?.statuses}
+          optionLabel="type"
+          value={status}
+          onChange={(e) => {
+            setStatus(e.value);
+            setQuery((prev) => ({ ...prev, statusId: e.value.id }));
+          }}
+          className="w-full h-10 sm:w-40"
+          panelClassName="text-sm"
+          placeholder="Status"
+        />
       </div>
+
       {noData ? (
         <div className="flex items-center justify-center h-80">
-          <p>No data to show</p>
+          <p className="text-sm text-gray-600">No data to show</p>
         </div>
       ) : (
-        <Chart
-          type="line"
-          data={chartData}
-          options={chartOptions}
-          className="h-80"
-        />
+        <div className="h-[400px] w-full">
+          <Chart
+            type="line"
+            data={chartData}
+            options={chartOptions}
+            className="w-full h-full"
+          />
+        </div>
       )}
     </div>
   );

@@ -188,7 +188,6 @@ const KnowledgebaseTable = () => {
           <Column
             header="Title"
             field="title"
-            filter
             filterPlaceholder="Search title"
             style={{ minWidth: "200px", maxWidth: "300px" }}
             bodyStyle={{ wordBreak: "break-word" }}
@@ -198,7 +197,6 @@ const KnowledgebaseTable = () => {
           <Column
             header="Category"
             field="category.name"
-            filter
             filterPlaceholder="Search category"
             body={(rowData: Ticket) => rowData.category?.name || "—"}
             style={{ minWidth: "150px" }}

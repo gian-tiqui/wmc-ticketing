@@ -115,17 +115,18 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
       loading: false,
     },
     {
-      name: ticket.statusId === TicketStatus.ESCALATED ? "Assign" : "Escalate",
+      name: "Assign",
+      disabled: statusId !== TicketStatus.ACKNOWLEDGED || isUpdating,
+      onClick: () => setAssignUserVisible(true),
+      type: "",
+      loading: false,
+    },
+    {
+      name: "Escalate",
       disabled:
-        ![
-          TicketStatus.ACKNOWLEDGED,
-          TicketStatus.ASSIGNED,
-          TicketStatus.ESCALATED,
-        ].includes(statusId) || isUpdating,
-      onClick:
-        ticket.statusId === TicketStatus.ESCALATED
-          ? () => setAssignUserVisible(true)
-          : () => setEscalateUserVisible(true),
+        ![TicketStatus.ASSIGNED, TicketStatus.ESCALATED].includes(statusId) ||
+        isUpdating,
+      onClick: () => setEscalateUserVisible(true),
       type: "",
       loading: false,
     },
@@ -149,7 +150,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
       loading: false,
     },
     {
-      name: "Re-open",
+      name: "Open",
       disabled:
         ![TicketStatus.CLOSED, TicketStatus.RESOLVED].includes(statusId) ||
         isUpdating,

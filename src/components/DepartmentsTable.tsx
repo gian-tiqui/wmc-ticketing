@@ -133,7 +133,6 @@ const DepartmentsTable: React.FC<Props> = ({
         <Column
           header="Name"
           field="name"
-          filter
           filterPlaceholder="Search name"
           pt={{ filterInput: { className: "text-xs" } }}
           style={{ minWidth: "10rem" }}
@@ -141,7 +140,6 @@ const DepartmentsTable: React.FC<Props> = ({
         <Column
           header="Code"
           field="code"
-          filter
           filterPlaceholder="Search code"
           pt={{ filterInput: { className: "text-xs" } }}
           style={{ minWidth: "6rem" }}
@@ -149,7 +147,6 @@ const DepartmentsTable: React.FC<Props> = ({
         <Column
           header="Created At"
           field="createdAt"
-          filter
           filterPlaceholder="Search created date"
           pt={{ filterInput: { className: "text-xs" } }}
           body={(rowData: Department) => rowData.createdAt}
@@ -158,7 +155,6 @@ const DepartmentsTable: React.FC<Props> = ({
         <Column
           header="Updated At"
           field="updatedAt"
-          filter
           filterPlaceholder="Search updated date"
           pt={{ filterInput: { className: "text-xs" } }}
           body={(rowData: Department) => rowData.updatedAt}
