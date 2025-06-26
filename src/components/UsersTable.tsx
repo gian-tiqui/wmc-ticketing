@@ -110,21 +110,18 @@ const UsersTable: React.FC<Props> = ({ users, refetch }) => {
         <Column
           header="First Name"
           field="firstName"
-          filter
           filterPlaceholder="Search by first name"
           pt={{ filterInput: { className: "text-xs" } }}
         />
         <Column
           header="Last Name"
           field="lastName"
-          filter
           filterPlaceholder="Search by last name"
           pt={{ filterInput: { className: "text-xs" } }}
         />
         <Column
           header="Department"
           field="department.code"
-          filter
           filterPlaceholder="Search by department"
           pt={{ filterInput: { className: "text-xs" } }}
           body={(rowData: User) => <p>{rowData.department?.code || "None"}</p>}
