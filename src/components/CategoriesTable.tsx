@@ -95,14 +95,12 @@ const CategoriesTable = () => {
           field="name"
           header="Category Name"
           expander
-          filter
           filterPlaceholder="Search by name"
           style={{ minWidth: "14rem" }}
         />
         <Column
           field="SLA"
           header="SLA"
-          filter
           filterPlaceholder="Exact SLA"
           style={{ minWidth: "8rem" }}
         />
