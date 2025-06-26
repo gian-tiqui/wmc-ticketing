@@ -108,7 +108,6 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         <Column
           header="Title"
           field="title"
-          filter
           pt={{}}
           filterPlaceholder="Search by title"
           style={{ minWidth: "12rem" }}
@@ -116,7 +115,6 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         <Column
           header="Category"
           field="category.name"
-          filter
           filterPlaceholder="Search by category"
           body={(rowData: Ticket) => rowData.category?.name || "N/A"}
           style={{ minWidth: "10rem" }}
@@ -125,7 +123,6 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         <Column
           header="Overdue"
           field="isOverdue"
-          filter
           filterPlaceholder="true / false"
           body={(rowData: Ticket) =>
             rowData.isOverdue ? (
@@ -139,7 +136,6 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
         <Column
           header="Assigned To"
           field="assignedUser.firstName"
-          filter
           filterPlaceholder="Search by assignee"
           body={(rowData: Ticket) =>
             rowData.assignedUser ? (
