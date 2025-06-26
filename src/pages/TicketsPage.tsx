@@ -14,6 +14,7 @@ import { getUserTicketsById } from "../@utils/services/userService";
 import { TicketStatus } from "../@utils/enums/enum";
 import InboxButton from "../components/InboxButton";
 import SearchButton from "../components/SearchButton";
+import SentTicketsButton from "../components/SentTicketsButton";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
@@ -292,6 +293,7 @@ const TicketsPage = () => {
           </h4>
           <div className="flex gap-2">
             <SearchButton />
+            <SentTicketsButton />
             <InboxButton />
             <NewTicketButton refetchAll={refetchAll} />
           </div>
