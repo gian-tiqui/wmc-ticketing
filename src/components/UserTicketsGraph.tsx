@@ -6,19 +6,17 @@ import useUserDataStore from "../@utils/store/userDataStore";
 import { getUsersTicketsPerDateRange } from "../@utils/services/dashboardService";
 import { getAllStatus } from "../@utils/services/statusService";
 import { DateRange, Range, RangeKeyDict } from "react-date-range";
-import "react-date-range/dist/styles.css";
-import "react-date-range/dist/theme/default.css";
 import { Popover } from "@headlessui/react";
 import { addDays } from "date-fns";
+import "react-date-range/dist/styles.css";
+import "react-date-range/dist/theme/default.css";
 
-// Define status type (adjust this based on your actual status object structure)
+// Types
 type StatusType = {
   id: number;
   type: string;
-  // Add other properties as needed
 };
 
-// Define the groupBy type
 type GroupByType = "day" | "month" | "year";
 
 const UserTicketsGraph = () => {
@@ -38,11 +36,13 @@ const UserTicketsGraph = () => {
     },
   ]);
 
+  // Fetch statuses
   const { data: statuses } = useQuery({
     queryKey: ["statuses-dashboard"],
     queryFn: () => getAllStatus({ limit: 20 }),
   });
 
+  // Fetch ticket data
   const { data: userTicketsData } = useQuery({
     queryKey: [
       "user-tickets-flat",
@@ -62,6 +62,7 @@ const UserTicketsGraph = () => {
     enabled: !!user?.deptId && !!range[0].startDate && !!range[0].endDate,
   });
 
+  // Handle chart updates
   useEffect(() => {
     if (!userTicketsData?.data?.ticketsData) return;
     const { labels, dataSets } = userTicketsData.data.ticketsData;
@@ -85,7 +86,6 @@ const UserTicketsGraph = () => {
     });
   }, [userTicketsData]);
 
-  // Helper function to handle date range changes safely
   const handleDateRangeChange = (item: RangeKeyDict) => {
     const selection = item.selection;
     if (selection.startDate && selection.endDate) {
@@ -95,13 +95,14 @@ const UserTicketsGraph = () => {
 
   return (
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
-      <div className="flex items-center justify-between w-full mb-8">
-        <p className="font-medium">
+      <div className="flex flex-col gap-4 mb-6">
+        <p className="text-lg font-medium text-gray-800">
           User ticket counts grouped by {query.groupBy}
         </p>
-        <div className="flex items-center gap-2">
-          <Popover className="relative">
-            <Popover.Button className="px-4 py-2 bg-white border rounded shadow">
+
+        <div className="flex flex-wrap gap-x-2 gap-y-2">
+          <Popover className="relative w-full sm:w-auto">
+            <Popover.Button className="w-full px-4 py-2 text-sm text-left bg-white border rounded shadow sm:w-auto">
               {range[0].startDate?.toLocaleDateString() || "Start Date"} -{" "}
               {range[0].endDate?.toLocaleDateString() || "End Date"}
             </Popover.Button>
@@ -127,7 +128,7 @@ const UserTicketsGraph = () => {
             onChange={(e) =>
               setQuery((prev) => ({ ...prev, groupBy: e.value }))
             }
-            className="h-10"
+            className="items-center w-full h-10 sm:w-40"
             placeholder="Group by"
           />
 
@@ -135,25 +136,26 @@ const UserTicketsGraph = () => {
             options={statuses?.data?.statuses}
             optionLabel="type"
             value={status}
-            onChange={(e) => {
-              setStatus(e.value);
-            }}
-            className="h-10"
+            onChange={(e) => setStatus(e.value)}
+            className="items-center w-full h-10 sm:w-40"
             placeholder="Status"
           />
         </div>
       </div>
+
       {noData ? (
         <div className="flex items-center justify-center h-80">
-          <p>No data to show</p>
+          <p className="text-sm text-gray-600">No data to show</p>
         </div>
       ) : (
-        <Chart
-          type="bar"
-          data={chartData}
-          options={chartOptions}
-          className="h-80"
-        />
+        <div className="h-[400px] w-full">
+          <Chart
+            type="bar"
+            data={chartData}
+            options={chartOptions}
+            className="w-full h-full"
+          />
+        </div>
       )}
     </div>
   );

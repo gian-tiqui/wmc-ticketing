@@ -32,6 +32,7 @@ const PauseReason: React.FC<Props> = ({
   const handleCloseTicket = (data: FormFields) => {
     setPauseReason(data.pauseReason);
     setStatusId(TicketStatus.ON_HOLD);
+    setVisible(false);
   };
 
   return (
