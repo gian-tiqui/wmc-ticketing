@@ -6,7 +6,7 @@ interface Props {
 
 const PageTemplate: React.FC<Props> = ({ children }) => {
   return (
-    <div className="relative w-full h-screen overflow-hidden font-sans bg-[#CBD5E1]">
+    <div className="relative w-full h-screen font-sans bg-[#CBD5E1]">
       {children}
     </div>
   );
