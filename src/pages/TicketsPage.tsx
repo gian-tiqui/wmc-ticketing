@@ -15,6 +15,7 @@ import { TicketStatus } from "../@utils/enums/enum";
 import InboxButton from "../components/InboxButton";
 import SearchButton from "../components/SearchButton";
 import SentTicketsButton from "../components/SentTicketsButton";
+import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
 
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
@@ -302,7 +303,7 @@ const TicketsPage = () => {
         <TabView
           pt={{
             panelContainer: {
-              className: "h-[73vh] w-full bg-inherit",
+              className: `${scrollbarTheme} h-[73vh] overflow-auto w-full bg-inherit`,
             },
             nav: { className: "w-full bg-inherit" },
             tab: { className: "w-full bg-inherit" },

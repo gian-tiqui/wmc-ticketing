@@ -162,7 +162,8 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
     <div className="mx-2 overflow-hidden bg-white border border-gray-200 shadow-lg rounded-xl sm:mx-4 lg:mx-0">
       {header}
 
-      <div className="overflow-x-auto">
+      {/* Wrapper with proper scrolling */}
+      <div className="w-full overflow-x-auto border border-gray-200 shadow-sm rounded-xl">
         <DataTable
           value={tickets}
           paginator
@@ -177,17 +178,17 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
             "createdAt",
           ]}
           emptyMessage={
-            <div className="flex flex-col items-center justify-center py-12">
-              <i className="mb-4 text-4xl text-gray-400 pi pi-inbox" />
-              <h3 className="mb-2 text-lg font-semibold text-gray-600">
+            <div className="flex flex-col items-center justify-center py-8 sm:py-12">
+              <i className="mb-3 text-3xl text-gray-400 sm:mb-4 sm:text-4xl pi pi-inbox" />
+              <h3 className="mb-2 text-base font-semibold text-gray-600 sm:text-lg">
                 No tickets found
               </h3>
-              <p className="px-4 text-sm text-center text-gray-500">
+              <p className="px-4 text-xs text-center text-gray-500 sm:text-sm">
                 Try adjusting your search or filters
               </p>
             </div>
           }
-          className="min-w-full text-sm"
+          className="text-xs sm:text-sm"
           stripedRows
           pt={{
             bodyRow: {
@@ -200,22 +201,29 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
             },
             thead: {
               className:
-                "text-gray-700 font-semibold py-3 sm:py-4 px-3 sm:px-6 text-xs sm:text-sm",
+                "text-gray-700 font-semibold py-2 sm:py-3 md:py-4 px-2 sm:px-3 md:px-6 text-xs sm:text-sm",
             },
             tbody: {
-              className: "py-3 sm:py-4 px-3 sm:px-6",
+              className: "py-2 sm:py-3 md:py-4 px-2 sm:px-3 md:px-6",
             },
             paginator: {
               root: {
                 className:
-                  "bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-200 rounded-b-xl px-3 sm:px-6 py-4",
+                  "bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-200 px-2 sm:px-3 md:px-6 py-3 sm:py-4",
               },
             },
             root: {
-              className: "text-sm",
+              className: "text-xs sm:text-sm border-0 rounded-xl",
+            },
+            wrapper: {
+              className: "rounded-xl",
+            },
+            table: {
+              className: "min-w-full table-fixed",
             },
           }}
         >
+          {/* Ticket Number - Fixed width */}
           <Column
             header="Ticket #"
             field="id"
@@ -223,74 +231,103 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
             pt={{
               filterInput: {
                 className:
-                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+                  "text-xs p-1.5 sm:p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
               },
             }}
-            style={{ minWidth: "6rem" }}
+            style={{ width: "80px", minWidth: "80px" }}
+            headerStyle={{ width: "80px", minWidth: "80px" }}
           />
 
+          {/* Title - Flexible with text truncation */}
           <Column
             header="Title"
             field="title"
-            body={titleTemplate}
-            filterPlaceholder="Search by title..."
+            body={(rowData) => (
+              <div className="flex-1 max-w-0">
+                <div
+                  className="pr-2 truncate transition-colors cursor-pointer hover:text-blue-600"
+                  title={rowData.title}
+                  onClick={() => titleTemplate(rowData)}
+                >
+                  {rowData.title}
+                </div>
+              </div>
+            )}
+            filterPlaceholder="Search..."
             pt={{
               filterInput: {
                 className:
-                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+                  "text-xs p-1.5 sm:p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
               },
             }}
-            style={{ minWidth: "12rem" }}
+            style={{ width: "200px", minWidth: "150px" }}
+            headerStyle={{ width: "200px", minWidth: "150px" }}
           />
 
+          {/* Category - Fixed width, hidden on mobile */}
           <Column
             header="Category"
             field="category.name"
-            body={categoryTemplate}
-            filterPlaceholder="Search by category..."
+            body={(rowData) => (
+              <div className="truncate" title={rowData.category?.name}>
+                {categoryTemplate(rowData)}
+              </div>
+            )}
+            filterPlaceholder="Category..."
             pt={{
               filterInput: {
                 className:
-                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+                  "text-xs p-1.5 sm:p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
               },
             }}
-            style={{ minWidth: "10rem" }}
+            style={{ width: "120px", minWidth: "120px" }}
+            headerStyle={{ width: "120px", minWidth: "120px" }}
             className="hidden sm:table-cell"
           />
 
+          {/* Status - Fixed width */}
           <Column
             header="Status"
             field="isOverdue"
             body={overdueTemplate}
-            filterPlaceholder="true / false"
+            filterPlaceholder="Status..."
             pt={{
               filterInput: {
                 className:
-                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+                  "text-xs p-1.5 sm:p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
               },
             }}
-            style={{ minWidth: "8rem" }}
+            style={{ width: "100px", minWidth: "100px" }}
+            headerStyle={{ width: "100px", minWidth: "100px" }}
           />
 
+          {/* Assigned - Fixed width, hidden on mobile */}
           <Column
             header="Assigned"
             field="assignedUser.firstName"
-            body={assigneeTemplate}
-            filterPlaceholder="Search by assignee..."
+            body={(rowData) => (
+              <div className="truncate" title={rowData.assignedUser?.firstName}>
+                {assigneeTemplate(rowData)}
+              </div>
+            )}
+            filterPlaceholder="Assignee..."
             pt={{
               filterInput: {
                 className:
-                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+                  "text-xs p-1.5 sm:p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
               },
             }}
-            style={{ minWidth: "10rem" }}
+            style={{ width: "120px", minWidth: "120px" }}
+            headerStyle={{ width: "120px", minWidth: "120px" }}
             className="hidden md:table-cell"
           />
 
+          {/* Actions - Fixed width */}
           <Column
             header="Actions"
             body={actionTemplate}
-            style={{ minWidth: "6rem" }}
+            style={{ width: "80px", minWidth: "80px" }}
+            headerStyle={{ width: "80px", minWidth: "80px" }}
           />
         </DataTable>
       </div>
