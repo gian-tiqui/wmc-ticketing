@@ -1,6 +1,5 @@
 import { Avatar } from "primereact/avatar";
 import { motion } from "framer-motion";
-import CrmAsideButtonToggler from "./CrmAsideButtonToggler";
 import useUserDataStore from "../@utils/store/userDataStore";
 import { useEffect, useState } from "react";
 
@@ -101,16 +100,6 @@ const CrmSidebarHeader = () => {
                 </motion.p>
               )}
             </div>
-          </motion.div>
-
-          {/* Toggle Button */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.4 }}
-            className="ml-2"
-          >
-            <CrmAsideButtonToggler />
           </motion.div>
         </div>
 
