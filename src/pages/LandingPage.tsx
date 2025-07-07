@@ -17,13 +17,22 @@ import {
 import wmcLogo from "../assets/wmcLogo.png";
 import { Image } from "primereact/image";
 import { useNavigate } from "react-router-dom";
+import useLoggedInStore from "../@utils/store/loggedIn";
+import useUserDataStore from "../@utils/store/userDataStore";
 
 const LandingPage = () => {
   const navigate = useNavigate();
-
+  const { isLoggedIn } = useLoggedInStore();
   const [isLoaded, setIsLoaded] = useState(false);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [animationTime, setAnimationTime] = useState(0);
+  const { user } = useUserDataStore();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate("/ticket");
+    }
+  }, [isLoggedIn, navigate, user]);
 
   useEffect(() => {
     setIsLoaded(true);
