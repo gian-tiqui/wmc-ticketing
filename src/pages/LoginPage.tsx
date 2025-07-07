@@ -150,7 +150,7 @@ const LoginPage = () => {
       <CustomToast ref={toastRef} />
 
       {/* Main container - now properly scrollable */}
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
+      <div className="h-screen min-h-screen overflow-auto bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
         {/* Background animation */}
         <div className="fixed inset-0 pointer-events-none">
           <div

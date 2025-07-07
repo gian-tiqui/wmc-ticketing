@@ -97,7 +97,7 @@ const UserTicketsGraph = () => {
     <div className="p-4 bg-[#EEEEEE] w-full rounded-2xl shadow">
       <div className="flex flex-col gap-4 mb-6">
         <p className="text-lg font-medium text-gray-800">
-          User ticket counts grouped by {query.groupBy}
+          Staff ticket counts grouped by {query.groupBy}
         </p>
 
         <div className="flex flex-wrap gap-x-2 gap-y-2">

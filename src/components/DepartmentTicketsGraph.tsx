@@ -51,26 +51,85 @@ const DepartmentTicketsGraph = () => {
   });
 
   useEffect(() => {
+    console.log(ticketsData);
+  }, [ticketsData]);
+
+  useEffect(() => {
     if (!ticketsData?.data?.ticketsData) return;
-    const { labels, dataSets } = ticketsData.data.ticketsData;
-    if (!labels || labels.length < 1) return setNoData(true);
+    const { labels, dataSet, dataSets } = ticketsData.data.ticketsData;
+
+    // ADD DEBUG LOGGING
+    console.log("=== DEBUG: Chart Data ===");
+    console.log("Group By:", query.groupBy);
+    console.log("Labels:", labels);
+    console.log("DataSet (singular):", dataSet);
+    console.log("DataSets (plural):", dataSets);
+    console.log("Labels length:", labels?.length);
+    console.log("Full ticketsData:", ticketsData.data.ticketsData);
+    console.log("========================");
+
+    // Handle both dataSet (singular) and dataSets (plural) from backend
+    const datasets = dataSets || (dataSet ? [dataSet] : []);
+
+    if (!labels || labels.length < 1 || !datasets || datasets.length < 1) {
+      return setNoData(true);
+    }
     setNoData(false);
 
     const docStyle = getComputedStyle(document.documentElement);
     const textColor = docStyle.getPropertyValue("--text-color-secondary");
     const borderColor = docStyle.getPropertyValue("--surface-border");
 
-    setChartData({ labels, datasets: dataSets });
+    // Enhanced chart options for better line visibility
+    let enhancedDataSets =
+      datasets?.map((dataset: any) => ({
+        ...dataset,
+        type: "line", // Force line type
+        tension: 0.4, // Smooth lines
+        borderWidth: 3, // Thicker lines
+        pointRadius: 6, // Larger points
+        pointHoverRadius: 8,
+        fill: false, // Ensure no fill for line chart
+        showLine: true, // Explicitly show line
+        borderColor: dataset.borderColor || "#3B82F6", // Default color if not provided
+        backgroundColor: dataset.backgroundColor || "#3B82F6",
+      })) || [];
+
+    setChartData({ labels, datasets: enhancedDataSets });
     setChartOptions({
       maintainAspectRatio: false,
       aspectRatio: 0.6,
-      plugins: { legend: { position: "bottom" } },
+      plugins: {
+        legend: { position: "bottom" },
+        tooltip: {
+          mode: "index",
+          intersect: false,
+        },
+      },
       scales: {
-        x: { ticks: { color: textColor }, grid: { color: borderColor } },
-        y: { ticks: { color: textColor }, grid: { color: borderColor } },
+        x: {
+          ticks: { color: textColor },
+          grid: { color: borderColor },
+          type: query.groupBy === "year" ? "linear" : "category", // Different scale for years
+        },
+        y: {
+          ticks: { color: textColor },
+          grid: { color: borderColor },
+          beginAtZero: true,
+        },
+      },
+      elements: {
+        point: {
+          radius: 4,
+          hoverRadius: 6,
+        },
+        line: {
+          borderWidth: 2,
+          tension: 0.4,
+        },
       },
     });
-  }, [ticketsData]);
+  }, [ticketsData, query.groupBy]);
 
   // Helper function to handle date range changes safely
   const handleDateRangeChange = (item: RangeKeyDict) => {
