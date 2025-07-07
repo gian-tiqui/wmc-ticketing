@@ -76,7 +76,6 @@ const CrmUserSidebarSection = () => {
     []
   );
 
-  // Modern approach: Memoized filtered buttons
   const authorizedButtons = useMemo(
     (): ButtonType[] =>
       navigationItems.filter((item) => isAuthorized(user, item.allowedRoles)),
@@ -94,100 +93,132 @@ const CrmUserSidebarSection = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
-      className="flex-1 overflow-hidden"
+      className="flex flex-col h-full overflow-hidden"
     >
-      {/* Section Header */}
+      {/* Sidebar Header */}
       <motion.div
-        initial={{ opacity: 0, x: -20 }}
-        animate={{ opacity: 1, x: 0 }}
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="mx-3 mb-3"
+        className="px-4 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50"
       >
-        <small className="text-xs font-semibold tracking-wide text-gray-700 uppercase">
-          Pages
-        </small>
+        <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-center w-10 h-10 bg-blue-600 rounded-lg">
+            <i className="text-lg text-white pi pi-sitemap" />
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-gray-800">
+              Westlake Medical Center
+            </h3>
+            <p className="text-sm text-gray-600">Ticketing System</p>
+          </div>
+        </div>
       </motion.div>
 
-      {/* Navigation Buttons */}
-      <div className="flex flex-col gap-1 mx-2">
-        <AnimatePresence>
-          {authorizedButtons.map((button, index) => {
-            const isActive = id === button.id;
+      {/* Navigation Section */}
+      <div className="flex flex-col flex-1 overflow-hidden">
+        {/* Section Header */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2 }}
+          className="px-4 py-3 border-b border-gray-100"
+        >
+          <small className="text-xs font-semibold tracking-wide text-gray-700 uppercase">
+            Navigation
+          </small>
+        </motion.div>
 
-            return (
-              <motion.div
-                key={button.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -20 }}
-                transition={{
-                  delay: index * 0.05,
-                  duration: 0.3,
-                  ease: "easeOut",
-                }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Button
-                  className={`
-                    relative items-center w-full px-3 py-2 text-xs border-none h-9 font-medium 
-                    transition-all duration-300 ease-in-out rounded-lg
-                    ${
-                      isActive
-                        ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-lg transform scale-[1.02]"
-                        : "bg-transparent text-gray-800 hover:bg-blue-50 hover:text-blue-700"
-                    }
-                    focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-1
-                    group overflow-hidden
-                  `}
-                  onClick={() => handleNavigation(button)}
-                >
-                  {/* Icon with consistent styling */}
-                  <i
-                    className={`
-                      ${button.icon} me-3 text-lg transition-all duration-300
-                      ${
-                        isActive
-                          ? "text-white"
-                          : "text-gray-700 group-hover:scale-110 group-hover:text-blue-700"
-                      }
-                    `}
-                  />
+        {/* Scrollable Navigation Buttons */}
+        <div className="flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
+          <div className="flex flex-col gap-1 p-2">
+            <AnimatePresence>
+              {authorizedButtons.map((button, index) => {
+                const isActive = id === button.id;
 
-                  <span className="relative z-10 text-left">{button.name}</span>
-
-                  {/* Hover effect background */}
+                return (
                   <motion.div
-                    className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-r from-blue-50 to-blue-100 group-hover:opacity-100"
-                    layoutId={isActive ? "activeBackground" : undefined}
-                  />
+                    key={button.id}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{
+                      delay: index * 0.05,
+                      duration: 0.3,
+                      ease: "easeOut",
+                    }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      className={`
+                        relative items-center w-full px-3 py-2 text-xs border-none h-9 font-medium 
+                        transition-all duration-300 ease-in-out rounded-lg
+                        focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:ring-offset-1
+                        group overflow-hidden
+                        ${
+                          isActive
+                            ? "!bg-gradient-to-r !from-blue-500 !to-blue-600 !text-white shadow-lg transform scale-[1.02]"
+                            : "bg-transparent text-gray-800 hover:bg-blue-50 hover:text-blue-700"
+                        }
+                      `}
+                      onClick={() => handleNavigation(button)}
+                    >
+                      {/* Icon with consistent styling */}
+                      <i
+                        className={`
+                          ${
+                            button.icon
+                          } me-3 text-lg transition-all duration-300
+                          ${
+                            isActive
+                              ? "!text-white"
+                              : "text-gray-700 group-hover:scale-110 group-hover:text-blue-700"
+                          }
+                        `}
+                      />
 
-                  {/* Active indicator */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeIndicator"
-                      className="absolute top-0 bottom-0 left-0 w-1 bg-white rounded-r-full"
-                      transition={{
-                        type: "spring",
-                        stiffness: 500,
-                        damping: 30,
-                      }}
-                    />
-                  )}
-                </Button>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                      <span
+                        className={`relative z-10 text-left ${
+                          isActive ? "!text-white" : ""
+                        }`}
+                      >
+                        {button.name}
+                      </span>
+
+                      {/* Hover effect background - only for inactive buttons */}
+                      {!isActive && (
+                        <motion.div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-r from-blue-50 to-blue-100 group-hover:opacity-100" />
+                      )}
+
+                      {/* Active indicator */}
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeIndicator"
+                          className="absolute top-0 bottom-0 left-0 w-1 bg-white rounded-r-full"
+                          transition={{
+                            type: "spring",
+                            stiffness: 500,
+                            damping: 30,
+                          }}
+                        />
+                      )}
+                    </Button>
+                  </motion.div>
+                );
+              })}
+            </AnimatePresence>
+          </div>
+        </div>
+
+        {/* Bottom Decorative Element */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.5 }}
+          className="h-px mx-4 mt-2 mb-4 bg-gradient-to-r from-transparent via-gray-300 to-transparent"
+        />
       </div>
-
-      {/* Bottom Decorative Element */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.5 }}
-        className="h-px mx-3 mt-6 bg-gradient-to-r from-transparent via-gray-300 to-transparent"
-      />
     </motion.section>
   );
 };

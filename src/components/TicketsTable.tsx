@@ -3,7 +3,7 @@ import { Ticket } from "../types/types";
 import { DataTable, DataTableFilterMeta } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
-import { PrimeIcons, FilterMatchMode } from "primereact/api";
+import { FilterMatchMode } from "primereact/api";
 import { InputText } from "primereact/inputtext";
 import { useNavigate } from "react-router-dom";
 
@@ -49,117 +49,251 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
   };
 
   const header = (
-    <div className="flex justify-between items-center bg-[#eee] h-14 rounded-t px-2">
-      <div className="flex items-center gap-2">
-        <span className="text-lg font-semibold text-blue-600">Tickets</span>
-        <span className="text-sm text-gray-500">
-          ({tickets?.length || 0} tickets)
-        </span>
+    <div className="flex flex-col gap-4 px-4 py-4 border-b border-gray-200 lg:flex-row lg:justify-between lg:items-center bg-gradient-to-r from-slate-50 to-gray-50 sm:px-6 rounded-t-xl">
+      <div className="flex items-center gap-3">
+        <div className="flex items-center justify-center w-10 h-10 rounded-lg shadow-lg bg-gradient-to-r from-blue-500 to-indigo-600">
+          <i className="text-lg text-white pi pi-ticket" />
+        </div>
+        <div>
+          <h2 className="text-lg font-bold text-gray-800 sm:text-xl">
+            Support Tickets
+          </h2>
+          <p className="text-sm text-gray-500">
+            {tickets?.length || 0} ticket{tickets?.length !== 1 ? "s" : ""}{" "}
+            found
+          </p>
+        </div>
       </div>
-      <div className="flex items-center gap-2">
-        <InputText
-          value={globalFilterValue}
-          onChange={onGlobalFilterChange}
-          placeholder="Search tickets..."
-          className="h-8 px-4 text-sm"
-        />
+      <div className="flex flex-col items-stretch w-full gap-3 sm:flex-row sm:items-center lg:w-auto">
+        <div className="relative flex-1 lg:flex-none">
+          <i className="absolute text-sm text-gray-400 transform -translate-y-1/2 left-3 top-1/2 pi pi-search" />
+          <InputText
+            value={globalFilterValue}
+            onChange={onGlobalFilterChange}
+            placeholder="Search tickets..."
+            className="w-full py-2 pl-10 pr-4 text-sm transition-all duration-200 border border-gray-300 rounded-lg shadow-sm lg:w-64 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
         <Button
           onClick={clearFilter}
-          className="h-8 px-3 text-xs border rounded p-button-outlined p-button-sm hover:bg-gray-50"
+          className="px-4 py-2 text-sm font-medium text-gray-700 transition-all duration-200 bg-white border border-gray-300 rounded-lg shadow-sm hover:bg-gray-50 hover:border-gray-400 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 whitespace-nowrap"
         >
+          <i className="mr-2 pi pi-times" />
           Clear
         </Button>
       </div>
     </div>
   );
 
+  const ticketNumberTemplate = (rowData: Ticket) => (
+    <div className="inline-block px-3 py-1 font-mono text-sm font-semibold text-indigo-600 rounded-full bg-indigo-50">
+      #{rowData.id}
+    </div>
+  );
+
+  const titleTemplate = (rowData: Ticket) => (
+    <div className="max-w-xs">
+      <div className="font-semibold text-gray-800 truncate">
+        {rowData.title}
+      </div>
+    </div>
+  );
+
+  const categoryTemplate = (rowData: Ticket) => (
+    <div className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
+      <i className="mr-1 pi pi-tag" />
+      {rowData.category?.name || "Uncategorized"}
+    </div>
+  );
+
+  const overdueTemplate = (rowData: Ticket) => (
+    <div className="flex items-center">
+      {rowData.isOverdue ? (
+        <div className="inline-flex items-center px-3 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full">
+          <i className="mr-1 pi pi-exclamation-triangle" />
+          Overdue
+        </div>
+      ) : (
+        <div className="inline-flex items-center px-3 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full">
+          <i className="mr-1 pi pi-check-circle" />
+          On Time
+        </div>
+      )}
+    </div>
+  );
+
+  const assigneeTemplate = (rowData: Ticket) => (
+    <div className="flex items-center">
+      {rowData.assignedUser ? (
+        <div className="flex items-center space-x-2">
+          <div className="flex items-center justify-center w-8 h-8 text-xs font-bold text-white rounded-full bg-gradient-to-r from-purple-400 to-pink-400">
+            {rowData.assignedUser.firstName.charAt(0)}
+            {rowData.assignedUser.lastName.charAt(0)}
+          </div>
+          <div className="hidden sm:block">
+            <div className="text-sm font-medium text-gray-800">
+              {rowData.assignedUser.firstName} {rowData.assignedUser.lastName}
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="inline-flex items-center px-3 py-1 text-xs font-medium text-gray-600 bg-gray-100 rounded-full">
+          <i className="mr-1 pi pi-user-minus" />
+          <span className="hidden sm:inline">Unassigned</span>
+          <span className="sm:hidden">N/A</span>
+        </div>
+      )}
+    </div>
+  );
+
+  const actionTemplate = (rowData: Ticket) => (
+    <div className="flex items-center space-x-1 sm:space-x-2">
+      <Button
+        icon="pi pi-eye"
+        className="w-8 h-8 transition-all duration-200 transform border-none rounded-lg shadow-md sm:w-9 sm:h-9 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 hover:shadow-lg hover:scale-105"
+        onClick={() => navigate(`/ticket/${rowData.id}`)}
+        tooltip="View Ticket"
+        tooltipOptions={{ position: "top" }}
+      />
+    </div>
+  );
+
   return (
-    <div className="pb-8">
+    <div className="mx-2 overflow-hidden bg-white border border-gray-200 shadow-lg rounded-xl sm:mx-4 lg:mx-0">
       {header}
 
-      <DataTable
-        value={tickets}
-        paginator
-        rows={5}
-        size="small"
-        filters={filters}
-        filterDisplay="row"
-        globalFilterFields={[
-          "title",
-          "category.name",
-          "assignedUser.firstName",
-          "createdAt",
-        ]}
-        emptyMessage="No tickets found."
-        className="text-sm"
-        pt={{
-          bodyRow: { className: "bg-[#EEEEEE]" },
-          headerRow: { className: "bg-[#EEEEEE]" },
-          paginator: { root: { className: "bg-[#EEEEEE] rounded-b" } },
-          root: { className: "text-xs" },
-        }}
-      >
-        <Column
-          header="Ticket Number"
-          field="id"
-          pt={{ filterInput: { className: "text-xs" } }}
-          style={{ minWidth: "6rem" }}
-        />
-        <Column
-          header="Title"
-          field="title"
-          pt={{}}
-          filterPlaceholder="Search by title"
-          style={{ minWidth: "12rem" }}
-        />
-        <Column
-          header="Category"
-          field="category.name"
-          filterPlaceholder="Search by category"
-          body={(rowData: Ticket) => rowData.category?.name || "N/A"}
-          style={{ minWidth: "10rem" }}
-        />
+      <div className="overflow-x-auto">
+        <DataTable
+          value={tickets}
+          paginator
+          rows={8}
+          size="normal"
+          filters={filters}
+          filterDisplay="row"
+          globalFilterFields={[
+            "title",
+            "category.name",
+            "assignedUser.firstName",
+            "createdAt",
+          ]}
+          emptyMessage={
+            <div className="flex flex-col items-center justify-center py-12">
+              <i className="mb-4 text-4xl text-gray-400 pi pi-inbox" />
+              <h3 className="mb-2 text-lg font-semibold text-gray-600">
+                No tickets found
+              </h3>
+              <p className="px-4 text-sm text-center text-gray-500">
+                Try adjusting your search or filters
+              </p>
+            </div>
+          }
+          className="min-w-full text-sm"
+          stripedRows
+          pt={{
+            bodyRow: {
+              className:
+                "hover:bg-blue-50 transition-colors duration-200 border-b border-gray-100",
+            },
+            headerRow: {
+              className:
+                "bg-gradient-to-r from-gray-50 to-slate-50 border-b border-gray-200",
+            },
+            thead: {
+              className:
+                "text-gray-700 font-semibold py-3 sm:py-4 px-3 sm:px-6 text-xs sm:text-sm",
+            },
+            tbody: {
+              className: "py-3 sm:py-4 px-3 sm:px-6",
+            },
+            paginator: {
+              root: {
+                className:
+                  "bg-gradient-to-r from-gray-50 to-slate-50 border-t border-gray-200 rounded-b-xl px-3 sm:px-6 py-4",
+              },
+            },
+            root: {
+              className: "text-sm",
+            },
+          }}
+        >
+          <Column
+            header="Ticket #"
+            field="id"
+            body={ticketNumberTemplate}
+            pt={{
+              filterInput: {
+                className:
+                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+              },
+            }}
+            style={{ minWidth: "6rem" }}
+          />
 
-        <Column
-          header="Overdue"
-          field="isOverdue"
-          filterPlaceholder="true / false"
-          body={(rowData: Ticket) =>
-            rowData.isOverdue ? (
-              <span className="font-semibold text-red-500">Yes</span>
-            ) : (
-              <span className="text-green-600">No</span>
-            )
-          }
-          style={{ minWidth: "8rem" }}
-        />
-        <Column
-          header="Assigned To"
-          field="assignedUser.firstName"
-          filterPlaceholder="Search by assignee"
-          body={(rowData: Ticket) =>
-            rowData.assignedUser ? (
-              <>
-                {rowData.assignedUser.firstName} {rowData.assignedUser.lastName}
-              </>
-            ) : (
-              "None"
-            )
-          }
-          style={{ minWidth: "12rem" }}
-        />
-        <Column
-          header="Action"
-          body={(rowData: Ticket) => (
-            <Button
-              icon={PrimeIcons.DIRECTIONS}
-              className="w-10 h-10 bg-blue-600 rounded-full"
-              onClick={() => navigate(`/ticket/${rowData.id}`)}
-            />
-          )}
-          style={{ minWidth: "8rem" }}
-        />
-      </DataTable>
+          <Column
+            header="Title"
+            field="title"
+            body={titleTemplate}
+            filterPlaceholder="Search by title..."
+            pt={{
+              filterInput: {
+                className:
+                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+              },
+            }}
+            style={{ minWidth: "12rem" }}
+          />
+
+          <Column
+            header="Category"
+            field="category.name"
+            body={categoryTemplate}
+            filterPlaceholder="Search by category..."
+            pt={{
+              filterInput: {
+                className:
+                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+              },
+            }}
+            style={{ minWidth: "10rem" }}
+            className="hidden sm:table-cell"
+          />
+
+          <Column
+            header="Status"
+            field="isOverdue"
+            body={overdueTemplate}
+            filterPlaceholder="true / false"
+            pt={{
+              filterInput: {
+                className:
+                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+              },
+            }}
+            style={{ minWidth: "8rem" }}
+          />
+
+          <Column
+            header="Assigned"
+            field="assignedUser.firstName"
+            body={assigneeTemplate}
+            filterPlaceholder="Search by assignee..."
+            pt={{
+              filterInput: {
+                className:
+                  "text-xs p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent w-full",
+              },
+            }}
+            style={{ minWidth: "10rem" }}
+            className="hidden md:table-cell"
+          />
+
+          <Column
+            header="Actions"
+            body={actionTemplate}
+            style={{ minWidth: "6rem" }}
+          />
+        </DataTable>
+      </div>
     </div>
   );
 };
