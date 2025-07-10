@@ -52,73 +52,92 @@ const UsersTable: React.FC<Props> = ({ users, refetch }) => {
     setFilters(_filters);
     setGlobalFilterValue(value);
   };
-
   const header = (
-    <div className="flex items-center justify-between p-6 border-b bg-gradient-to-r from-white to-slate-50 rounded-t-2xl border-slate-200/50 backdrop-blur-sm">
-      <div className="flex items-center gap-3">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-          <span className="text-xl font-bold text-transparent bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text">
-            Users
-          </span>
-        </div>
-        <div className="px-3 py-1 rounded-full bg-slate-100">
-          <span className="text-sm font-medium text-slate-600">
-            {users?.length || 0} total
-          </span>
-        </div>
-      </div>
+    <div className="relative overflow-hidden">
+      {/* Gradient Background */}
+      <div className="absolute inset-0 bg-gradient-to-r from-blue-50 via-indigo-50/50 to-purple-50/30"></div>
 
-      <div className="flex items-center gap-3">
-        <div className="relative group">
-          <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-            <svg
-              className="w-4 h-4 transition-colors text-slate-400 group-hover:text-slate-600"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
+      {/* Content */}
+      <div className="relative flex items-center justify-between p-8 border-b border-white/20 backdrop-blur-sm">
+        {/* Left Section */}
+        <div className="flex items-center gap-6">
+          <div className="flex items-center gap-4">
+            {/* Animated Icon */}
+            <div className="relative">
+              <div className="w-3 h-3 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 animate-pulse"></div>
+              <div className="absolute inset-0 w-3 h-3 rounded-full opacity-75 bg-gradient-to-r from-blue-500 to-purple-500 animate-ping"></div>
+            </div>
+
+            {/* Title */}
+            <h2 className="text-2xl font-bold text-transparent bg-gradient-to-r from-slate-900 via-blue-800 to-purple-800 bg-clip-text">
+              WMC Employees
+            </h2>
           </div>
-          <InputText
-            value={globalFilterValue}
-            onChange={onGlobalFilterChange}
-            placeholder="Search users..."
-            className="h-10 pl-10 pr-4 text-sm transition-all duration-200 shadow-sm bg-white/70 backdrop-blur-sm border-slate-200 rounded-xl hover:bg-white focus:bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-400"
-          />
         </div>
 
-        <Button
-          onClick={initFilters}
-          className="h-10 px-4 text-sm font-medium transition-all duration-200 bg-white/70 backdrop-blur-sm border-slate-200 rounded-xl hover:bg-white hover:border-slate-300 hover:shadow-md focus:ring-2 focus:ring-slate-500/20 text-slate-700"
-        >
-          <svg
-            className="w-4 h-4 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+        {/* Right Section */}
+        <div className="flex items-center gap-4">
+          {/* Enhanced Search */}
+          <div className="relative group">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
+              <svg
+                className="w-5 h-5 transition-colors duration-200 text-slate-400 group-hover:text-blue-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
+              </svg>
+            </div>
+            <InputText
+              value={globalFilterValue}
+              onChange={onGlobalFilterChange}
+              placeholder="Search team members..."
+              className="h-12 pl-12 pr-6 text-sm transition-all duration-200 border shadow-sm w-72 bg-white/70 backdrop-blur-sm border-white/30 rounded-2xl hover:bg-white/90 hover:border-blue-300/50 focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-500/10 placeholder:text-slate-400"
             />
-          </svg>
-          Reset
-        </Button>
+
+            {/* Search Enhancement */}
+            <div className="absolute inset-y-0 right-0 flex items-center pr-4">
+              <kbd className="px-2 py-1 text-xs border rounded text-slate-500 bg-slate-100 border-slate-200">
+                ⌘K
+              </kbd>
+            </div>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={initFilters}
+              className="h-12 px-5 font-medium transition-all duration-200 border bg-white/70 backdrop-blur-sm border-white/30 rounded-2xl hover:bg-white/90 hover:border-slate-300/50 hover:shadow-lg focus:ring-4 focus:ring-slate-500/10 text-slate-700"
+            >
+              <svg
+                className="w-4 h-4 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                />
+              </svg>
+              Reset Filters
+            </Button>
+          </div>
+        </div>
       </div>
     </div>
   );
 
   return (
-    <div className="overflow-hidden bg-white border shadow-xl rounded-2xl shadow-slate-200/50 border-slate-200/50">
+    <div className="overflow-hidden border shadow-xl rounded-2xl shadow-slate-200/50 border-slate-200/50">
       {header}
 
       <UpdateUserDialog

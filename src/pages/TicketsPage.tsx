@@ -240,7 +240,7 @@ const TicketsPage = () => {
 
   return (
     <PageTemplate>
-      <div className="w-full h-full bg-gradient-to-br from-slate-50 to-white">
+      <div className="w-full h-full bg-[#EEE]">
         {/* Header Section */}
         <div className="relative p-6 mb-8 overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
           <div className="absolute inset-0 bg-black/10"></div>
@@ -284,14 +284,14 @@ const TicketsPage = () => {
           <TabView
             pt={{
               panelContainer: {
-                className: `${scrollbarTheme} h-[calc(100vh-280px)] overflow-auto w-full bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-xl`,
+                className: `${scrollbarTheme} h-[67vh] overflow-auto w-full bg-[#EEE]`,
               },
               nav: {
                 className:
                   "w-full bg-transparent border-b border-slate-200/50 px-6 pt-6",
               },
               tab: {
-                className: "mx-1 ",
+                className: "mx-1",
               },
               navContent: {
                 className: "flex gap-2",
