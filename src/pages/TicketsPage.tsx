@@ -17,6 +17,17 @@ import SearchButton from "../components/SearchButton";
 import SentTicketsButton from "../components/SentTicketsButton";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
 
+const TabHeader = ({ label, count }: { label: string; count?: number }) => (
+  <div className="flex items-center gap-2">
+    <span>{label}</span>
+    {count && count > 0 && (
+      <span className="px-2 py-0.5 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">
+        {count}
+      </span>
+    )}
+  </div>
+);
+
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
   const { user } = useUserDataStore();
@@ -146,14 +157,7 @@ const TicketsPage = () => {
   const tabs: TicketsPageTabItems[] = [
     {
       icon: PrimeIcons.PLUS,
-      header: (
-        <div className="flex items-center">
-          <p>
-            {newTicketsData?.data.count > 0 && `${newTicketsData?.data.count}`}{" "}
-            New
-          </p>
-        </div>
-      ),
+      header: <TabHeader label="New" count={newTicketsData?.data.count} />,
       body:
         newTicketsData?.data.count > 0 ? (
           <TicketsTable tickets={newTicketsData?.data.tickets} />
@@ -164,13 +168,10 @@ const TicketsPage = () => {
     {
       icon: PrimeIcons.CHECK,
       header: (
-        <div className="flex items-center">
-          <p>
-            {acknowledgeTicketsData?.data.count > 0 &&
-              `${acknowledgeTicketsData?.data.count} - `}{" "}
-            Acknowledged
-          </p>
-        </div>
+        <TabHeader
+          label="Acknowledged"
+          count={acknowledgeTicketsData?.data.count}
+        />
       ),
       body:
         acknowledgeTicketsData?.data.count > 0 ? (
@@ -182,15 +183,7 @@ const TicketsPage = () => {
     {
       icon: PrimeIcons.USER_PLUS,
       header: (
-        <div className="flex items-center">
-          <p>
-            Assigned
-            <span className="text-slate-100">
-              {assignedTickets?.data.count > 0 &&
-                ` - ${assignedTickets?.data.count}`}
-            </span>
-          </p>
-        </div>
+        <TabHeader label="Assigned" count={assignedTickets?.data.count} />
       ),
       body:
         assignedTickets?.data.count > 0 ? (
@@ -202,15 +195,7 @@ const TicketsPage = () => {
     {
       icon: PrimeIcons.USER_PLUS,
       header: (
-        <div className="flex items-center">
-          <p>
-            Escalated
-            <span className="text-slate-100">
-              {escalatedTickets?.data.count > 0 &&
-                ` - ${escalatedTickets?.data.count}`}
-            </span>
-          </p>
-        </div>
+        <TabHeader label="Escalated" count={escalatedTickets?.data.count} />
       ),
       body:
         escalatedTickets?.data.count > 0 ? (
@@ -221,17 +206,7 @@ const TicketsPage = () => {
     },
     {
       icon: PrimeIcons.PAUSE,
-      header: (
-        <div className="flex items-center">
-          <p>
-            On-hold
-            <span className="text-slate-100">
-              {onHoldTickets?.data.count > 0 &&
-                ` - ${onHoldTickets?.data.count}`}
-            </span>
-          </p>
-        </div>
-      ),
+      header: <TabHeader label="On-Hold" count={onHoldTickets?.data.count} />,
       body:
         onHoldTickets?.data.count > 0 ? (
           <TicketsTable tickets={onHoldTickets?.data.tickets} />
@@ -242,15 +217,7 @@ const TicketsPage = () => {
     {
       icon: PrimeIcons.CHECK_CIRCLE,
       header: (
-        <div className="flex items-center">
-          <p>
-            Resolved
-            <span className="text-slate-100">
-              {resolvedTickets?.data.count > 0 &&
-                ` - ${resolvedTickets?.data.count}`}
-            </span>
-          </p>
-        </div>
+        <TabHeader label="Resolved" count={resolvedTickets?.data.count} />
       ),
       body:
         resolvedTickets?.data.count > 0 ? (
@@ -261,17 +228,7 @@ const TicketsPage = () => {
     },
     {
       icon: PrimeIcons.CHECK_CIRCLE,
-      header: (
-        <div className="flex items-center">
-          <p>
-            Closed
-            <span className="text-slate-100">
-              {closedTickets?.data.count > 0 &&
-                ` - ${closedTickets?.data.count}`}
-            </span>
-          </p>
-        </div>
-      ),
+      header: <TabHeader label="Closed" count={closedTickets?.data.count} />,
       body:
         closedTickets?.data.count > 0 ? (
           <TicketsTable tickets={closedTickets?.data.tickets} />
