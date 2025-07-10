@@ -240,43 +240,81 @@ const TicketsPage = () => {
 
   return (
     <PageTemplate>
-      <div className="w-full h-full p-4 bg-inherit">
-        <div className="flex items-center justify-between mb-10">
-          <h4
-            className={` text-lg text-blue-600 font-semibold ${
-              !isExpanded && "ms-14"
-            } `}
-          >
-            Tickets
-          </h4>
-          <div className="flex gap-2">
-            <SearchButton />
-            <SentTicketsButton />
-            <InboxButton />
-            <NewTicketButton refetchAll={refetchAll} />
+      <div className="w-full h-full bg-gradient-to-br from-slate-50 to-white">
+        {/* Header Section */}
+        <div className="relative p-6 mb-8 overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative z-10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm">
+                  <i className={`${PrimeIcons.TICKET} text-white text-xl`}></i>
+                </div>
+                <div>
+                  <h1
+                    className={`text-2xl font-bold text-white ${
+                      !isExpanded && "ms-14"
+                    }`}
+                  >
+                    Ticket Management
+                  </h1>
+                  <p className="mt-1 text-sm text-blue-100">
+                    Track, manage, and resolve support tickets
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="flex items-center gap-3">
+                <SearchButton />
+                <SentTicketsButton />
+                <InboxButton />
+                <NewTicketButton refetchAll={refetchAll} />
+              </div>
+            </div>
           </div>
+
+          {/* Decorative Elements */}
+          <div className="absolute w-24 h-24 rounded-full -top-4 -right-4 bg-white/5 blur-xl"></div>
+          <div className="absolute w-32 h-32 rounded-full -bottom-8 -left-8 bg-white/5 blur-2xl"></div>
         </div>
 
-        <TabView
-          pt={{
-            panelContainer: {
-              className: `${scrollbarTheme} h-[73vh] overflow-auto w-full bg-inherit`,
-            },
-            nav: { className: "w-full bg-inherit" },
-            tab: { className: "w-full bg-inherit" },
-          }}
-        >
-          {tabs.map((tab, index) => (
-            <TabPanel
-              key={index}
-              pt={{ headerAction: { className: "bg-inherit" } }}
-              header={tab.header}
-              headerClassName="text-xs"
-            >
-              {tab.body}
-            </TabPanel>
-          ))}
-        </TabView>
+        {/* Content Section */}
+        <div className="px-6 pb-6">
+          <TabView
+            pt={{
+              panelContainer: {
+                className: `${scrollbarTheme} h-[calc(100vh-280px)] overflow-auto w-full bg-white/80 backdrop-blur-sm rounded-2xl border border-slate-200/50 shadow-xl`,
+              },
+              nav: {
+                className:
+                  "w-full bg-transparent border-b border-slate-200/50 px-6 pt-6",
+              },
+              tab: {
+                className: "mx-1 ",
+              },
+              navContent: {
+                className: "flex gap-2",
+              },
+            }}
+          >
+            {tabs.map((tab, index) => (
+              <TabPanel
+                key={index}
+                pt={{
+                  headerAction: {
+                    className:
+                      "px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-slate-100/80 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg",
+                  },
+                }}
+                header={tab.header}
+                headerClassName="text-sm font-medium"
+              >
+                <div className="animate-fadeIn">{tab.body}</div>
+              </TabPanel>
+            ))}
+          </TabView>
+        </div>
       </div>
     </PageTemplate>
   );
