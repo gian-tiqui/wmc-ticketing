@@ -4,7 +4,6 @@ import { useState } from "react";
 import { Query } from "../types/types";
 import { getDepartments } from "../@utils/services/departmentService";
 import DepartmentsTable from "../components/DepartmentsTable";
-import DepartmentsHeader from "../components/DepartmentsHeader";
 
 const DepartmentsPage = () => {
   const [query] = useState<Query>({ search: "", limit: 100 });
@@ -21,7 +20,6 @@ const DepartmentsPage = () => {
 
   return (
     <PageTemplate>
-      <DepartmentsHeader refetch={refetch} />
       <DepartmentsTable
         refetch={refetch}
         departments={departmentsData}
