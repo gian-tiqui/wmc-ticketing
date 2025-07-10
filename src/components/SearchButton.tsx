@@ -13,18 +13,22 @@ const SearchButton = () => {
         visible={searchDialogVisible}
         setVisible={setSearchDialogVisible}
       />
+
+      {/* Desktop Version */}
       <Button
-        className="hidden h-8 gap-2 text-xs bg-blue-600 md:flex hover:border-blue-500 hover:border"
-        icon={`${PrimeIcons.SEARCH} text-xs`}
+        className="items-center hidden gap-2 px-4 py-2 text-sm font-medium text-white transition-all duration-200 border shadow-lg md:flex bg-white/20 hover:bg-white/30 border-white/30 hover:border-white/50 rounded-xl backdrop-blur-sm hover:shadow-xl"
+        icon={`${PrimeIcons.SEARCH} text-sm`}
         onClick={() => setSearchDialogVisible(true)}
       >
         Search
       </Button>
+
+      {/* Mobile Version */}
       <Button
-        className="justify-center bg-blue-600 md:hidden w-9 hover:border-blue-500 h-9 hover:border"
-        icon={`${PrimeIcons.SEARCH}`}
+        className="flex items-center justify-center w-10 h-10 text-white transition-all duration-200 border shadow-lg md:hidden bg-white/20 hover:bg-white/30 border-white/30 hover:border-white/50 rounded-xl backdrop-blur-sm hover:shadow-xl"
+        icon={`${PrimeIcons.SEARCH} text-sm`}
         onClick={() => setSearchDialogVisible(true)}
-      ></Button>
+      />
     </>
   );
 };

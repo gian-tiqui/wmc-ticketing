@@ -91,13 +91,13 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
     </div>
   );
 
-  const titleTemplate = (rowData: Ticket) => (
-    <div className="max-w-xs">
-      <div className="font-semibold text-gray-800 truncate">
-        {rowData.title}
-      </div>
-    </div>
-  );
+  // const titleTemplate = (rowData: Ticket) => (
+  //   <div className="max-w-xs">
+  //     <div className="font-semibold text-gray-800 truncate">
+  //       {rowData.title}
+  //     </div>
+  //   </div>
+  // );
 
   const categoryTemplate = (rowData: Ticket) => (
     <div className="inline-flex items-center px-3 py-1 text-xs font-medium text-blue-800 bg-blue-100 rounded-full">
@@ -243,14 +243,11 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
             header="Title"
             field="title"
             body={(rowData) => (
-              <div className="flex-1 max-w-0">
-                <div
-                  className="pr-2 truncate transition-colors cursor-pointer hover:text-blue-600"
-                  title={rowData.title}
-                  onClick={() => titleTemplate(rowData)}
-                >
-                  {rowData.title}
-                </div>
+              <div
+                className="pr-2 truncate cursor-pointer hover:text-blue-600"
+                title={rowData.title}
+              >
+                {rowData.title}
               </div>
             )}
             filterPlaceholder="Search..."

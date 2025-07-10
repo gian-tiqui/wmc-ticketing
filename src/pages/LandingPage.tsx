@@ -96,8 +96,8 @@ const LandingPage = () => {
 
   const stats = [
     { number: "99.9%", label: "Uptime", icon: CheckCircle },
-    { number: "24/7", label: "Support", icon: Headphones },
-    { number: "500+", label: "Employees", icon: Users },
+    { number: "8AM–5PM", label: "Support", icon: Headphones },
+    { number: "150+", label: "Employees", icon: Users },
     { number: "10k+", label: "Tickets Resolved", icon: Star },
   ];
 
