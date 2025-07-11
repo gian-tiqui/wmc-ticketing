@@ -38,7 +38,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   const toastRef = useRef<Toast>(null);
 
   const [statusId, setStatusId] = useState<number>(ticket.status.id);
-  const [selectedUser, setSelectedUser] = useState<User>();
+  const [selectedUser, setSelectedUser] = useState<
+    User & { fullName: string }
+  >();
   const [selectedCategory, setSelectedCategory] = useState<Category>();
   const [selectedDepartment, setSelectedDepartment] = useState<Department>();
   const [closingReason, setClosingReason] = useState<string>();
