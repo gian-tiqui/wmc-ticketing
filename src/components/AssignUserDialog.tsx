@@ -13,8 +13,10 @@ interface Props {
   setVisible: Dispatch<SetStateAction<boolean>>;
   setStatusId: Dispatch<SetStateAction<number>>;
   ticket: Ticket;
-  selectedUser: User | undefined;
-  setSelectedUser: Dispatch<SetStateAction<User | undefined>>;
+  selectedUser: (User & { fullName: string }) | undefined;
+  setSelectedUser: Dispatch<
+    SetStateAction<(User & { fullName: string }) | undefined>
+  >;
 }
 
 const AssignUserDialog: React.FC<Props> = ({
