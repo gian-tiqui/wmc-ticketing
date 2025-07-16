@@ -31,7 +31,11 @@ const TabHeader = ({ label, count }: { label: string; count?: number }) => (
 const TicketsPage = () => {
   const { isExpanded } = useCrmSidebarStore();
   const { user } = useUserDataStore();
-  const [query] = useState<Query>({ search: "", deptId: user?.deptId });
+  const [query] = useState<Query>({
+    search: "",
+    deptId: user?.deptId,
+    limit: 500,
+  });
   const { data: newTicketsData, refetch: refetchNewTickets } = useQuery({
     queryKey: [
       `new-tickets-${JSON.stringify({ ...query, statusId: TicketStatus.NEW })}`,
