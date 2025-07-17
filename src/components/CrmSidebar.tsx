@@ -19,11 +19,11 @@ const CrmSidebar: React.FC<Props> = ({ children }) => {
     <PageTemplate>
       <div className="relative flex bg-inherit">
         {isExpanded === false && (
-          <div className="absolute z-10 top-4 left-4">
+          <div className="absolute z-50 top-4 left-4">
             <CrmAsideButtonToggler />
           </div>
         )}
-        <div className="absolute z-10 md:relative">
+        <div className="absolute z-50 md:relative">
           {isExpanded && <CrmAside />}
         </div>
         <main className="w-full">{children}</main>

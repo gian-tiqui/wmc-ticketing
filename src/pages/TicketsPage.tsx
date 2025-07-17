@@ -244,61 +244,66 @@ const TicketsPage = () => {
 
   return (
     <PageTemplate>
-      <div className="w-full h-full bg-[#EEE]">
+      <div className="w-full min-h-screen bg-[#EEE]">
         {/* Header Section */}
-        <div className="relative p-6 mb-8 overflow-hidden bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
+        <div className="relative p-3 mb-4 overflow-hidden sm:p-4 lg:p-6 sm:mb-6 lg:mb-8 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600">
           <div className="absolute inset-0 bg-black/10"></div>
           <div className="relative z-10">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm">
-                  <i className={`${PrimeIcons.TICKET} text-white text-xl`}></i>
+            <div className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:items-center lg:justify-between">
+              {/* Left Side - Title and Icon */}
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/20 backdrop-blur-sm">
+                  <i
+                    className={`${PrimeIcons.TICKET} text-white text-lg sm:text-xl`}
+                  ></i>
                 </div>
                 <div>
                   <h1
-                    className={`text-2xl font-bold text-white ${
-                      !isExpanded && "ms-14"
+                    className={`text-xl sm:text-2xl font-bold text-white ${
+                      !isExpanded && "ms-0 sm:ms-14"
                     }`}
                   >
                     Ticket Management
                   </h1>
-                  <p className="mt-1 text-sm text-blue-100">
+                  <p className="mt-1 text-xs text-blue-100 sm:text-sm">
                     Track, manage, and resolve support tickets
                   </p>
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex items-center gap-3">
-                <SearchButton />
-                <SentTicketsButton />
-                <InboxButton />
-                <NewTicketButton refetchAll={refetchAll} />
+              {/* Right Side - Action Buttons */}
+              <div className="flex items-center gap-2 overflow-x-auto sm:gap-3">
+                <div className="flex items-center gap-2 sm:gap-3 min-w-max">
+                  <SearchButton />
+                  <SentTicketsButton />
+                  <InboxButton />
+                  <NewTicketButton refetchAll={refetchAll} />
+                </div>
               </div>
             </div>
           </div>
 
           {/* Decorative Elements */}
-          <div className="absolute w-24 h-24 rounded-full -top-4 -right-4 bg-white/5 blur-xl"></div>
-          <div className="absolute w-32 h-32 rounded-full -bottom-8 -left-8 bg-white/5 blur-2xl"></div>
+          <div className="absolute w-16 h-16 rounded-full sm:w-24 sm:h-24 -top-4 -right-4 bg-white/5 blur-xl"></div>
+          <div className="absolute w-20 h-20 rounded-full sm:w-32 sm:h-32 -bottom-8 -left-8 bg-white/5 blur-2xl"></div>
         </div>
 
         {/* Content Section */}
-        <div className="px-6 pb-6">
+        <div className="px-3 pb-3 sm:px-4 lg:px-6 sm:pb-4 lg:pb-6">
           <TabView
             pt={{
               panelContainer: {
-                className: `${scrollbarTheme} h-[67vh] overflow-auto w-full bg-[#EEE]`,
+                className: `${scrollbarTheme} h-[calc(100vh-200px)] sm:h-[calc(100vh-220px)] lg:h-[67vh] overflow-auto w-full bg-[#EEE]`,
               },
               nav: {
                 className:
-                  "w-full bg-transparent border-b border-slate-200/50 px-6 pt-6",
+                  "w-full bg-transparent border-b border-slate-200/50 px-2 sm:px-4 lg:px-6 pt-3 sm:pt-4 lg:pt-6",
               },
               tab: {
-                className: "mx-1",
+                className: "mx-0.5 sm:mx-1",
               },
               navContent: {
-                className: "flex gap-2",
+                className: "flex gap-1 sm:gap-2 overflow-x-auto pb-2",
               },
             }}
           >
@@ -308,11 +313,11 @@ const TicketsPage = () => {
                 pt={{
                   headerAction: {
                     className:
-                      "px-4 py-3 rounded-xl font-medium text-sm transition-all duration-200 hover:bg-slate-100/80 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg",
+                      "px-2 sm:px-3 lg:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm transition-all duration-200 hover:bg-slate-100/80 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg whitespace-nowrap",
                   },
                 }}
                 header={tab.header}
-                headerClassName="text-sm font-medium"
+                headerClassName="text-xs sm:text-sm font-medium"
               >
                 <div className="animate-fadeIn">{tab.body}</div>
               </TabPanel>
