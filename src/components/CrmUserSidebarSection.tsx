@@ -7,6 +7,7 @@ import useSelectedButtonStore from "../@utils/store/selectedButton";
 import useUserDataStore from "../@utils/store/userDataStore";
 import isAuthorized from "../@utils/functions/isAuthorized";
 import { useEffect, useMemo } from "react";
+import CrmAsideButtonToggler from "./CrmAsideButtonToggler";
 
 const CrmUserSidebarSection = () => {
   const navigate = useNavigate();
@@ -122,11 +123,12 @@ const CrmUserSidebarSection = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.2 }}
-          className="px-4 py-3 border-b border-gray-100"
+          className="flex justify-between px-4 py-3 border-b border-gray-100"
         >
           <small className="text-xs font-semibold tracking-wide text-gray-700 uppercase">
             Navigation
           </small>
+          <CrmAsideButtonToggler />
         </motion.div>
 
         {/* Scrollable Navigation Buttons */}

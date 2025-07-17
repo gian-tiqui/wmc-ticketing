@@ -167,7 +167,7 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     return (
       <button
         type="button"
-        className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all duration-200 ${
+        className={`flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 ${
           item.disabled
             ? "bg-gray-300 text-white cursor-not-allowed"
             : isActive
@@ -184,51 +184,105 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   };
 
   const customizedContent = (item: StatusMarker) => (
-    <div className="text-xs font-medium text-center">{item.name}</div>
+    <div className="text-xs font-medium text-center sm:text-sm">
+      <span className="hidden sm:inline">{item.name}</span>
+      <span className="sm:hidden">{item.name.slice(0, 3)}</span>
+    </div>
   );
 
   return (
-    <div className="max-w-4xl p-6 mx-auto">
+    <div className="w-full max-w-4xl p-3 mx-auto sm:p-4 md:p-6">
       <CustomToast ref={toastRef} />
 
       {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-lg bg-blue-50">
-            <i className={`${PrimeIcons.FILTER} text-blue-600 text-lg`}></i>
+      <div className="mb-6 sm:mb-8">
+        <div className="flex items-center gap-2 mb-2 sm:gap-3">
+          <div className="p-1.5 sm:p-2 rounded-lg bg-blue-50">
+            <i
+              className={`${PrimeIcons.FILTER} text-blue-600 text-base sm:text-lg`}
+            ></i>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900">Ticket Status</h2>
+          <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
+            Ticket Status
+          </h2>
         </div>
-        <p className="text-sm text-gray-600">
+        <p className="text-xs text-gray-600 sm:text-sm">
           Manage the lifecycle of the current ticket.
         </p>
       </div>
 
       {/* Status Card */}
-      <div className="overflow-hidden bg-white border border-gray-200 shadow-sm rounded-xl">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
+      <div className="overflow-hidden bg-white border border-gray-200 rounded-lg shadow-sm sm:rounded-xl">
+        <div className="flex flex-col items-start justify-between gap-3 px-3 py-3 border-b border-gray-200 sm:flex-row sm:items-center sm:px-4 md:px-6 sm:py-4 bg-gradient-to-r from-gray-50 to-gray-100">
           <div className="flex items-center gap-2">
-            <i className={`${PrimeIcons.TICKET} text-gray-600`}></i>
-            <h3 className="text-lg font-semibold text-gray-900">
+            <i
+              className={`${PrimeIcons.TICKET} text-gray-600 text-sm sm:text-base`}
+            ></i>
+            <h3 className="text-base font-semibold text-gray-900 sm:text-lg">
               Status Tracker
             </h3>
           </div>
           <Chip
-            className="font-medium text-white bg-blue-600"
+            className="text-xs font-medium text-white bg-blue-600 sm:text-sm"
             label={`Current: ${ticket.status.type}`}
+            pt={{
+              root: {
+                className: "px-2 py-1 sm:px-3 sm:py-1.5",
+              },
+            }}
           />
         </div>
 
-        <div className="p-6 space-y-4">
-          <Timeline
-            value={markers}
-            layout="horizontal"
-            marker={customizedMarker}
-            content={customizedContent}
-            className="w-full"
-          />
+        <div className="p-3 space-y-3 sm:p-4 md:p-6 sm:space-y-4">
+          {/* Mobile Timeline - Vertical on small screens */}
+          <div className="block sm:hidden">
+            <div className="space-y-3">
+              {markers.map((marker, index) => (
+                <div key={index} className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all duration-200 ${
+                      marker.disabled
+                        ? "bg-gray-300 text-white cursor-not-allowed"
+                        : marker.name === ticket.status.type
+                        ? "bg-amber-500 text-white shadow-md"
+                        : "bg-blue-600 text-white hover:bg-blue-700"
+                    }`}
+                    disabled={marker.disabled}
+                    onClick={marker.onClick}
+                    title={marker.name}
+                  >
+                    {marker.name[0]}
+                  </button>
+                  <span className="text-sm font-medium text-gray-700">
+                    {marker.name}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
 
-          <div className="flex justify-end gap-2 pt-4 border-t border-gray-100">
+          {/* Desktop Timeline - Horizontal on sm+ screens */}
+          <div className="hidden sm:block">
+            <Timeline
+              value={markers}
+              layout="horizontal"
+              marker={customizedMarker}
+              content={customizedContent}
+              className="w-full"
+              pt={{
+                root: {
+                  className: "w-full",
+                },
+                content: {
+                  className: "text-xs sm:text-sm",
+                },
+              }}
+            />
+          </div>
+
+          {/* Pause Button */}
+          <div className="flex justify-end pt-3 border-t border-gray-100 sm:pt-4">
             <Button
               onClick={() => setPauseReasonDialogVisible(true)}
               icon={PrimeIcons.PAUSE}
@@ -240,9 +294,15 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
                   TicketStatus.CLOSED_RESOLVED,
                 ].includes(statusId) || isUpdating
               }
-              className="px-4 py-2 text-white transition-all bg-blue-600 rounded-lg hover:bg-blue-700"
+              className="px-3 py-2 text-xs text-white transition-all bg-blue-600 rounded-lg sm:px-4 sm:text-sm hover:bg-blue-700"
+              pt={{
+                root: {
+                  className: "flex items-center gap-2",
+                },
+              }}
             >
-              Pause Ticket
+              <span className="hidden sm:inline">Pause Ticket</span>
+              <span className="sm:hidden">Pause</span>
             </Button>
           </div>
         </div>
