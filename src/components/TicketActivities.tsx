@@ -205,44 +205,6 @@ const TicketActivities: React.FC<Props> = ({ ticket }) => {
           </div>
         </div>
       </div>
-
-      {/* Custom Styles */}
-      <style>{`
-        .custom-timeline :global(.p-timeline-event-connector) {
-          background: linear-gradient(
-            90deg,
-            #e5e7eb 0%,
-            #d1d5db 50%,
-            #e5e7eb 100%
-          );
-          height: 3px;
-          border-radius: 2px;
-        }
-
-        .custom-timeline
-          :global(
-            .p-timeline-horizontal
-              .p-timeline-event:not(:last-child)
-              .p-timeline-event-connector
-          ) {
-          width: 100%;
-        }
-
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        .custom-timeline :global(.p-timeline-event) {
-          animation: fadeInUp 0.6s ease-out;
-        }
-      `}</style>
     </div>
   );
 };
