@@ -108,6 +108,7 @@ const LandingPage = () => {
   return (
     <div className="min-h-screen overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
       {/* Background Animation */}
+
       <div className="fixed inset-0 pointer-events-none">
         <div
           className="absolute rounded-full top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 blur-3xl"
