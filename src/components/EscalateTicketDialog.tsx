@@ -1,5 +1,12 @@
 import { Dispatch, SetStateAction, useState, useMemo } from "react";
-import { Category, Department, Query, Ticket, User } from "../types/types";
+import {
+  Category,
+  Department,
+  Query,
+  Ticket,
+  User,
+  UserData,
+} from "../types/types";
 import { useQuery } from "@tanstack/react-query";
 import {
   getDepartments,
@@ -9,13 +16,17 @@ import {
 import { Dropdown } from "primereact/dropdown";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
-import { TicketStatus } from "../@utils/enums/enum";
 import { Dialog } from "primereact/dialog";
+
+interface EscalationData {
+  assignedUserId: number;
+  categoryId: number;
+  deptId: number;
+}
 
 interface Props {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
-  setStatusId: Dispatch<SetStateAction<number>>;
   ticket: Ticket;
   selectedUser: (User & { fullName: string }) | undefined;
   setSelectedUser: Dispatch<
@@ -25,6 +36,8 @@ interface Props {
   setSelectedCategory: Dispatch<SetStateAction<Category | undefined>>;
   selectedDepartment: Department | undefined;
   setSelectedDepartment: Dispatch<SetStateAction<Department | undefined>>;
+  onEscalate: (data: EscalationData) => void;
+  isLoading?: boolean;
 }
 
 const EscalateTicketDialog: React.FC<Props> = ({
@@ -36,7 +49,9 @@ const EscalateTicketDialog: React.FC<Props> = ({
   setSelectedDepartment,
   selectedUser,
   setSelectedUser,
-  setStatusId,
+  ticket,
+  onEscalate,
+  isLoading = false,
 }) => {
   const [query] = useState<Query>({ search: "", limit: 10 });
 
@@ -69,35 +84,49 @@ const EscalateTicketDialog: React.FC<Props> = ({
     refetchOnWindowFocus: false,
   });
 
+  const memoizedDepartments = useMemo(
+    () => departmentsData?.data?.departments || [],
+    [departmentsData]
+  );
+
   const memoizedCategories = useMemo(
-    () => departmentCategoriesData?.data.categories || [],
+    () => departmentCategoriesData?.data?.categories || [],
     [departmentCategoriesData]
   );
 
-  const memoizedUsers = useMemo(
-    () => departmentUsers?.data.users || [],
-    [departmentUsers]
-  );
+  const memoizedUsers = useMemo(() => {
+    const users = departmentUsers?.data?.users || [];
+    return users.map((user: UserData) => ({
+      ...user,
+      fullName: `${user.firstName} ${user.lastName}`,
+    }));
+  }, [departmentUsers]);
 
   const handleEscalate = () => {
     if (selectedDepartment && selectedCategory && selectedUser) {
-      setStatusId(TicketStatus.ESCALATED);
-      setVisible(false);
+      onEscalate({
+        assignedUserId: selectedUser.id,
+        categoryId: selectedCategory.id,
+        deptId: selectedDepartment.id,
+      });
     }
   };
 
   // Reset selections when dialog closes
   const handleDialogClose = () => {
+    if (isLoading) return; // Prevent closing while loading
     setVisible(false);
-    setSelectedDepartment(undefined);
-    setSelectedCategory(undefined);
-    setSelectedUser(undefined);
+    // Don't reset selections here - let parent component handle it
   };
+
+  const isFormValid = selectedDepartment && selectedCategory && selectedUser;
 
   return (
     <Dialog
       visible={visible}
       onHide={handleDialogClose}
+      closable={!isLoading}
+      closeOnEscape={!isLoading}
       className="w-[95vw] max-w-2xl"
       pt={{
         root: {
@@ -112,8 +141,9 @@ const EscalateTicketDialog: React.FC<Props> = ({
             "bg-gradient-to-b from-white to-slate-50/30 rounded-b-2xl p-0 overflow-auto",
         },
         closeButton: {
-          className:
-            "w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 border-0 transition-all duration-200 shadow-sm hover:shadow-md",
+          className: `w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 border-0 transition-all duration-200 shadow-sm hover:shadow-md ${
+            isLoading ? "opacity-50 cursor-not-allowed" : ""
+          }`,
         },
         mask: {
           className: "backdrop-blur-sm bg-black/10",
@@ -126,16 +156,24 @@ const EscalateTicketDialog: React.FC<Props> = ({
           </div>
           <div>
             <h2 className="text-xl font-semibold text-slate-900">
-              Escalate Ticket
+              Escalate Ticket #{ticket.id}
             </h2>
             <p className="text-sm text-slate-600 mt-0.5">
               Transfer to specialized department
             </p>
           </div>
+          {isLoading && (
+            <div className="ml-auto">
+              <div className="flex items-center gap-2 text-orange-600">
+                <div className="w-4 h-4 border-2 border-orange-600 rounded-full border-t-transparent animate-spin"></div>
+                <span className="text-sm font-medium">Processing...</span>
+              </div>
+            </div>
+          )}
         </div>
       }
     >
-      <div className="p-6 space-y-6">
+      <div className={`p-6 space-y-6 ${isLoading ? "opacity-50" : ""}`}>
         {/* Progress Indicator */}
         <div className="flex items-center gap-2 mb-6">
           <div
@@ -164,6 +202,23 @@ const EscalateTicketDialog: React.FC<Props> = ({
               : "0/3"}
           </span>
         </div>
+
+        {/* Current Assignment Info */}
+        {ticket.assignedUser && (
+          <div className="p-3 border border-blue-200 rounded-lg bg-blue-50">
+            <div className="flex items-center gap-2 text-sm text-blue-700">
+              <i className={`${PrimeIcons.INFO_CIRCLE} text-blue-500`}></i>
+              <span className="font-medium">Current Assignment</span>
+            </div>
+            <p className="mt-1 text-xs text-blue-600">
+              Currently assigned to{" "}
+              <span className="font-medium">
+                {ticket.assignedUser.firstName} {ticket.assignedUser.lastName}
+              </span>{" "}
+              in {ticket.department?.name || "Unknown Department"}
+            </p>
+          </div>
+        )}
 
         {/* Department Selection */}
         <div className="space-y-3">
@@ -219,7 +274,7 @@ const EscalateTicketDialog: React.FC<Props> = ({
                     "p-3 rounded-lg hover:bg-blue-50 focus:bg-blue-50 transition-all duration-150 text-slate-700 font-medium",
                 },
               }}
-              options={departmentsData}
+              options={memoizedDepartments}
               value={selectedDepartment}
               optionLabel="name"
               onChange={(e) => {
@@ -230,6 +285,7 @@ const EscalateTicketDialog: React.FC<Props> = ({
               filter
               placeholder="Select a department"
               className="w-full h-14"
+              disabled={isLoading}
             />
             {selectedDepartment && (
               <div className="absolute transform -translate-y-1/2 top-1/2 right-12">
@@ -328,7 +384,11 @@ const EscalateTicketDialog: React.FC<Props> = ({
                 setSelectedUser(undefined);
               }}
               filter
-              disabled={!selectedDepartment || memoizedCategories.length === 0}
+              disabled={
+                !selectedDepartment ||
+                memoizedCategories.length === 0 ||
+                isLoading
+              }
               placeholder={
                 !selectedDepartment
                   ? "Select department first"
@@ -433,7 +493,9 @@ const EscalateTicketDialog: React.FC<Props> = ({
                   ? "Complete previous steps first"
                   : "Assign to personnel"
               }
-              disabled={!selectedDepartment || memoizedUsers.length === 0}
+              disabled={
+                !selectedDepartment || memoizedUsers.length === 0 || isLoading
+              }
             />
             {selectedUser && (
               <div className="absolute transform -translate-y-1/2 top-1/2 right-12">
@@ -447,21 +509,24 @@ const EscalateTicketDialog: React.FC<Props> = ({
         <div className="pt-4 border-t border-slate-200/50">
           <Button
             className={`w-full h-12 rounded-xl gap-2 font-medium transition-all duration-200 ${
-              !selectedDepartment || !selectedCategory || !selectedUser
+              !isFormValid || isLoading
                 ? "bg-slate-200 text-slate-500 cursor-not-allowed"
                 : "bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
             }`}
-            icon={`${PrimeIcons.ARROW_UP}`}
+            icon={isLoading ? undefined : `${PrimeIcons.ARROW_UP}`}
             iconPos="right"
             onClick={handleEscalate}
-            disabled={!selectedDepartment || !selectedCategory || !selectedUser}
+            disabled={!isFormValid || isLoading}
+            loading={isLoading}
           >
-            {!selectedDepartment || !selectedCategory || !selectedUser
+            {isLoading
+              ? "Escalating..."
+              : !isFormValid
               ? "Complete all fields to escalate"
               : "Escalate Ticket"}
           </Button>
 
-          {selectedDepartment && selectedCategory && selectedUser && (
+          {isFormValid && !isLoading && (
             <div className="p-3 mt-3 border border-green-200 rounded-lg bg-green-50">
               <div className="flex items-center gap-2 text-sm text-green-700">
                 <i className={`${PrimeIcons.CHECK_CIRCLE} text-green-500`}></i>
