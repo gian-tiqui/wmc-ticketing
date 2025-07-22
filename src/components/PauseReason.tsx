@@ -2,15 +2,17 @@ import { PrimeIcons } from "primereact/api";
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { InputTextarea } from "primereact/inputtextarea";
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
-import { TicketStatus } from "../@utils/enums/enum";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 interface Props {
-  setPauseReason: Dispatch<SetStateAction<string>>;
-  setStatusId: Dispatch<SetStateAction<number>>;
   visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>;
+  setVisible: React.Dispatch<React.SetStateAction<boolean>>;
+  pauseReason: string;
+  setPauseReason: React.Dispatch<React.SetStateAction<string>>;
+  onPause: (reason: string) => void;
+  isLoading: boolean;
 }
 
 interface FormFields {
@@ -18,20 +20,29 @@ interface FormFields {
 }
 
 const PauseReason: React.FC<Props> = ({
-  setPauseReason,
-  setStatusId,
   visible,
   setVisible,
+  pauseReason,
+  onPause,
+  isLoading,
 }) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormFields>();
+    reset,
+  } = useForm<FormFields>({
+    defaultValues: {
+      pauseReason: pauseReason || "",
+    },
+  });
 
-  const handleCloseTicket = (data: FormFields) => {
-    setPauseReason(data.pauseReason);
-    setStatusId(TicketStatus.ON_HOLD);
+  const onSubmit = (data: FormFields) => {
+    onPause(data.pauseReason);
+  };
+
+  const onHide = () => {
+    reset();
     setVisible(false);
   };
 
@@ -39,39 +50,84 @@ const PauseReason: React.FC<Props> = ({
     <Dialog
       header="Pause Ticket"
       visible={visible}
-      onHide={() => {
-        if (visible) setVisible(false);
-      }}
+      onHide={onHide}
+      className="w-full max-w-md"
+      draggable={false}
       pt={{
         header: {
-          className: "bg-[#EEEEEE] rounded-t-3xl",
+          className: "bg-gray-50 border-b border-gray-200 rounded-t-lg p-4",
         },
         content: {
-          className:
-            "bg-[#EEEEEE] pt-5  scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-300 hover:scrollbar-thumb-gray-400 rounded-b-3xl",
+          className: "bg-gray-50 p-4 rounded-b-lg",
         },
-        closeButton: { className: "bg-white" },
-        root: { className: "shadow-none" },
-        mask: { className: "backdrop-blur" },
+        closeButton: {
+          className: "hover:bg-gray-200",
+        },
       }}
-      className="w-96"
     >
-      <form onSubmit={handleSubmit(handleCloseTicket)}>
-        <h4 className="mb-1 ">Enter your reason here to pause the ticket.</h4>
-        <InputTextarea
-          {...register("pauseReason", { required: true })}
-          className="w-full bg-white border-black h-52"
-        />
-        <span className="text-sm text-red-400">
-          {errors.pauseReason?.message && "This field is required"}
-        </span>
-        <Button
-          className="justify-center w-full h-12 gap-2 mt-2 bg-blue-600"
-          icon={`${PrimeIcons.PAUSE}`}
-          type="submit"
-        >
-          Pause Ticket
-        </Button>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+        <div>
+          <label
+            htmlFor="pauseReason"
+            className="block mb-1 text-sm font-medium text-gray-700"
+          >
+            Reason for pausing
+            <span className="text-red-500">*</span>
+          </label>
+          <InputTextarea
+            id="pauseReason"
+            {...register("pauseReason", {
+              required: "Pause reason is required",
+              minLength: {
+                value: 10,
+                message: "Reason should be at least 10 characters",
+              },
+            })}
+            rows={5}
+            className={`w-full ${errors.pauseReason ? "p-invalid" : ""}`}
+            autoFocus
+            disabled={isLoading}
+            pt={{
+              root: {
+                className: "resize-none",
+              },
+            }}
+          />
+          {errors.pauseReason && (
+            <small className="block mt-1 p-error">
+              {errors.pauseReason.message}
+            </small>
+          )}
+        </div>
+
+        <div className="flex justify-end gap-2">
+          <Button
+            type="button"
+            label="Cancel"
+            icon={PrimeIcons.TIMES}
+            onClick={onHide}
+            severity="secondary"
+            disabled={isLoading}
+            className="px-4 py-2"
+          />
+          <Button
+            type="submit"
+            label={isLoading ? "Pausing..." : "Pause Ticket"}
+            icon={
+              isLoading ? (
+                <ProgressSpinner
+                  style={{ width: "20px", height: "20px" }}
+                  strokeWidth="6"
+                />
+              ) : (
+                PrimeIcons.PAUSE
+              )
+            }
+            severity="warning"
+            loading={isLoading}
+            className="px-4 py-2"
+          />
+        </div>
       </form>
     </Dialog>
   );

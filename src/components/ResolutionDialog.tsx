@@ -1,28 +1,26 @@
 import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { Dialog } from "primereact/dialog";
-import { CustomFile, Ticket } from "../types/types";
+import { CustomFile } from "../types/types";
 import { FileUpload } from "primereact/fileupload";
 import { Button } from "primereact/button";
 import { PrimeIcons } from "primereact/api";
 import { InputTextarea } from "primereact/inputtextarea";
-import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
-import { TicketStatus } from "../@utils/enums/enum";
 import extractOriginalName from "../@utils/functions/extractOriginalName";
 import { Nullable } from "primereact/ts-helpers";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
+import { Calendar } from "primereact/calendar";
 
 interface Props {
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
-  setResolution: Dispatch<SetStateAction<string>>;
-  refetch: (
-    options?: RefetchOptions
-  ) => Promise<QueryObserverResult<Ticket, Error>>;
   files: CustomFile[];
   setFiles: Dispatch<SetStateAction<CustomFile[]>>;
-  setStatusId: Dispatch<SetStateAction<number>>;
   resolutionTime: Nullable<Date>;
   setResolutionTime: Dispatch<SetStateAction<Nullable<Date>>>;
+  resolution: string;
+  setResolution: Dispatch<SetStateAction<string>>;
+  onResolve: (data: { resolution: string; resolutionTime?: string }) => void;
+  isLoading?: boolean;
 }
 
 const ResolutionDialog: React.FC<Props> = ({
@@ -30,34 +28,49 @@ const ResolutionDialog: React.FC<Props> = ({
   setVisible,
   setFiles,
   files,
+  resolutionTime,
+  setResolutionTime,
+  resolution,
   setResolution,
-  setStatusId,
+  onResolve,
+  isLoading = false,
 }) => {
   const fileUploadRef = useRef<FileUpload>(null);
   const [deleteMode, setDeleteMode] = useState<boolean>(false);
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
 
-  const handleResolve = async () => {
-    setIsSubmitting(true);
-    try {
-      setStatusId(TicketStatus.RESOLVED);
-      // Add any additional submit logic here
-    } finally {
-      setIsSubmitting(false);
+  const handleResolve = () => {
+    // Validate resolution text
+    if (!resolution.trim()) {
+      // You might want to show a toast error here
+      return;
     }
+
+    const data: { resolution: string; resolutionTime?: string } = {
+      resolution: resolution.trim(),
+    };
+
+    if (resolutionTime) {
+      data.resolutionTime = new Date(resolutionTime).toISOString();
+    }
+
+    onResolve(data);
+  };
+
+  const handleClose = () => {
+    if (isLoading) return;
+    setVisible(false);
+    setDeleteMode(false);
   };
 
   return (
     <Dialog
       visible={visible}
-      onHide={() => {
-        setVisible(false);
-        setDeleteMode(false);
-      }}
+      onHide={handleClose}
       className="w-[95vw] max-w-2xl"
+      closable={!isLoading}
       pt={{
         root: {
-          className: " border-none shadow-none",
+          className: "border-none shadow-none",
         },
         header: {
           className:
@@ -68,8 +81,10 @@ const ResolutionDialog: React.FC<Props> = ({
             "bg-gradient-to-b from-white to-slate-50/30 rounded-b-2xl p-0 overflow-auto",
         },
         closeButton: {
-          className:
-            "w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 border-0 transition-all duration-200 shadow-sm hover:shadow-md",
+          className: `
+            w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 border-0 transition-all duration-200 shadow-sm hover:shadow-md
+            ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
+          `,
         },
         mask: {
           className: "backdrop-blur-sm",
@@ -104,41 +119,84 @@ const ResolutionDialog: React.FC<Props> = ({
             className={`
               px-6 py-3 rounded-xl font-medium transition-all duration-200 gap-2
               ${
-                isSubmitting
+                isLoading || !resolution.trim()
                   ? "bg-slate-300 text-slate-500 cursor-not-allowed"
                   : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
               }
             `}
-            disabled={isSubmitting}
-            icon={isSubmitting ? PrimeIcons.SPINNER : PrimeIcons.CHECK}
+            disabled={isLoading || !resolution.trim()}
+            icon={isLoading ? PrimeIcons.SPINNER : PrimeIcons.CHECK}
             iconPos="left"
             onClick={handleResolve}
-            loading={isSubmitting}
+            loading={isLoading}
           >
-            {isSubmitting ? "Resolving..." : "Mark as Resolved"}
+            {isLoading ? "Resolving..." : "Mark as Resolved"}
           </Button>
+        </div>
+
+        {/* Resolution Time */}
+        <div className="space-y-4">
+          <div className="flex items-center gap-3">
+            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-green-100 to-green-200">
+              <i
+                className={`${PrimeIcons.CALENDAR} text-green-600 text-sm`}
+              ></i>
+            </div>
+            <h3 className="text-lg font-semibold text-slate-900">
+              Resolution Time
+            </h3>
+          </div>
+
+          <div className="relative">
+            <Calendar
+              value={resolutionTime}
+              onChange={(e) => setResolutionTime(e.value)}
+              showTime
+              hourFormat="12"
+              className="w-full"
+              placeholder="Select resolution time (optional - defaults to now)"
+              disabled={isLoading}
+              pt={{
+                input: {
+                  className:
+                    "w-full p-4 border-2 border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 placeholder:text-slate-400 font-medium text-slate-700",
+                },
+              }}
+            />
+            <div className="absolute text-xs bottom-3 right-3 text-slate-400">
+              <i className={`${PrimeIcons.INFO_CIRCLE} mr-1`}></i>
+              Leave empty to use current time
+            </div>
+          </div>
         </div>
 
         {/* Resolution Details */}
         <div className="space-y-4">
           <div className="flex items-center gap-3">
             <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-200">
-              <i
-                className={`${"pi pi-file-edit"} text-emerald-600 text-sm`}
-              ></i>
+              <i className={`pi pi-file-edit text-emerald-600 text-sm`}></i>
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
-              Resolution Details
+              Resolution Details *
             </h3>
           </div>
 
           <div className="relative">
             <InputTextarea
-              className="w-full min-h-[200px] p-4 border-2 border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm 
-                        focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 resize-none
-                        placeholder:text-slate-400"
+              value={resolution}
+              className={`
+                w-full min-h-[200px] p-4 border-2 rounded-xl bg-white/80 backdrop-blur-sm 
+                transition-all duration-200 resize-none placeholder:text-slate-400 font-medium text-slate-700
+                ${
+                  !resolution.trim() && !isLoading
+                    ? "border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
+                    : "border-slate-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10"
+                }
+                ${isLoading ? "opacity-50 cursor-not-allowed" : ""}
+              `}
               placeholder="Describe the resolution in detail, including steps taken, root cause, and any preventive measures..."
               onChange={(e) => setResolution(e.target.value)}
+              disabled={isLoading}
               pt={{
                 root: {
                   className: "font-medium text-slate-700",
@@ -147,7 +205,7 @@ const ResolutionDialog: React.FC<Props> = ({
             />
             <div className="absolute text-xs bottom-3 right-3 text-slate-400">
               <i className={`${PrimeIcons.INFO_CIRCLE} mr-1`}></i>
-              Be specific and detailed
+              Required field - Be specific and detailed
             </div>
           </div>
         </div>
@@ -161,7 +219,7 @@ const ResolutionDialog: React.FC<Props> = ({
               ></i>
             </div>
             <h3 className="text-lg font-semibold text-slate-900">
-              Service Report
+              Service Report (Optional)
             </h3>
           </div>
 
@@ -171,15 +229,24 @@ const ResolutionDialog: React.FC<Props> = ({
               <FileUpload
                 ref={fileUploadRef}
                 mode="basic"
+                disabled={isLoading}
                 pt={{
                   basicButton: {
-                    className:
-                      "px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white rounded-lg transition-all duration-200 shadow-md hover:shadow-lg font-medium",
+                    className: `
+                      px-4 py-2 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg font-medium
+                      ${
+                        isLoading
+                          ? "bg-slate-300 text-slate-500 cursor-not-allowed"
+                          : "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white"
+                      }
+                    `,
                   },
                 }}
                 accept="application/pdf"
                 chooseLabel="Upload PDF"
                 onSelect={(e) => {
+                  if (isLoading) return;
+
                   setFiles((prevFiles) => {
                     const existingFileNames = new Set(
                       prevFiles.map((file) => file.file.name)
@@ -207,11 +274,14 @@ const ResolutionDialog: React.FC<Props> = ({
             {files.length > 0 && (
               <Button
                 icon={deleteMode ? PrimeIcons.TIMES : PrimeIcons.TRASH}
-                onClick={() => setDeleteMode(!deleteMode)}
+                onClick={() => !isLoading && setDeleteMode(!deleteMode)}
+                disabled={isLoading}
                 className={`
                   w-10 h-10 rounded-lg transition-all duration-200 shadow-sm
                   ${
-                    deleteMode
+                    isLoading
+                      ? "bg-slate-200 text-slate-400 cursor-not-allowed"
+                      : deleteMode
                       ? "bg-slate-200 hover:bg-slate-300 text-slate-600"
                       : "bg-red-500 hover:bg-red-600 text-white hover:shadow-md"
                   }
@@ -225,16 +295,17 @@ const ResolutionDialog: React.FC<Props> = ({
           {/* Files List */}
           <div
             className={`
-            ${scrollbarTheme} 
-            max-h-80 overflow-y-auto space-y-3 p-4 
-            bg-gradient-to-br from-white/60 to-slate-50/40 
-            rounded-xl border border-slate-200/50 backdrop-blur-sm
-            ${
-              files.length === 0
-                ? "flex items-center justify-center min-h-[200px]"
-                : ""
-            }
-          `}
+              ${scrollbarTheme} 
+              max-h-80 overflow-y-auto space-y-3 p-4 
+              bg-gradient-to-br from-white/60 to-slate-50/40 
+              rounded-xl border border-slate-200/50 backdrop-blur-sm
+              ${
+                files.length === 0
+                  ? "flex items-center justify-center min-h-[200px]"
+                  : ""
+              }
+              ${isLoading ? "opacity-50" : ""}
+            `}
           >
             {files.length === 0 ? (
               <div className="space-y-3 text-center">
@@ -255,7 +326,7 @@ const ResolutionDialog: React.FC<Props> = ({
             ) : (
               files.map((file, index) => (
                 <div key={index} className="relative group">
-                  {deleteMode && (
+                  {deleteMode && !isLoading && (
                     <Button
                       icon={PrimeIcons.TIMES}
                       className="absolute z-10 w-8 h-8 p-1 text-white transition-all duration-200 bg-red-500 rounded-full shadow-lg opacity-0 hover:bg-red-600 top-2 right-2 group-hover:opacity-100"
@@ -294,6 +365,20 @@ const ResolutionDialog: React.FC<Props> = ({
             )}
           </div>
         </div>
+
+        {/* Loading Overlay */}
+        {isLoading && (
+          <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-sm rounded-xl">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-8 h-8">
+                <div className="w-full h-full border-4 border-blue-200 rounded-full border-t-blue-600 animate-spin"></div>
+              </div>
+              <p className="text-sm font-medium text-slate-700">
+                Resolving ticket...
+              </p>
+            </div>
+          </div>
+        )}
       </div>
     </Dialog>
   );
