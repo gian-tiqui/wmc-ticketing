@@ -59,7 +59,6 @@ const UpdateDepartmentDialog: React.FC<Props> = ({
 
   useEffect(() => {
     if (data?.data) {
-      console.log(data.data);
       setValue("name", data.data.department.name);
       setValue("code", data.data.department.code);
     }

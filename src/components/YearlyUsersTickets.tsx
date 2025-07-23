@@ -30,10 +30,6 @@ const YearlyUsersTickets = () => {
   });
 
   useEffect(() => {
-    console.log(yearlyTicketsData?.data);
-  }, [yearlyTicketsData]);
-
-  useEffect(() => {
     if (!yearlyTicketsData?.data?.yearlyTicketsData) return;
 
     if (yearlyTicketsData?.data?.yearlyTicketsData.labels.length < 1) {

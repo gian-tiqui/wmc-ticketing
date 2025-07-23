@@ -40,9 +40,6 @@ const Notifications: React.FC<Props> = ({
       (entries) => {
         const entry = entries[0];
         if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          console.log(
-            "🔄 Loading more notifications via intersection observer"
-          );
           onLoadMore();
         }
       },

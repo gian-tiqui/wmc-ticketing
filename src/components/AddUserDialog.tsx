@@ -76,12 +76,6 @@ const AddUserDialog: React.FC<Props> = ({ refetch, visible, setVisible }) => {
     formState: { errors },
   } = useForm<UserFormData>();
 
-  useEffect(() => {
-    if (selectedRoles.length > 0) {
-      console.log(selectedRoles);
-    }
-  }, [selectedRoles]);
-
   const handleCreateUser = (formData: UserFormData) => {
     const payload = {
       ...formData,
