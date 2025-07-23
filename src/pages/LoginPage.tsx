@@ -19,16 +19,10 @@ import wmcLogo from "../assets/wmcLogo.png";
 import CustomToast from "../components/CustomToast";
 import navigateBasedOnRole from "../@utils/functions/navigateBasedOnRole";
 import { Image } from "primereact/image";
-import wmcBuilding from "../assets/bg-removed-wmc.png";
 
 interface FormFields {
   username: string;
   password: string;
-}
-
-interface MousePosition {
-  x: number;
-  y: number;
 }
 
 const LoginPage = () => {
@@ -42,15 +36,10 @@ const LoginPage = () => {
   } = useForm<FormFields>();
   const toastRef = useRef<Toast>(null);
 
-  // Modern UI states
+  // UI states
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
-  const [mousePosition, setMousePosition] = useState<MousePosition>({
-    x: 0,
-    y: 0,
-  });
-  const [animationTime, setAnimationTime] = useState<number>(0);
   const [focusedField, setFocusedField] = useState<string>("");
 
   useEffect(() => {
@@ -61,24 +50,8 @@ const LoginPage = () => {
   }, [navigate, user]);
 
   useEffect(() => {
-    // Initialize modern UI animations
+    // Smooth entrance animation
     setIsLoaded(true);
-    setAnimationTime(Date.now());
-
-    const handleMouseMove = (e: MouseEvent): void => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    const animationInterval = setInterval(() => {
-      setAnimationTime(Date.now());
-    }, 50);
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      clearInterval(animationInterval);
-    };
   }, []);
 
   const handleLogin = async ({ username, password }: FormFields) => {
@@ -131,270 +104,223 @@ const LoginPage = () => {
     }
   };
 
-  // Animation helper
-  const getAnimationStyle = (index: number = 0): React.CSSProperties => {
-    if (!isLoaded) return {};
-
-    return {
-      transform: `translate(${
-        mousePosition.x * (index === 0 ? 0.02 : -0.02)
-      }px, ${mousePosition.y * (index === 0 ? 0.02 : -0.02)}px) scale(${
-        1 + Math.sin(animationTime / (3000 + index * 1000)) * 0.1
-      })`,
-      transition: "transform 0.1s ease-out",
-    };
-  };
-
   return (
     <PageTemplate>
       <CustomToast ref={toastRef} />
 
-      {/* Main container - now properly scrollable */}
-      <div className="h-screen min-h-screen overflow-auto bg-gradient-to-br from-slate-50 via-blue-50 to-cyan-50">
-        {/* Background animation */}
-        <div className="fixed inset-0 pointer-events-none">
+      {/* Main Container - Centered Design */}
+      <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-slate-100 via-blue-50 to-cyan-100">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {/* Floating Geometric Shapes */}
+          <div className="absolute w-32 h-32 rounded-full top-20 left-10 bg-gradient-to-r from-blue-400/10 to-cyan-400/10 blur-xl animate-pulse"></div>
           <div
-            className="absolute rounded-full top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-blue-400/20 to-cyan-400/20 blur-3xl"
-            style={getAnimationStyle(0)}
-          />
+            className="absolute w-24 h-24 rounded-lg top-40 right-20 bg-gradient-to-r from-purple-400/10 to-pink-400/10 blur-lg animate-bounce"
+            style={{ animationDuration: "3s" }}
+          ></div>
           <div
-            className="absolute rounded-full bottom-1/4 right-1/4 w-80 h-80 bg-gradient-to-r from-purple-400/20 to-pink-400/20 blur-3xl"
-            style={getAnimationStyle(1)}
-          />
+            className="absolute w-20 h-20 rounded-full bottom-32 left-20 bg-gradient-to-r from-green-400/10 to-blue-400/10 blur-lg animate-pulse"
+            style={{ animationDelay: "1s" }}
+          ></div>
           <div
-            className="absolute transform -translate-x-1/2 -translate-y-1/2 rounded-full top-1/2 left-1/2 w-72 h-72 bg-gradient-to-r from-green-400/10 to-blue-400/10 blur-3xl"
-            style={getAnimationStyle(2)}
-          />
+            className="absolute rounded-lg bottom-20 right-10 w-28 h-28 bg-gradient-to-r from-yellow-400/10 to-orange-400/10 blur-xl animate-bounce"
+            style={{ animationDuration: "4s", animationDelay: "2s" }}
+          ></div>
+
+          {/* Grid Pattern */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
         </div>
 
-        {/* Main Content Container */}
-        <div className="relative z-10 flex flex-col min-h-screen lg:flex-row">
-          {/* Left Side - Hero Content */}
-          <div className="flex items-center justify-center p-8 lg:p-12 lg:w-1/2">
-            <div
-              className="max-w-lg space-y-6 lg:space-y-8"
-              style={{
-                opacity: isLoaded ? 1 : 0,
-                transform: `translateY(${isLoaded ? 0 : 50}px)`,
-                transition: "all 0.8s ease-out",
-              }}
-            >
-              <div>
-                <span className="inline-block px-4 py-2 mb-4 text-sm font-semibold text-blue-700 rounded-full bg-gradient-to-r from-blue-100 to-cyan-100">
-                  🎫 WMC Ticketing System
-                </span>
-                <h1 className="text-4xl font-bold leading-tight text-gray-900 lg:text-5xl xl:text-6xl">
-                  Streamline Your{" "}
-                  <span className="text-transparent bg-gradient-to-r from-blue-600 via-purple-600 to-cyan-600 bg-clip-text">
-                    Support Operations
-                  </span>
-                </h1>
-              </div>
-
-              <p className="text-lg text-gray-600 lg:text-xl">
-                Built exclusively for{" "}
-                <span className="font-semibold text-blue-600">
-                  Westlake Medical Center
-                </span>{" "}
-                to revolutionize internal ticket management and enhance team
-                collaboration.
-              </p>
-
-              {/* WMC Building Image - Responsive sizing */}
-              <div className="relative flex justify-center">
-                <Image
-                  src={wmcBuilding}
-                  alt="wmc building"
-                  className="object-cover w-48 h-48 lg:h-64 lg:w-64 xl:h-80 xl:w-80 opacity-60 rounded-2xl"
-                />
-              </div>
-
-              {/* Bottom Text */}
-              <div className="pt-4 lg:pt-8">
-                <h2 className="text-2xl font-bold text-gray-800 lg:text-3xl">
-                  Powerful Features for{" "}
-                  <span className="text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 bg-clip-text">
-                    Modern Healthcare
-                  </span>
-                </h2>
-                <p className="mt-4 text-gray-600">
-                  Experience the next generation of ticketing with advanced
-                  features designed for healthcare environments.
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Side - Login Form */}
-          <div className="flex items-center justify-center w-full p-8 lg:w-1/2">
-            <div
-              className="w-full max-w-md"
-              style={{
-                opacity: isLoaded ? 1 : 0,
-                transform: `translateY(${isLoaded ? 0 : 30}px)`,
-                transition: "all 0.8s ease-out 0.2s",
-              }}
-            >
-              {/* Header */}
+        {/* Centered Content */}
+        <div className="flex items-center justify-center min-h-screen p-4">
+          <div
+            className="w-full max-w-md"
+            style={{
+              opacity: isLoaded ? 1 : 0,
+              transform: `translateY(${isLoaded ? 0 : 20}px)`,
+              transition: "all 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}
+          >
+            {/* Login Card */}
+            <div className="relative p-8 border shadow-2xl bg-white/70 backdrop-blur-xl rounded-3xl border-white/20 lg:p-10">
+              {/* Floating Header */}
               <div className="mb-8 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl">
+                {/* Logo Container */}
+                <div className="inline-flex items-center justify-center w-20 h-20 mb-6 transition-transform duration-300 transform shadow-xl bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl hover:scale-105">
                   <Image
                     src={wmcLogo}
-                    alt="wmc-logo"
-                    className="object-cover w-10 h-10 rounded-lg"
+                    alt="WMC Logo"
+                    className="object-cover w-12 h-12 rounded-lg"
                   />
                 </div>
-                <h2 className="mb-2 text-3xl font-bold text-gray-900">
-                  Welcome back!
-                </h2>
-                <p className="text-gray-600">
-                  Sign in to your WMC Ticketing System account
-                </p>
+
+                {/* Welcome Text */}
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-bold text-transparent lg:text-4xl bg-gradient-to-r from-gray-900 via-blue-800 to-cyan-700 bg-clip-text">
+                    Welcome Back
+                  </h1>
+                  <p className="font-medium text-gray-600">
+                    WMC Ticketing System
+                  </p>
+                  <div className="w-16 h-1 mx-auto rounded-full bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                </div>
               </div>
 
-              {/* Form Container */}
-              <div className="p-6 border shadow-2xl lg:p-8 bg-white/60 backdrop-blur-md border-white/20 rounded-3xl">
-                <form
-                  onSubmit={handleSubmit(handleLogin)}
-                  className="space-y-6"
-                >
-                  {/* Username Field */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">
-                      Username
-                    </label>
-                    <div className="relative">
-                      <div className="absolute transform -translate-y-1/2 left-4 top-1/2">
-                        <i
-                          className={`${
-                            PrimeIcons.USER
-                          } text-lg transition-colors duration-200 ${
-                            focusedField === "username"
-                              ? "text-blue-600"
-                              : "text-gray-400"
-                          }`}
-                        />
-                      </div>
-                      <InputText
-                        {...register("username", { required: true })}
-                        placeholder="APAGASA"
-                        onFocus={() => setFocusedField("username")}
-                        onBlur={() => setFocusedField("")}
-                        className="w-full pl-12 pr-4 text-gray-900 placeholder-gray-500 transition-all duration-200 border border-gray-200 h-14 bg-white/80 backdrop-blur-sm rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white"
+              {/* Login Form */}
+              <form onSubmit={handleSubmit(handleLogin)} className="space-y-6">
+                {/* Username Field */}
+                <div className="space-y-2">
+                  <label className="block mb-2 text-sm font-semibold text-gray-700">
+                    Username
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute transition-all duration-300 transform -translate-y-1/2 left-4 top-1/2">
+                      <i
+                        className={`${PrimeIcons.USER} text-lg ${
+                          focusedField === "username"
+                            ? "text-blue-600 scale-110"
+                            : "text-gray-400"
+                        }`}
                       />
                     </div>
-                    {errors.username && (
-                      <p className="flex items-center gap-1 text-sm font-semibold text-red-500">
-                        <i
-                          className={`${PrimeIcons.EXCLAMATION_CIRCLE} text-sm`}
-                        ></i>
-                        Username is required.
-                      </p>
-                    )}
+                    <InputText
+                      {...register("username", { required: true })}
+                      placeholder="Enter your username"
+                      onFocus={() => setFocusedField("username")}
+                      onBlur={() => setFocusedField("")}
+                      className={`w-full pl-12 pr-4 h-14 bg-white/60 backdrop-blur-sm border-2 rounded-xl 
+                        placeholder-gray-500 text-gray-900 font-medium transition-all duration-300
+                        focus:outline-none focus:bg-white focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/20
+                        hover:bg-white/80 hover:border-gray-300
+                        ${
+                          errors.username ? "border-red-300" : "border-gray-200"
+                        }
+                      `}
+                    />
                   </div>
-
-                  {/* Password Field */}
-                  <div className="space-y-2">
-                    <label className="text-sm font-semibold text-gray-700">
-                      Password
-                    </label>
-                    <div className="relative">
-                      <div className="absolute transform -translate-y-1/2 left-4 top-1/2">
-                        <i
-                          className={`${
-                            PrimeIcons.LOCK
-                          } text-lg transition-colors duration-200 ${
-                            focusedField === "password"
-                              ? "text-blue-600"
-                              : "text-gray-400"
-                          }`}
-                        />
-                      </div>
-                      <InputText
-                        {...register("password", { required: true })}
-                        placeholder="*********"
-                        type={showPassword ? "text" : "password"}
-                        onFocus={() => setFocusedField("password")}
-                        onBlur={() => setFocusedField("")}
-                        className="w-full pl-12 pr-12 text-gray-900 placeholder-gray-500 transition-all duration-200 border border-gray-200 h-14 bg-white/80 backdrop-blur-sm rounded-xl focus:outline-none focus:border-blue-500 focus:bg-white"
+                  {errors.username && (
+                    <div className="flex items-center gap-2 text-sm font-medium text-red-500 animate-pulse">
+                      <i
+                        className={`${PrimeIcons.EXCLAMATION_CIRCLE} text-sm`}
                       />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword(!showPassword)}
-                        className="absolute text-gray-400 transition-colors duration-200 transform -translate-y-1/2 right-4 top-1/2 hover:text-blue-600"
-                      >
-                        <i
-                          className={`${
-                            showPassword ? PrimeIcons.EYE_SLASH : PrimeIcons.EYE
-                          } text-lg`}
-                        />
-                      </button>
+                      Username is required
                     </div>
-                    {errors.password && (
-                      <p className="flex items-center gap-1 text-sm font-semibold text-red-500">
-                        <i
-                          className={`${PrimeIcons.EXCLAMATION_CIRCLE} text-sm`}
-                        ></i>
-                        Password is required.
-                      </p>
-                    )}
-                  </div>
+                  )}
+                </div>
 
-                  {/* Sign In Button */}
+                {/* Password Field */}
+                <div className="space-y-2">
+                  <label className="block mb-2 text-sm font-semibold text-gray-700">
+                    Password
+                  </label>
+                  <div className="relative group">
+                    <div className="absolute transition-all duration-300 transform -translate-y-1/2 left-4 top-1/2">
+                      <i
+                        className={`${PrimeIcons.LOCK} text-lg ${
+                          focusedField === "password"
+                            ? "text-blue-600 scale-110"
+                            : "text-gray-400"
+                        }`}
+                      />
+                    </div>
+                    <InputText
+                      {...register("password", { required: true })}
+                      placeholder="Enter your password"
+                      type={showPassword ? "text" : "password"}
+                      onFocus={() => setFocusedField("password")}
+                      onBlur={() => setFocusedField("")}
+                      className={`w-full pl-12 pr-12 h-14 bg-white/60 backdrop-blur-sm border-2 rounded-xl 
+                        placeholder-gray-500 text-gray-900 font-medium transition-all duration-300
+                        focus:outline-none focus:bg-white focus:border-blue-500 focus:shadow-lg focus:shadow-blue-500/20
+                        hover:bg-white/80 hover:border-gray-300
+                        ${
+                          errors.password ? "border-red-300" : "border-gray-200"
+                        }
+                      `}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute text-gray-400 transition-all duration-300 transform -translate-y-1/2 right-4 top-1/2 hover:text-blue-600 hover:scale-110"
+                    >
+                      <i
+                        className={`${
+                          showPassword ? PrimeIcons.EYE_SLASH : PrimeIcons.EYE
+                        } text-lg`}
+                      />
+                    </button>
+                  </div>
+                  {errors.password && (
+                    <div className="flex items-center gap-2 text-sm font-medium text-red-500 animate-pulse">
+                      <i
+                        className={`${PrimeIcons.EXCLAMATION_CIRCLE} text-sm`}
+                      />
+                      Password is required
+                    </div>
+                  )}
+                </div>
+
+                {/* Sign In Button */}
+                <div className="pt-4">
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="group w-full h-14 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 disabled:opacity-70 disabled:cursor-not-allowed rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 flex items-center justify-center gap-2"
+                    className="w-full h-14 bg-gradient-to-r from-blue-600 via-blue-700 to-cyan-600 
+                      hover:from-blue-700 hover:via-blue-800 hover:to-cyan-700
+                      disabled:opacity-60 disabled:cursor-not-allowed
+                      rounded-xl font-bold text-white text-lg shadow-xl
+                      transform hover:scale-[1.02] active:scale-[0.98] 
+                      transition-all duration-300 ease-out
+                      hover:shadow-2xl hover:shadow-blue-500/30
+                      flex items-center justify-center gap-3 group"
                   >
                     {isLoading ? (
-                      <div className="w-6 h-6 border-2 rounded-full border-white/30 border-t-white animate-spin"></div>
+                      <div className="flex items-center gap-3">
+                        <div className="w-5 h-5 border-2 rounded-full border-white/30 border-t-white animate-spin"></div>
+                        <span>Signing in...</span>
+                      </div>
                     ) : (
                       <>
-                        Sign in
+                        <span>Sign In</span>
                         <i
-                          className={`${PrimeIcons.ARROW_RIGHT} text-lg group-hover:translate-x-1 transition-transform duration-200`}
+                          className={`${PrimeIcons.ARROW_RIGHT} text-lg group-hover:translate-x-1 transition-transform duration-300`}
                         />
                       </>
                     )}
                   </Button>
+                </div>
 
-                  {/* Forgot Password Link */}
-                  <div className="text-center">
-                    <Link
-                      to="/forgot-password"
-                      className="text-sm font-semibold text-blue-600 transition-colors duration-200 hover:text-blue-800 hover:underline"
-                    >
-                      Forgot your password?
-                    </Link>
-                  </div>
-                </form>
-              </div>
+                {/* Forgot Password */}
+                <div className="pt-4 text-center">
+                  <Link
+                    to="/forgot-password"
+                    className="inline-flex items-center gap-1 text-sm font-semibold text-blue-600 transition-all duration-300 hover:text-blue-800 hover:underline group"
+                  >
+                    <i
+                      className={`${PrimeIcons.QUESTION_CIRCLE} text-sm group-hover:scale-110 transition-transform duration-300`}
+                    />
+                    Forgot your password?
+                  </Link>
+                </div>
+              </form>
             </div>
-          </div>
-        </div>
 
-        {/* Footer - Now properly positioned */}
-        <div className="relative z-10 py-8 bg-gradient-to-r from-slate-50/80 to-blue-50/80 backdrop-blur-sm">
-          <div className="container px-4 mx-auto text-center">
-            <div className="flex flex-col items-center justify-center space-y-4">
-              <div className="flex items-center justify-center space-x-2 text-gray-600">
+            {/* Footer Info */}
+            <div className="mt-8 space-y-3 text-center">
+              <div className="flex items-center justify-center gap-2 text-gray-600">
                 <i className={`${PrimeIcons.SHIELD} text-sm`} />
-                <span className="text-sm lg:text-base">
-                  Powered by Westlake Medical Center ICT Department
+                <span className="text-sm font-medium">
+                  Westlake Medical Center ICT Department
                 </span>
               </div>
 
-              <div className="flex flex-col items-center justify-center space-y-2 lg:flex-row lg:space-y-0 lg:space-x-6">
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                  <i className={`${PrimeIcons.PHONE} text-sm`} />
+              <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-gray-500">
+                <div className="flex items-center gap-1">
+                  <i className={`${PrimeIcons.PHONE} text-xs`} />
                   <span>(+632) 8553-8185</span>
                 </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                  <i className={`${PrimeIcons.ENVELOPE} text-sm`} />
-                  <span>info@westlakemedical.com</span>
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-500">
-                  <i className={`${PrimeIcons.MAP_MARKER} text-sm`} />
+                <div className="flex items-center gap-1">
+                  <i className={`${PrimeIcons.MAP_MARKER} text-xs`} />
                   <span>San Pedro, Laguna</span>
                 </div>
               </div>

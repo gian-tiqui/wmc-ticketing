@@ -18,7 +18,7 @@ import { Chip } from "primereact/chip";
 import { Timeline } from "primereact/timeline";
 import { PrimeIcons } from "primereact/api";
 import { ProgressSpinner } from "primereact/progressspinner";
-import { confirmDialog, ConfirmDialog } from "primereact/confirmdialog";
+import { confirmDialog } from "primereact/confirmdialog";
 
 import AssignUserDialog from "./AssignUserDialog";
 import EscalateTicketDialog from "./EscalateTicketDialog";
@@ -403,7 +403,6 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
   return (
     <div className="w-full max-w-4xl p-3 mx-auto sm:p-4 md:p-6">
       <CustomToast ref={toastRef} />
-      <ConfirmDialog />
 
       {/* Header */}
       <div className="mb-6 sm:mb-8">

@@ -50,7 +50,9 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
         className="flex flex-col flex-1"
         pt={{
           root: { className: "flex-1 flex flex-col" },
-          panelContainer: { className: "flex-1 bg-inherit overflow-hidden" },
+          panelContainer: {
+            className: "flex-1 bg-inherit overflow-hidden",
+          },
           nav: { className: "bg-inherit" },
         }}
       >
@@ -61,7 +63,7 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
             header={tab.name}
             pt={{
               content: {
-                className: "h-full bg-inherit overflow-auto",
+                className: "h-[50vh] bg-inherit overflow-auto",
               },
               header: { className: "bg-inherit text-sm" },
               headerAction: { className: "bg-inherit" },

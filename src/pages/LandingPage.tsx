@@ -125,21 +125,12 @@ const LandingPage = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="relative z-10 flex items-center justify-between px-8 py-6">
+      <nav className="relative z-10 flex items-center justify-center px-8 py-6">
         <div className="flex items-center space-x-3">
           <div className="flex items-center justify-center w-10 h-10 shadow">
             <Image src={wmcLogo} alt="Westlake Medical Center" />
           </div>
-          <span className="text-xl font-bold text-gray-900">WMC Ticketing</span>
         </div>
-
-        <button
-          onClick={handleSignIn}
-          className="flex items-center px-6 py-3 space-x-2 font-semibold text-white transition-all duration-200 transform shadow-lg bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 rounded-xl hover:shadow-xl hover:scale-105"
-        >
-          <span>Sign In</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
       </nav>
 
       {/* Hero Section */}
