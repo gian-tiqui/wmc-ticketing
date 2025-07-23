@@ -103,23 +103,25 @@ const TicketsTable: React.FC<Props> = ({ tickets }) => {
     </div>
   );
 
-  const overdueTemplate = (rowData: Ticket) => (
-    <div className="flex items-center">
-      {rowData.isOverdue ? (
-        <div className="inline-flex items-center px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full sm:px-3">
-          <i className="mr-1 pi pi-exclamation-triangle" />
-          <span className="hidden sm:inline">Overdue</span>
-          <span className="sm:hidden">!</span>
-        </div>
-      ) : (
-        <div className="inline-flex items-center px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full sm:px-3">
-          <i className="mr-1 pi pi-check-circle" />
-          <span className="hidden sm:inline">On Time</span>
-          <span className="sm:hidden">✓</span>
-        </div>
-      )}
-    </div>
-  );
+  const overdueTemplate = (rowData: Ticket) => {
+    return (
+      <div className="flex items-center">
+        {rowData.isOverdue ? (
+          <div className="inline-flex items-center px-2 py-1 text-xs font-semibold text-red-800 bg-red-100 rounded-full sm:px-3">
+            <i className="mr-1 pi pi-exclamation-triangle" />
+            <span className="hidden sm:inline">Overdue</span>
+            <span className="sm:hidden">!</span>
+          </div>
+        ) : (
+          <div className="inline-flex items-center px-2 py-1 text-xs font-semibold text-green-800 bg-green-100 rounded-full sm:px-3">
+            <i className="mr-1 pi pi-check-circle" />
+            <span className="hidden sm:inline">On Time</span>
+            <span className="sm:hidden">✓</span>
+          </div>
+        )}
+      </div>
+    );
+  };
 
   const assigneeTemplate = (rowData: Ticket) => (
     <div className="flex items-center">

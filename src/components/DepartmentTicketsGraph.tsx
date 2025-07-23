@@ -51,22 +51,8 @@ const DepartmentTicketsGraph = () => {
   });
 
   useEffect(() => {
-    console.log(ticketsData);
-  }, [ticketsData]);
-
-  useEffect(() => {
     if (!ticketsData?.data?.ticketsData) return;
     const { labels, dataSet, dataSets } = ticketsData.data.ticketsData;
-
-    // ADD DEBUG LOGGING
-    console.log("=== DEBUG: Chart Data ===");
-    console.log("Group By:", query.groupBy);
-    console.log("Labels:", labels);
-    console.log("DataSet (singular):", dataSet);
-    console.log("DataSets (plural):", dataSets);
-    console.log("Labels length:", labels?.length);
-    console.log("Full ticketsData:", ticketsData.data.ticketsData);
-    console.log("========================");
 
     // Handle both dataSet (singular) and dataSets (plural) from backend
     const datasets = dataSets || (dataSet ? [dataSet] : []);
