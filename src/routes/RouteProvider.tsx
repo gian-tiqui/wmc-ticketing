@@ -15,7 +15,6 @@ import UnauthorizedPage from "../pages/UnauthorizedPage";
 import DepartmentsPage from "../pages/DepartmentsPage";
 import KnowledgebasePage from "../pages/KnowledgebasePage";
 import TicketKnowledgebasePage from "../pages/TicketKnowledgebasePage";
-import ForgotPasswordPage from "../pages/ForgotPasswordPage";
 
 const RouteProvider = () => {
   const routes: RouteType[] = [
