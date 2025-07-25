@@ -27,7 +27,7 @@ const NotFoundPage = () => {
 
   return (
     <PageTemplate>
-      <main className="grid w-full h-full place-content-center">
+      <main className="grid w-full h-screen place-content-center">
         <section className="w-full text-center">
           <p className="mb-3 text-3xl font-medium">
             <span className="text-blue-400">404</span> Page Not found
