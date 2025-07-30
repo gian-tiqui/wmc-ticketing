@@ -3,12 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Ticket } from "../types/types";
 import { TicketStatus } from "../@utils/enums/enum";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
+import TicketStatusSection from "./TicketStatusSection";
+import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 
 interface Props {
   ticket: Ticket;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<Ticket, Error>>;
 }
 
-const TicketSummary: React.FC<Props> = ({ ticket }) => {
+const TicketSummary: React.FC<Props> = ({ ticket, refetch }) => {
   const [content, setContent] = useState<string | undefined>("");
   const [header, setHeader] = useState<string | undefined>("");
 
@@ -37,6 +42,7 @@ const TicketSummary: React.FC<Props> = ({ ticket }) => {
     <div
       className={`${scrollbarTheme} px-4 py-8 mx-auto space-y-6 text-gray-800 max-w-7xl overflow-auto h-[62%]`}
     >
+      <TicketStatusSection ticket={ticket} refetch={refetch} />
       {/* Title & Status */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
