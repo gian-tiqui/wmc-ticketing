@@ -128,7 +128,7 @@ const LoginPage = () => {
           ></div>
 
           {/* Grid Pattern */}
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_2px,transparent_2px),linear-gradient(90deg,rgba(59,130,246,0.03)_2px,transparent_2px)] bg-[size:4rem_4rem]"></div>
         </div>
 
         {/* Centered Content */}
@@ -146,7 +146,7 @@ const LoginPage = () => {
               {/* Floating Header */}
               <div className="mb-8 text-center">
                 {/* Logo Container */}
-                <div className="inline-flex items-center justify-center w-20 h-20 mb-6 transition-transform duration-300 transform shadow-xl bg-gradient-to-r from-blue-500 to-cyan-500 rounded-2xl hover:scale-105">
+                <div className="inline-flex items-center justify-center w-20 h-20 mb-6 transition-transform duration-300 transform shadow-xl hover:scale-105">
                   <Image
                     src={wmcLogo}
                     alt="WMC Logo"
