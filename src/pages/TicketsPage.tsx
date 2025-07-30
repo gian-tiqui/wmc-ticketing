@@ -185,7 +185,7 @@ const TicketsPage = () => {
         ),
     },
     {
-      icon: PrimeIcons.USER_PLUS,
+      icon: PrimeIcons.USERS,
       header: (
         <TabHeader label="Assigned" count={assignedTickets?.data.count} />
       ),
@@ -307,21 +307,29 @@ const TicketsPage = () => {
               },
             }}
           >
-            {tabs.map((tab, index) => (
-              <TabPanel
-                key={index}
-                pt={{
-                  headerAction: {
-                    className:
-                      "px-2 sm:px-3 lg:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm transition-all duration-200 hover:bg-slate-100/80 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg whitespace-nowrap",
-                  },
-                }}
-                header={tab.header}
-                headerClassName="text-xs sm:text-sm font-medium"
-              >
-                <div className="animate-fadeIn">{tab.body}</div>
-              </TabPanel>
-            ))}
+            {tabs.map((tab, index) => {
+              if (
+                tab.icon === PrimeIcons.USER_PLUS &&
+                !roleIncludes(user, "admin")
+              )
+                return null;
+
+              return (
+                <TabPanel
+                  key={index}
+                  pt={{
+                    headerAction: {
+                      className:
+                        "px-2 sm:px-3 lg:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl font-medium text-xs sm:text-sm transition-all duration-200 hover:bg-slate-100/80 data-[state=active]:bg-blue-500 data-[state=active]:text-white data-[state=active]:shadow-lg whitespace-nowrap",
+                    },
+                  }}
+                  header={tab.header}
+                  headerClassName="text-xs sm:text-sm font-medium"
+                >
+                  <div className="animate-fadeIn">{tab.body}</div>
+                </TabPanel>
+              );
+            })}
           </TabView>
         </div>
       </div>

@@ -20,7 +20,7 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
   const ticketTabComponents: TicketTabs[] = [
     {
       name: "Summary",
-      component: <TicketSummary ticket={ticket} />,
+      component: <TicketSummary ticket={ticket} refetch={refetch} />,
       icon: "pi pi-wave-pulse",
     },
     {
