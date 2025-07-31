@@ -15,6 +15,7 @@ import UnauthorizedPage from "../pages/UnauthorizedPage";
 import DepartmentsPage from "../pages/DepartmentsPage";
 import KnowledgebasePage from "../pages/KnowledgebasePage";
 import TicketKnowledgebasePage from "../pages/TicketKnowledgebasePage";
+import CloseTicketPage from "../pages/CloseTicketPage";
 
 const RouteProvider = () => {
   const routes: RouteType[] = [
@@ -36,6 +37,12 @@ const RouteProvider = () => {
       hidden: false,
       path: "/",
       element: <LandingPage />,
+    },
+    {
+      name: "Close Ticket Page",
+      hidden: false,
+      path: "/close-ticket/:ticketId/resolve",
+      element: <CloseTicketPage />,
     },
     {
       name: "Tickets Page",

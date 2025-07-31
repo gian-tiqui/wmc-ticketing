@@ -63,7 +63,7 @@ const TicketTab: React.FC<Props> = ({ ticket, refetch }) => {
             header={tab.name}
             pt={{
               content: {
-                className: "h-[50vh] bg-inherit overflow-auto",
+                className: "h-[65vh] bg-inherit overflow-auto",
               },
               header: { className: "bg-inherit text-sm" },
               headerAction: { className: "bg-inherit" },
