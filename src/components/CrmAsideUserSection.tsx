@@ -74,7 +74,7 @@ const CrmSidebarUserSection = () => {
       }
 
       const response = await apiClient.patch(
-        `${URI.API_URI}/api/v1/auth/logout?userId=${user.sub}`
+        `${URI.API_URI}/api/v1/auth/logout?refreshToken=${refreshToken}`
       );
 
       if (response.status === 200) {
