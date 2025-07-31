@@ -41,7 +41,7 @@ const RouteProvider = () => {
     {
       name: "Close Ticket Page",
       hidden: false,
-      path: "/close-ticket",
+      path: "/close-ticket/:ticketId/resolve",
       element: <CloseTicketPage />,
     },
     {
