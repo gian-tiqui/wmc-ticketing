@@ -10,6 +10,7 @@ import {
   StatusMarker,
   Ticket,
   User,
+  UserData,
 } from "../types/types";
 import { RefetchOptions, QueryObserverResult } from "@tanstack/react-query";
 import { Toast } from "primereact/toast";
@@ -31,6 +32,7 @@ import { Nullable } from "primereact/ts-helpers";
 
 interface Props {
   ticket: Ticket;
+  currentUser: UserData | undefined; // Add current user prop to determine permissions
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<Ticket, Error>>;
@@ -47,7 +49,11 @@ interface UpdateTicketData {
   pauseReason?: string;
 }
 
-const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
+const TicketStatusSection: React.FC<Props> = ({
+  ticket,
+  currentUser,
+  refetch,
+}) => {
   const toastRef = useRef<Toast>(null);
 
   // State management
@@ -77,6 +83,35 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     useState(false);
   const [pauseReasonDialogVisible, setPauseReasonDialogVisible] =
     useState(false);
+
+  // Permission helpers
+  const isAssignedUser = currentUser?.sub === ticket.assignedUserId;
+  const isIssuer = currentUser?.sub === ticket.issuerId;
+  const isResolvedOrClosed = [
+    TicketStatus.RESOLVED,
+    TicketStatus.CLOSED,
+  ].includes(currentStatusId);
+
+  // Check if current user can perform actions based on role and ticket status
+  const canPerformAction = useCallback(
+    (actionType: "general" | "issuer-only" = "general"): boolean => {
+      if (actionType === "issuer-only") {
+        // Actions only issuers can perform
+        if (!isIssuer) return false;
+        // Issuers can only perform actions if ticket is resolved or closed
+        return isResolvedOrClosed;
+      }
+
+      // General actions
+      if (isAssignedUser && isResolvedOrClosed) {
+        // Assigned users cannot perform actions if ticket is resolved or closed
+        return false;
+      }
+
+      return true;
+    },
+    [isAssignedUser, isIssuer, isResolvedOrClosed]
+  );
 
   // Update current status when ticket prop changes
   useEffect(() => {
@@ -295,11 +330,14 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     [updateTicketStatus, ticket.status.id]
   );
 
-  // Status markers configuration
+  // Status markers configuration with role-based permissions
   const markers: StatusMarker[] = [
     {
       name: "Acknowledge",
-      disabled: currentStatusId !== TicketStatus.NEW || isUpdating,
+      disabled:
+        currentStatusId !== TicketStatus.NEW ||
+        isUpdating ||
+        !canPerformAction(),
       onClick: () =>
         handleSimpleStatusChange(TicketStatus.ACKNOWLEDGED, "Acknowledge"),
       type: "",
@@ -307,7 +345,10 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
     },
     {
       name: "Assign",
-      disabled: currentStatusId !== TicketStatus.ACKNOWLEDGED || isUpdating,
+      disabled:
+        currentStatusId !== TicketStatus.ACKNOWLEDGED ||
+        isUpdating ||
+        !canPerformAction(),
       onClick: () => setAssignUserVisible(true),
       type: "",
       loading: isUpdating && updatingAction === "Assign",
@@ -317,7 +358,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
       disabled:
         ![TicketStatus.ASSIGNED, TicketStatus.ESCALATED].includes(
           currentStatusId
-        ) || isUpdating,
+        ) ||
+        isUpdating ||
+        !canPerformAction(),
       onClick: () => setEscalateUserVisible(true),
       type: "",
       loading: isUpdating && updatingAction === "Escalate",
@@ -329,14 +372,19 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
           TicketStatus.ASSIGNED,
           TicketStatus.ESCALATED,
           TicketStatus.ON_HOLD,
-        ].includes(currentStatusId) || isUpdating,
+        ].includes(currentStatusId) ||
+        isUpdating ||
+        !canPerformAction(),
       onClick: () => setServiceReportDialogVisible(true),
       type: "",
       loading: isUpdating && updatingAction === "Resolve",
     },
     {
       name: "Close",
-      disabled: isUpdating || currentStatusId === TicketStatus.CLOSED,
+      disabled:
+        isUpdating ||
+        currentStatusId === TicketStatus.CLOSED ||
+        !canPerformAction(),
       onClick: () => setCloseDialogVisible(true),
       type: "",
       loading: isUpdating && updatingAction === "Close",
@@ -346,7 +394,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
       disabled:
         ![TicketStatus.CLOSED, TicketStatus.RESOLVED].includes(
           currentStatusId
-        ) || isUpdating,
+        ) ||
+        isUpdating ||
+        !canPerformAction("issuer-only"), // Only issuer can reopen resolved/closed tickets
       onClick: () => handleSimpleStatusChange(TicketStatus.NEW, "Reopen"),
       type: "",
       loading: isUpdating && updatingAction === "Reopen",
@@ -370,7 +420,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         } ${isLoading ? "opacity-75" : ""}`}
         disabled={item.disabled}
         onClick={item.onClick}
-        title={`${item.name}${isLoading ? " (Processing...)" : ""}`}
+        title={`${item.name}${isLoading ? " (Processing...)" : ""}${
+          item.disabled && !canPerformAction() ? " - Permission denied" : ""
+        }`}
       >
         {isLoading ? (
           <ProgressSpinner
@@ -429,6 +481,25 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
         <p className="text-xs text-gray-600 sm:text-sm">
           Manage the lifecycle of the current ticket.
         </p>
+
+        {/* Permission info */}
+        <div className="mt-2">
+          <p className="text-xs text-gray-500">
+            Role:{" "}
+            {isIssuer ? "Issuer" : isAssignedUser ? "Assigned User" : "Other"} |
+            Status: {ticket.status.type}
+            {isAssignedUser && isResolvedOrClosed && (
+              <span className="ml-2 text-amber-600">
+                ⚠ Limited actions (ticket resolved/closed)
+              </span>
+            )}
+            {isIssuer && !isResolvedOrClosed && (
+              <span className="ml-2 text-amber-600">
+                ⚠ Reopen action only available for resolved/closed tickets
+              </span>
+            )}
+          </p>
+        </div>
       </div>
 
       {/* Status Card */}
@@ -472,6 +543,10 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
                     onClick={marker.onClick}
                     title={`${marker.name}${
                       marker.loading ? " (Processing...)" : ""
+                    }${
+                      marker.disabled && !canPerformAction()
+                        ? " - Permission denied"
+                        : ""
                     }`}
                   >
                     {marker.loading ? (
@@ -529,7 +604,9 @@ const TicketStatusSection: React.FC<Props> = ({ ticket, refetch }) => {
                   TicketStatus.ESCALATED,
                   TicketStatus.CLOSED,
                   TicketStatus.CLOSED_RESOLVED,
-                ].includes(currentStatusId) || isUpdating
+                ].includes(currentStatusId) ||
+                isUpdating ||
+                !canPerformAction()
               }
               loading={isUpdating && updatingAction === "Pause"}
               className="px-3 py-2 text-xs text-white transition-all bg-blue-600 rounded-lg sm:px-4 sm:text-sm hover:bg-blue-700 disabled:opacity-50"
