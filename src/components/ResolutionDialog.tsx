@@ -8,7 +8,6 @@ import { InputTextarea } from "primereact/inputtextarea";
 import extractOriginalName from "../@utils/functions/extractOriginalName";
 import { Nullable } from "primereact/ts-helpers";
 import { scrollbarTheme } from "../@utils/tw-classes/tw-class";
-import { Calendar } from "primereact/calendar";
 
 interface Props {
   visible: boolean;
@@ -29,7 +28,6 @@ const ResolutionDialog: React.FC<Props> = ({
   setFiles,
   files,
   resolutionTime,
-  setResolutionTime,
   resolution,
   setResolution,
   onResolve,
@@ -132,42 +130,6 @@ const ResolutionDialog: React.FC<Props> = ({
           >
             {isLoading ? "Resolving..." : "Mark as Resolved"}
           </Button>
-        </div>
-
-        {/* Resolution Time */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-gradient-to-br from-green-100 to-green-200">
-              <i
-                className={`${PrimeIcons.CALENDAR} text-green-600 text-sm`}
-              ></i>
-            </div>
-            <h3 className="text-lg font-semibold text-slate-900">
-              Resolution Time
-            </h3>
-          </div>
-
-          <div className="relative">
-            <Calendar
-              value={resolutionTime}
-              onChange={(e) => setResolutionTime(e.value)}
-              showTime
-              hourFormat="12"
-              className="w-full"
-              placeholder="Select resolution time (optional - defaults to now)"
-              disabled={isLoading}
-              pt={{
-                input: {
-                  className:
-                    "w-full p-4 border-2 border-slate-200 rounded-xl bg-white/80 backdrop-blur-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 transition-all duration-200 placeholder:text-slate-400 font-medium text-slate-700",
-                },
-              }}
-            />
-            <div className="absolute text-xs bottom-3 right-3 text-slate-400">
-              <i className={`${PrimeIcons.INFO_CIRCLE} mr-1`}></i>
-              Leave empty to use current time
-            </div>
-          </div>
         </div>
 
         {/* Resolution Details */}

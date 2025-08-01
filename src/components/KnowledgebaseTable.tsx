@@ -218,8 +218,6 @@ const MobileCard = memo(({ ticket }: { ticket: Ticket }) => (
 ));
 MobileCard.displayName = "MobileCard";
 
-// ... (keep all your existing imports and memoized components)
-
 const KnowledgebaseTable = () => {
   const [q, setQ] = useState<Query>({
     search: "",
@@ -231,17 +229,19 @@ const KnowledgebaseTable = () => {
   const [filters, setFilters] = useState<DataTableFilterMeta>({});
   const [globalFilterValue, setGlobalFilterValue] = useState("");
 
-  // Optimized query with better caching
+  // FIXED: Better query configuration to prevent caching issues
   const {
     data: ticketsData,
     isLoading,
     isError,
     error,
   } = useQuery({
-    queryKey: ["knowledgebase-tickets", JSON.stringify(q)],
+    queryKey: ["knowledgebase-tickets", q.search, q.offset, q.limit],
     queryFn: () => getTickets(query),
-    staleTime: 30000, // 30 seconds
+    staleTime: 0, // Always fetch fresh data
     gcTime: 300000, // 5 minutes
+    refetchOnWindowFocus: false,
+    refetchOnMount: true,
   });
 
   // Memoized tickets array and total count
@@ -254,7 +254,7 @@ const KnowledgebaseTable = () => {
     [ticketsData?.data?.count]
   );
 
-  // Pagination handlers
+  // FIXED: Proper pagination handlers
   const onPageChange = useCallback((event: { first: number; rows: number }) => {
     setQ((prev) => ({
       ...prev,
@@ -291,21 +291,26 @@ const KnowledgebaseTable = () => {
     []
   );
 
-  const goToPrevPage = () => {
+  // FIXED: Proper pagination functions
+  const goToPrevPage = useCallback(() => {
     setQ((prev) => ({
       ...prev,
-      offset: prev.offset - 10,
-      limit: prev.limit - 10,
+      offset: Math.max(0, (prev.offset ?? 0) - (prev.limit ?? 10)),
     }));
-  };
+  }, []);
 
-  const goToNextPage = () => {
+  const goToNextPage = useCallback(() => {
     setQ((prev) => ({
       ...prev,
-      offset: prev.offset + 10,
-      limit: prev.limit + 10,
+      offset: (prev.offset ?? 0) + (prev.limit ?? 10),
     }));
-  };
+  }, []);
+
+  // FIXED: Calculate current page and total pages properly
+  const currentPage = Math.floor((q.offset ?? 0) / (q.limit ?? 1)) + 1;
+  const totalPages = Math.ceil(totalRecords / (q.limit ?? 1));
+  const isFirstPage = (q.offset ?? 0) === 0;
+  const isLastPage = (q.offset ?? 0) + (q.limit ?? 1) >= totalRecords;
 
   const titleBodyTemplate = useCallback(
     (rowData: Ticket) => (
@@ -348,7 +353,7 @@ const KnowledgebaseTable = () => {
     []
   );
 
-  // Memoized header component
+  // FIXED: Updated header component with proper pagination info
   const header = useMemo(
     () => (
       <div className="relative overflow-hidden border border-gray-200 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 rounded-t-2xl">
@@ -376,7 +381,8 @@ const KnowledgebaseTable = () => {
                 Knowledgebase
               </h2>
               <p className="text-sm font-medium text-gray-600">
-                {tickets.length} tickets available
+                {totalRecords} total tickets • Showing {tickets.length} on page{" "}
+                {currentPage}
               </p>
             </div>
           </div>
@@ -404,24 +410,28 @@ const KnowledgebaseTable = () => {
                 className="pl-10 pr-4 py-3 text-sm border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all duration-200 bg-white/70 backdrop-blur-sm shadow-sm hover:shadow-md flex-1 sm:min-w-[280px]"
               />
             </div>
-            <div className="flex justify-between mt-4">
+
+            {/* FIXED: Custom pagination controls with proper state */}
+            <div className="flex items-center gap-2 px-4 py-2 border border-gray-200 bg-white/80 backdrop-blur-sm rounded-xl">
               <Button
                 onClick={goToPrevPage}
-                disabled={q.offset === 0}
+                disabled={isFirstPage}
                 icon="pi pi-chevron-left"
-                className="p-button-rounded p-button-outlined"
+                className="p-button-sm p-button-text"
+                severity={isFirstPage ? "secondary" : "info"}
               />
-              <span>
-                Page {Math.floor(q.offset / q.limit) + 1} of{" "}
-                {Math.ceil(totalRecords / q.limit)}
+              <span className="text-sm font-medium text-gray-700 min-w-[120px] text-center">
+                Page {currentPage} of {totalPages || 1}
               </span>
               <Button
                 onClick={goToNextPage}
-                disabled={q.offset + q.limit >= totalRecords}
+                disabled={isLastPage}
                 icon="pi pi-chevron-right"
-                className="p-button-rounded p-button-outlined"
+                className="p-button-sm p-button-text"
+                severity={isLastPage ? "secondary" : "info"}
               />
             </div>
+
             <Button
               onClick={initFilters}
               className="px-6 py-3 text-sm font-medium text-gray-700 transition-all duration-200 border-2 border-gray-200 shadow-sm bg-white/80 backdrop-blur-sm rounded-xl hover:bg-gray-50 hover:border-gray-300 hover:shadow-md whitespace-nowrap"
@@ -445,10 +455,22 @@ const KnowledgebaseTable = () => {
         </div>
       </div>
     ),
-    [tickets.length, globalFilterValue, onGlobalFilterChange, initFilters]
+    [
+      totalRecords,
+      tickets.length,
+      currentPage,
+      globalFilterValue,
+      onGlobalFilterChange,
+      initFilters,
+      goToPrevPage,
+      goToNextPage,
+      isFirstPage,
+      isLastPage,
+      totalPages,
+    ]
   );
 
-  // Updated DataTable configuration with pagination
+  // FIXED: Updated DataTable configuration
   const dataTableProps = useMemo(
     () => ({
       value: tickets,
@@ -457,7 +479,7 @@ const KnowledgebaseTable = () => {
       rows: q.limit,
       totalRecords: totalRecords,
       onPage: onPageChange,
-      rowsPerPageOptions: [10, 25, 50],
+      rowsPerPageOptions: [5, 10, 25, 50],
       scrollable: true,
       scrollHeight: "65vh",
       size: "small" as const,
@@ -500,6 +522,33 @@ const KnowledgebaseTable = () => {
     [tickets, filters, isLoading, q.offset, q.limit, totalRecords, onPageChange]
   );
 
+  // FIXED: Mobile pagination component
+  const MobilePagination = memo(() => (
+    <div className="flex items-center justify-between px-6 py-4 border-t border-gray-200 bg-white/80 backdrop-blur-sm">
+      <div className="flex items-center gap-2">
+        <Button
+          onClick={goToPrevPage}
+          disabled={isFirstPage}
+          icon="pi pi-chevron-left"
+          className="p-button-sm p-button-outlined"
+          severity={isFirstPage ? "secondary" : "info"}
+        />
+        <Button
+          onClick={goToNextPage}
+          disabled={isLastPage}
+          icon="pi pi-chevron-right"
+          className="p-button-sm p-button-outlined"
+          severity={isLastPage ? "secondary" : "info"}
+        />
+      </div>
+      <div className="text-sm text-gray-600">
+        Page {currentPage} of {totalPages || 1}
+      </div>
+      <div className="text-xs text-gray-500">{totalRecords} total</div>
+    </div>
+  ));
+  MobilePagination.displayName = "MobilePagination";
+
   // Early returns for loading and error states
   if (isLoading) return <LoadingState />;
   if (isError) return <ErrorState error={error} />;
@@ -511,16 +560,19 @@ const KnowledgebaseTable = () => {
 
         {/* Mobile view */}
         <div className="block lg:hidden">
-          <div className="p-6 border-gray-200 bg-gradient-to-br from-gray-50 to-blue-50/30 border-x rounded-b-2xl">
-            {tickets.length === 0 ? (
-              <EmptyState />
-            ) : (
-              <div className="space-y-4">
-                {tickets.map((ticket) => (
-                  <MobileCard key={ticket.id} ticket={ticket} />
-                ))}
-              </div>
-            )}
+          <div className="border-gray-200 bg-gradient-to-br from-gray-50 to-blue-50/30 border-x rounded-b-2xl">
+            <div className="p-6">
+              {tickets.length === 0 ? (
+                <EmptyState />
+              ) : (
+                <div className="space-y-4">
+                  {tickets.map((ticket) => (
+                    <MobileCard key={ticket.id} ticket={ticket} />
+                  ))}
+                </div>
+              )}
+            </div>
+            <MobilePagination />
           </div>
         </div>
 
@@ -529,7 +581,6 @@ const KnowledgebaseTable = () => {
           <div className="overflow-hidden border-b border-gray-200 shadow-sm bg-white/80 backdrop-blur-sm border-x rounded-b-2xl">
             <div className="overflow-x-auto">
               <DataTable {...dataTableProps}>
-                {/* ... (keep all your existing Column definitions) */}
                 <Column
                   header="Title"
                   field="title"
