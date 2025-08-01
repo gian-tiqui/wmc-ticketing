@@ -96,13 +96,18 @@ const TicketStatusSection: React.FC<Props> = ({
   const canPerformAction = useCallback(
     (actionType: "general" | "issuer-only" = "general"): boolean => {
       if (actionType === "issuer-only") {
-        // Actions only issuers can perform
+        // Actions only issuers can perform (like reopening)
         if (!isIssuer) return false;
-        // Issuers can only perform actions if ticket is resolved or closed
+        // Issuers can only perform issuer-only actions if ticket is resolved or closed
         return isResolvedOrClosed;
       }
 
-      // General actions
+      // For general actions:
+      if (isIssuer) {
+        // Issuers can only perform general actions if ticket is resolved
+        return currentStatusId === TicketStatus.RESOLVED;
+      }
+
       if (isAssignedUser && isResolvedOrClosed) {
         // Assigned users cannot perform actions if ticket is resolved or closed
         return false;
@@ -110,7 +115,7 @@ const TicketStatusSection: React.FC<Props> = ({
 
       return true;
     },
-    [isAssignedUser, isIssuer, isResolvedOrClosed]
+    [isAssignedUser, isIssuer, isResolvedOrClosed, currentStatusId]
   );
 
   // Update current status when ticket prop changes
@@ -493,9 +498,9 @@ const TicketStatusSection: React.FC<Props> = ({
                 ⚠ Limited actions (ticket resolved/closed)
               </span>
             )}
-            {isIssuer && !isResolvedOrClosed && (
+            {isIssuer && currentStatusId !== TicketStatus.RESOLVED && (
               <span className="ml-2 text-amber-600">
-                ⚠ Reopen action only available for resolved/closed tickets
+                ⚠ Actions only available when ticket is resolved
               </span>
             )}
           </p>
